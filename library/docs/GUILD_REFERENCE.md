@@ -79,16 +79,16 @@ graph TB
 
 ---
 
-## 2. Workflow (8 Phases)
+## 2. Workflow (9 Phases)
 
 ```
-Phase 0: Research       → Researcher
-Phase 1: Requirements   → Requirements-Analyst
-Phase 2: Planning       → Architect-Plan
-Phase 3: Design         → Designer (Nano Banana)
-Phase 4: Implementation → Senior-Coder (並列・Architect経由で指示)
+Phase 0: Requirements   → Requirements-Analyst
+Phase 1: Research       → Researcher（調査・競合分析）
+Phase 2: Design         → Designer（UIモックアップ）
+Phase 3: Planning       → Architect-Plan（技術設計・タスク分割）
+Phase 4: Implementation → Senior-Coder（並列・Architect経由で指示）
 Phase 5: Review         → Review-Guardian
-Phase 6: QA Testing     → QA-Tester (ブラウザテスト・E2E)
+Phase 6: QA Testing     → QA-Tester（ブラウザテスト・E2E）
 Phase 7: Marketing      → Marketing
 Phase 8: Integration    → PM
 ```

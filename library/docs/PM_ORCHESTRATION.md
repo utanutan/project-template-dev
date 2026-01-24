@@ -32,18 +32,40 @@ PMがプロジェクト全体を統括し、各エージェントを呼び出す
 docs/PRP.md を読み、以下のフェーズを順番に実行してプロジェクトを完遂してください。
 
 # WORKFLOW
-Phase 0: Requirements-Analyst に要件明確化を依頼
-Phase 1: Researcher に調査を依頼
-Phase 2: Architect-Plan に設計・タスク分割・実装プラン作成を依頼
-Phase 3: Designer にモックアップ作成を依頼
-Phase 4: 【委譲】Architect-Plan が実装プランに基づき Senior-Coder に指示（PMは直接指示しない）
-Phase 5: Review-Guardian にレビューを依頼
-Phase 6: QA-Tester にブラウザテスト・E2Eテストを依頼
-Phase 7: Content-Writer にコンテンツ執筆を依頼
-Phase 8: Marketing にSEO最適化を依頼
-Phase 9: 最終統合と完了報告
 
-【重要】実装指示は直接Coderに出さず、Architect-Planに設計と分割を依頼する。
+## Phase 0: エージェント選択【ユーザー確認】
+ユーザーに今回のプロジェクトで必要なエージェントを確認してください。
+利用可能: RA, Researcher, Designer, Architect, Coder, Reviewer, QA, Content-Writer, Marketing
+
+## Phase 1-2: 要件定義・調査
+- Requirements-Analyst に要件明確化を依頼
+- Researcher に調査・競合分析を依頼
+
+## 【ユーザー確認】要件・調査レビュー
+docs/requirements.md と research/ の内容をユーザーに提示し、承認を得てから次へ進む。
+
+## Phase 3-4: 設計
+- Designer にモックアップ作成を依頼
+- Architect-Plan に設計・タスク分割・実装プラン作成を依頼
+
+## Phase 5-7: 実装・レビュー・QA
+- 【委譲】Architect-Plan が実装プランに基づき Senior-Coder に指示（PMは直接指示しない）
+- Review-Guardian にレビューを依頼
+- QA-Tester にブラウザテスト・E2Eテストを依頼
+
+## Phase 8: コンテンツ作成
+- Content-Writer にコンテンツ執筆を依頼
+
+## 【ユーザー確認】コンテンツレビュー
+src/content/ の内容をユーザーに提示し、承認を得てから次へ進む。
+
+## Phase 9-10: マーケティング・統合
+- Marketing にSEO最適化を依頼
+- 最終統合と完了報告
+
+【重要】
+- 実装指示は直接Coderに出さず、Architect-Planに設計と分割を依頼する
+- ユーザー確認ポイントでは必ず承認を得てから次フェーズへ進む
 
 進捗は docs/project_status.md に記録してください。
 ```

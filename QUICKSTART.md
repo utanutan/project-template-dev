@@ -37,54 +37,59 @@ docs/PRP.md を読み、プロジェクトを完遂してください。
 
 ## PMの起動方法
 
-### 方法1: Claude Code CLI（推奨）
+### 方法1: launch-agents.sh（推奨）
 
 ```bash
-# プロジェクトディレクトリに移動
-cd projects/my-app
+# PMを起動（新しいTerminalウィンドウで開く）
+./projects/scripts/launch-agents.sh my-app
 
-# Claude Codeを起動
-claude
-
-# プロンプトを入力
-> あなたは Project-Manager です。docs/PRP.md を読み、プロジェクトを完遂してください。
-```
-
-### 方法2: ワンライナー起動
-
-```bash
-cd projects/my-app && claude "あなたは Project-Manager です。docs/PRP.md を読み、プロジェクトを完遂してください。"
-```
-
-### 方法3: launch-agents.sh 使用
-
-```bash
+# または明示的に指定
 ./projects/scripts/launch-agents.sh my-app --agents pm
+```
+
+### 方法2: Claude Code CLI
+
+```bash
+cd projects/my-app
+claude "あなたは Project-Manager です。docs/PRP.md を読み、プロジェクトを完遂してください。"
 ```
 
 ---
 
 ## 自動実行されるワークフロー
 
-PMが起動すると、以下のフェーズが自動的に実行されます：
+PMが起動すると、以下のフェーズが実行されます：
 
 ```
-Phase 0: Requirements-Analyst  → 要件明確化
-Phase 1: Researcher           → 調査・競合分析
-Phase 2: Architect-Plan       → 技術設計・タスク分割
-Phase 3: Designer             → UIモックアップ生成
-Phase 4: Senior-Coder         → 実装（並列実行可能）
-Phase 5: Review-Guardian      → コードレビュー
-Phase 6: QA-Tester            → ブラウザテスト・E2E
-Phase 7: Marketing            → SEO最適化
-Phase 8: Integration          → 最終統合
+Phase 0: 【確認】エージェント選択    → ユーザーに必要なエージェントを確認
+Phase 1: Requirements-Analyst       → 要件明確化
+Phase 2: Researcher                 → 調査・競合分析
+         【確認】要件・調査レビュー → ユーザーに requirements.md と調査結果を確認
+Phase 3: Designer                   → UIモックアップ生成
+Phase 4: Architect-Plan             → 技術設計・タスク分割
+Phase 5: Senior-Coder               → 実装（並列実行可能）
+Phase 6: Review-Guardian            → コードレビュー
+Phase 7: QA-Tester                  → ブラウザテスト・E2E
+Phase 8: Content-Writer             → コンテンツ作成
+         【確認】コンテンツレビュー → ユーザーにコンテンツを確認
+Phase 9: Marketing                  → SEO最適化
+Phase 10: Integration               → 最終統合
 ```
+
+### ユーザー確認ポイント
+
+PMは以下のタイミングでユーザーに確認を求めます：
+
+| タイミング | 確認内容 |
+|-----------|---------|
+| **起動直後** | 今回のプロジェクトに必要なエージェントを選択 |
+| **要件・調査完了後** | `docs/requirements.md` と `research/` の内容を確認 |
+| **コンテンツ作成後** | `src/content/` のコンテンツを確認 |
 
 ### 並列実行
 
 PMは独立したタスクを検出すると、複数のサブエージェントを**並列起動**します：
 
-- **Research & Design**: Researcher と Designer を並列実行
 - **Implementation**: 複数の Senior-Coder を Track A/B/C で並列実行
 - **Content & Marketing**: Content-Writer と Marketing を並列実行
 

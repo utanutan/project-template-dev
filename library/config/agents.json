@@ -30,14 +30,37 @@
         "multi_replace_file_content (for src/)"
       ],
       "workflow": [
-        "1. PRPを分析しプロジェクト計画を策定",
-        "2. Researcher に調査を依頼",
-        "3. Architect-Plan に設計・タスク分割・実装プラン作成を依頼",
-        "4. Designer にデザインを依頼",
-        "5. 【委譲】Architect-Planが実装プランに基づきSenior-Coderに指示（PMは直接指示しない）",
-        "6. Review-Guardian にレビューを依頼",
-        "7. Marketing に最適化を依頼",
-        "8. 最終統合と完了報告（コードには触れない）"
+        "1. PRPを分析",
+        "2. 【ユーザー確認】今回必要なエージェントを選択してもらう",
+        "3. Requirements-Analyst に要件明確化を依頼",
+        "4. Researcher に調査を依頼",
+        "5. 【ユーザー確認】requirements.md と調査結果を確認してもらう",
+        "6. Designer にデザインを依頼",
+        "7. Architect-Plan に設計・タスク分割・実装プラン作成を依頼",
+        "8. 【委譲】Architect-PlanがSenior-Coderに指示（PMは直接指示しない）",
+        "9. Review-Guardian にレビューを依頼",
+        "10. QA-Tester にテストを依頼",
+        "11. Content-Writer にコンテンツ執筆を依頼",
+        "12. 【ユーザー確認】コンテンツを確認してもらう",
+        "13. Marketing に最適化を依頼",
+        "14. 最終統合と完了報告（コードには触れない）"
+      ],
+      "userCheckpoints": [
+        {
+          "timing": "起動直後",
+          "action": "今回のプロジェクトで必要なエージェントを選択",
+          "options": ["RA", "Researcher", "Designer", "Architect", "Coder", "Reviewer", "QA", "Content-Writer", "Marketing"]
+        },
+        {
+          "timing": "要件・調査完了後",
+          "action": "docs/requirements.md と research/ の内容を確認",
+          "requiredApproval": true
+        },
+        {
+          "timing": "コンテンツ作成後",
+          "action": "src/content/ の内容を確認",
+          "requiredApproval": true
+        }
       ],
       "outputFormat": {
         "primaryOutput": "docs/project_status.md",
@@ -45,7 +68,8 @@
       },
       "notes": [
         "実装指示は直接Coderに出さず、Architect-Planに設計と分割を依頼する",
-        "Architect-PlanがCoderへの具体的なタスク指示を行う"
+        "Architect-PlanがCoderへの具体的なタスク指示を行う",
+        "ユーザー確認ポイントでは必ず承認を得てから次フェーズへ進む"
       ]
     },
     "requirements-analyst": {
@@ -374,16 +398,15 @@
       "phases": [
         {
           "id": 0,
-          "name": "Research",
-          "agent": "researcher",
-          "output": "research/",
-          "parallel": true
+          "name": "Requirements",
+          "agent": "requirements-analyst",
+          "output": "docs/requirements.md"
         },
         {
           "id": 1,
-          "name": "Planning",
-          "agent": "architect-plan",
-          "output": "spec/implementation_plan.md"
+          "name": "Research",
+          "agent": "researcher",
+          "output": "research/"
         },
         {
           "id": 2,
@@ -394,25 +417,38 @@
         },
         {
           "id": 3,
-          "name": "Parallel Implementation",
-          "agent": "senior-coder",
-          "mode": "background",
-          "parallelTracks": true
+          "name": "Planning",
+          "agent": "architect-plan",
+          "output": "spec/implementation_plan.md"
         },
         {
           "id": 4,
+          "name": "Parallel Implementation",
+          "agent": "senior-coder",
+          "mode": "background",
+          "parallelTracks": true,
+          "receivesInstructionsFrom": "architect-plan"
+        },
+        {
+          "id": 5,
           "name": "Review Cycle",
           "agent": "review-guardian",
           "loopWith": "senior-coder"
         },
         {
-          "id": 5,
+          "id": 6,
+          "name": "QA Testing",
+          "agent": "qa-tester",
+          "output": "tests/e2e/"
+        },
+        {
+          "id": 7,
           "name": "Marketing",
           "agent": "marketing",
           "output": "docs/marketing_strategy.md"
         },
         {
-          "id": 6,
+          "id": 8,
           "name": "Final Integration",
           "agent": "main-thread",
           "actions": [
