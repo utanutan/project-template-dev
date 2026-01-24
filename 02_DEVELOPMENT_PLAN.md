@@ -9,52 +9,61 @@
 
 ## 1. 開発方針 (Development Policy)
 
-### 1.1 技術選定とギルド構成 (Technology Stack & Guild Members)
+### 1.1 技術選定とエージェント構成 (Technology Stack & Agent Team)
 
-本プロジェクトは、賢明な「指揮官 (Orchestrator)」と、強力な「実行部隊 (Executor)」によるハイブリッド構成を採用する。
+本プロジェクトは、Claude Codeを基盤としたマルチエージェント・オーケストレーションを採用する。「チーフ・ソフトウェア・アーキテクト」がメインスレッドを担当し、特化型サブエージェントを指揮する。
 
-*   **Core Platform**: Google Antigravity (Orchestration & Planning)
-*   **Execution Engine**: OpenCode (Parallel Execution & Sub-agents)
-*   **Agent Models**:
-    *   **Orchestrator**: Gemini 1.5 Pro (戦略、高レベル判断、Inbox振り分け)
-    *   **Implementation**: DeepSeek-V3 (実装、コーディングループ)
-    *   **Review/Safety**: Claude 3.5 Sonnet (論理整合性), ELYZA (国内法・日本語対応)
-    *   **Creative**: GPT-4o, Sakana AI (トレンド分析・発信)
+*   **Core Platform**: Claude Code (Orchestration & Parallel Execution)
+*   **Agent Team**:
+
+| エージェント名 | 推奨モデル | 専門領域 |
+| :--- | :--- | :--- |
+| **Architect-Plan** | Claude Opus | プロジェクト構造、依存関係、技術スタック選定 |
+| **Senior-Coder** | Claude Sonnet | クリーンコード、DRY原則、パフォーマンス重視の実装 |
+| **Review-Guardian** | Claude Haiku / Sonnet | セキュリティ、命名規則、バグ検出 |
+| **Spec-Writer** | Claude Haiku | 変更履歴、実装プラン、APIドキュメント |
 
 ### 1.2 アーキテクチャ設計 (Architecture Design)
 詳細は `03_SYSTEM_ARCHITECTURE.md` を参照。
-重要コンセプト: **計画 (`spec/`) と実行 (`projects/`) の分離**。
+重要コンセプト: **計画 (`spec/`) と実行 (`projects/`) の分離**、**コンテキスト保護**。
 
-## 2. 実装計画 (Implementation Steps)
+## 2. 運用ワークフロー (Operation Workflow)
 
-### Phase 1: Foundation Setup (基盤構築)
-*   [x] **Directory Structure**: `config`, `library`, `spec` ディレクトリの整備。
-*   [ ] **Configuration**: `config/agents.json` にギルドメンバー（役割定義）を作成。
-*   [ ] **Environment**: 複数のAPIキー (Gemini, Anthropic, OpenRouter) を `.env` に設定。
+### Phase 1: プランニング（並列調査）
+*   `Architect-Plan` を呼び出し、現在のコードベースと要求仕様を照らし合わせ、`/spec` フォルダに段階的な実装プランを作成させる。
+*   依存関係のないタスクを特定し、並列実行可能な「トラック（Track）」に分割する。
 
-### Phase 2: Agent Harness & Loop Implementation (自律ループの実装)
-*   [ ] **Ralph Wiggum Loop Integration**: エージェントが完了条件 ("DONE") を満たすまで自律的に修正を繰り返すスクリプト/Hookの実装。
-*   [ ] **PRP Template**: ループへの入力品質を担保するための「要件定義シート (PRP)」テンプレートを `library/docs/PRP_TEMPLATE.md` に作成。
-*   [ ] **Multimodal Inbox**: 音声メモ (`inbox/voice/`) を自動でテキスト化するパイプラインの構築。
+### Phase 2: 並列実装とバックグラウンド実行
+*   各トラックに対し、個別の `Senior-Coder` をバックグラウンド（`Ctrl+B`）で起動する。
+*   **指示のコツ:** 「メインスレッドを汚さないよう、コード変更はサブエージェント内ですべて完結させ、完了報告のみを返せ」と命じる。
 
-### Phase 3: Workflow Automation (ワークフロー自動化)
-*   [ ] **Parallel Track Script**: 複数のOpenCodeインスタンス（サブエージェント）を並列トラックとして起動するワークフローの作成。
-*   [ ] **Review Pipeline**: ExecutorからReviewerエージェントへ成果物を自動で引き渡すパイプラインの構築。
+### Phase 3: 相互レビュー・サイクル
+*   `Senior-Coder` の成果物を、即座に `Review-Guardian` に渡して検証させる。
+*   レビューで指摘された点は、メインスレッドに戻さず、サブエージェント間で修正ループを回させる。
 
-## 3. テスト・検証計画 (Verification Plan)
+### Phase 4: 最終統合
+*   すべてのサブエージェントが完了した後、メインエージェントが最終的な動作確認とビルドチェックを行う。
 
-### 3.1 Scenario: "The Loop" Test
+## 3. 制約事項 (Constraints)
+
+1.  **コンテキスト節約**: 1,000行を超える調査や冗長なログ出力は、必ずサブエージェントに投げ、メインスレッドには「要約」のみを報告させる。
+2.  **並列性の活用**: 独立した作業は同時に3つ以上のエージェントを動かして時間を短縮する。
+3.  **自律性**: 各エージェントには「自分の判断で必要なツールを使い、解決まで持っていくこと」を強調する。
+
+## 4. テスト・検証計画 (Verification Plan)
+
+### 4.1 Scenario: "The Loop" Test
 1.  **Input**: 単純な「Todoアプリ機能」のPRPを `spec/` に作成。
-2.  **Execute**: 汎用のCoding Modelを用いて "Ralph Wiggum Loop" を起動。
-3.  **Verify**: エージェントがエラー修正やリファクタリングを自律的に繰り返し、最終的に "DONE" を出力するか検証。
+2.  **Execute**: `Senior-Coder` を用いて実装ループを起動。
+3.  **Verify**: エージェントがエラー修正やリファクタリングを自律的に繰り返し、最終的に完了報告を出力するか検証。
 
-### 3.2 Scenario: Parallel Tracks
+### 4.2 Scenario: Parallel Tracks
 1.  **Input**: 「フロントエンドUI」と「バックエンドAPI」の同時構築を指示。
-2.  **Verify**: 2つのサブエージェントが、互いのコンテキスト（変数やファイル操作）を衝突させずに並列動作するか検証。
+2.  **Verify**: 2つのサブエージェントが、互いのコンテキストを衝突させずに並列動作するか検証。
 
-## 4. デプロイ・運用戦略 (Deployment Strategy)
+## 5. デプロイ・運用戦略 (Deployment Strategy)
 *   **Local-First**: ObsidianやローカルGitとの深い統合。
-*   **Git Strategy**: `library/` のテンプレート群はバージョン管理し、`projects/` は成果物が確定するまでの一時的なワークスペースとして扱う（確定後にGit化）。
+*   **Git Strategy**: `library/` のテンプレート群はバージョン管理し、`projects/` は成果物が確定するまでの一時的なワークスペースとして扱う。
 
 ---
 *承認者:*

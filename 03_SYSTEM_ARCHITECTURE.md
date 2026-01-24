@@ -1,23 +1,30 @@
 # Antigravity Life OS - System Architecture
 
-このドキュメントでは、"Antigravity Life OS" におけるシステムアーキテクチャ、ディレクトリ構造、およびエージェントギルド（役割定義）について記述します。
+このドキュメントでは、"Antigravity Life OS" におけるシステムアーキテクチャ、ディレクトリ構造、およびエージェントチーム（役割定義）について記述します。
 
-## 1. Core Architecture: Orchestrator & Executor
+## 1. Core Architecture: Claude Code Multi-Agent Orchestration
 
-システム全体の効率とコンテキスト管理を最適化するため、以下の2層アーキテクチャを採用します。
+Claude Codeを基盤とし、「チーフ・ソフトウェア・アーキテクト」がメインスレッドを担当、複数の特化型サブエージェントを指揮する構成を採用します。
 
-*   **Orchestrator (Antigravity)**
-    *   **役割**: 高レベルな計画策定、要件定義 (PRP: Product Requirement Prompt) の作成、プロジェクト全体の進行管理。
-    *   **モデル**: Gemini 1.5 Pro / Claude 3.7 Sonnet (High Intelligence)
-    *   **責務**: 抽象的な指示を具体的な仕様に落とし込み、Executorに指示を出す。
+*   **Main Thread (Orchestrator)**
+    *   **役割**: 高レベルな計画策定、タスク分割、全体の進行管理。
+    *   **責務**: メインスレッドのコンテキスト（トークン）を保護しつつ、効率を最大化する。
 
-*   **Executor (OpenCode / Sub-agents)**
-    *   **役割**: 具体的な実装タスクの実行、テスト、詳細なコーディング。
+*   **Sub-Agents (Executors)**
+    *   **役割**: 具体的な実装タスクの実行、テスト、レビュー。
     *   **特徴**: **並列実行 (Parallel Execution)** と **コンテキスト分離 (Context Isolation)**。
-    *   **モデル**: DeepSeek-V3, Claude 3 Haiku 等（高速・低コスト）
-    *   **責務**: 与えられたトラック（タスク群）を完遂するまで自律的に試行錯誤ループを回す。
+    *   **責務**: バックグラウンドで作業を完結させ、メインスレッドには要約のみを報告する。
 
-## 2. Directory Structure
+## 2. Agent Team (Roles)
+
+| エージェント名 | 推奨モデル | 専門領域と責務 |
+| :--- | :--- | :--- |
+| **Architect-Plan** | Claude Opus | プロジェクト全体の構造、依存関係、技術スタック選定。実装前に詳細なフェーズ分けを行う。 |
+| **Senior-Coder** | Claude Sonnet | クリーンコード、DRY原則、パフォーマンスを重視した実装。テストコードも同時に作成する。 |
+| **Review-Guardian** | Claude Haiku / Sonnet | セキュリティ、命名規則、アクセシビリティ、バグの検出。Coderの実装を厳格にレビューする。 |
+| **Spec-Writer** | Claude Haiku | 変更履歴、実装プラン、APIドキュメントの生成と更新を担当。 |
+
+## 3. Directory Structure
 
 ```
 /workspace_root/
@@ -31,8 +38,6 @@
 │   └── docs/                # システムドキュメント・プロンプト集
 ├── spec/                    # アクティブな詳細仕様 (PRPs, Implementation Plans)
 ├── research/                # リサーチ資料・インサイト
-│   ├── 01_CLAUDE_CODE...    # 動画書き起こし・メモ
-│   └── RESEARCH_INSIGHTS.md # 統合された知見
 ├── inbox/                   # マルチモーダル・インボックス
 │   ├── voice/               # 音声ファイル -> 自動文字起こしへ
 │   └── text/                # テキストメモ
@@ -43,20 +48,26 @@
     └── ...
 ```
 
-## 3. Agent Guild (Roles)
+## 4. Workflow Strategy: 4-Phase Parallel Execution
 
-| Role | Responsibility | Type | Typical Model |
-| :--- | :--- | :--- | :--- |
-| **Guild Master** | 全体指揮、戦略策定、PRP作成 | **Orchestrator** | Gemini 1.5 Pro |
-| **Solution Architect**| 技術設計、システム仕様策定 | Orchestrator/Sub | Claude 3.5 Sonnet |
-| **Lead Developer** | 実装、デバッグ、リファクタリング | **Executor** | DeepSeek-V3 |
-| **Minute Taker** | 音声メモの文字起こし・要約 | Executor | Gemini 1.5 Flash |
-| **Code Reviewer** | 品質保証、セキュリティチェック | Executor | Claude 3 Haiku |
+### Phase 1: プランニング（並列調査）
+*   `Architect-Plan` を呼び出し、現在のコードベースと要求仕様を照らし合わせる。
+*   `spec/` フォルダに段階的な実装プランを作成させる。
+*   依存関係のないタスクを特定し、並列実行可能な「トラック（Track）」に分割する。
 
-## 4. Workflow Strategy: Parallel Tracks
+### Phase 2: 並列実装とバックグラウンド実行
+*   各トラックに対し、個別の `Senior-Coder` をバックグラウンドで起動する。
+*   コード変更はサブエージェント内ですべて完結させ、完了報告のみをメインスレッドに返す。
 
-1.  **Plan**: Orchestratorがユーザーの意図を汲み取り、詳細な要件定義書 (PRP) を `spec/` に作成する。
-2.  **Split**: 作業を依存関係のない独立した「トラック」に分割する（例：Frontend, Backend, Database）。
-3.  **Execute**: 各トラックに対してSub-agents (Executors) を割り当て、`projects/[name]/tracks/` 内で並列実行させる。
-4.  **Loop**: Executorは「完了条件（Safety Phrase: "DONE"）」を満たすまで、修正と検証のループ (**Ralph Wiggum Loop**) を自律的に回す。
-5.  **Merge**: 各トラックの成果物を統合し、Architect/Reviewerが最終チェックを行う。
+### Phase 3: 相互レビュー・サイクル
+*   `Senior-Coder` の成果物を、即座に `Review-Guardian` に渡して検証させる。
+*   レビューで指摘された点は、メインスレッドに戻さず、サブエージェント間で修正ループを回させる。
+
+### Phase 4: 最終統合
+*   すべてのサブエージェントが完了した後、メインエージェントが最終的な動作確認とビルドチェックを行う。
+
+## 5. Constraints (制約事項)
+
+1.  **コンテキスト節約**: 1,000行を超える調査や冗長なログ出力は、必ずサブエージェントに投げ、メインスレッドには「要約」のみを報告させること。
+2.  **並列性の活用**: 独立した作業は同時に3つ以上のエージェントを動かして時間を短縮すること。
+3.  **自律性**: 各エージェントには「自分の判断で必要なツールを使い、解決まで持っていくこと」を強調すること。

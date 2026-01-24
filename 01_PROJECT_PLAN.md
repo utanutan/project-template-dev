@@ -39,14 +39,14 @@
 
 ## 3. ギルドメンバー構成 (Guild Organization)
 
+Claude Codeのマルチエージェント・オーケストレーションを活用し、以下のエージェントチームを構成する。
+
 | カテゴリ | ロール | 推奨モデル | ミッション |
 | :--- | :--- | :--- | :--- |
-| **Tech** | **Lead Developer** | DeepSeek-V3 | 実装、技術的課題の解決 |
-| **Tech** | **Solution Architect** | Claude 3.5 | 設計、技術選定 |
-| **Creative** | **Chief Editor** | GPT-4o / Claude | コンテンツ企画、構成案、文体調整 |
-| **Creative** | **SNS Strategist** | Sakana AI | トレンドに合わせた発信戦略 |
-| **Life** | **Personal Concierge** | Gemini 1.5 Pro | リサーチ、スケジュール調整、メモ整理 |
-| **Legal** | **Legal & Compliance** | ELYZA | 規約作成、リスクチェック |
+| **Planning** | **Architect-Plan** | Claude Opus | プロジェクト全体の構造、依存関係、技術スタック選定、詳細なフェーズ分け |
+| **Implementation** | **Senior-Coder** | Claude Sonnet | クリーンコード、DRY原則、パフォーマンス重視の実装、テストコード作成 |
+| **Quality** | **Review-Guardian** | Claude Haiku / Sonnet | セキュリティ、命名規則、アクセシビリティ、バグ検出、厳格なレビュー |
+| **Documentation** | **Spec-Writer** | Claude Haiku | 変更履歴、実装プラン、APIドキュメントの生成と更新 |
 
 詳細は `03_SYSTEM_ARCHITECTURE.md` を参照。
 

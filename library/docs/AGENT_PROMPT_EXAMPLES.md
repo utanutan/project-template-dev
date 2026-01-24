@@ -1,5 +1,5 @@
 AIエージェント指示書サンプル集
-本ドキュメントは、GeminiからローカルのAIギルド（OpenCode / Antigravity環境）へタスクを移譲する際に使用する、具体的な指示書（Instruction）のテンプレート集です。
+本ドキュメントは、GeminiからローカルのAIギルド（Cloud Code / Antigravity環境）へタスクを移譲する際に使用する、具体的な指示書（Instruction）のテンプレート集です。
 パターン1：【技術実装】高効率コーディング（DeepSeek-V3向け）
 大量のロジック実装や、ボイラープレートコードの生成を目的とした指示書です。
 # ID: 20260124_Deep_Implementation

@@ -2,19 +2,18 @@
 
 提供された動画資料に基づき、プロジェクトに取り入れるべき重要なアーキテクチャとワークフローの要素を整理しました。
 
-## 1. Core Architecture: Orchestrator & Executor
+## 1. Core Architecture: Claude Code Multi-Agent Orchestration
 
 システムを「計画・指揮」と「実行」の2層に明確に分離します。
 
-*   **Orchestrator (Antigravity)**
-    *   **役割**: 高レベルな計画策定、PRP (Product Requirement Prompt) の作成、全体の進行管理。
-    *   **得意領域**: 抽象的な指示の具体化、複雑な判断、コンテキストの維持。
-    *   **使用モデル**: Gemini 1.5 Pro, Claude 3.7 Sonnet (High Intelligence).
+*   **Main Thread (Orchestrator)**
+    *   **役割**: 高レベルな計画策定、タスク分割、全体の進行管理。
+    *   **責務**: メインスレッドのコンテキスト（トークン）を保護しつつ、効率を最大化する。
 
-*   **Executor (OpenCode / Sub-agents)**
+*   **Sub-Agents (Executors)**
     *   **役割**: 具体的タスクの実行、コーディング、テスト。
     *   **特徴**: **並列実行 (Parallel Execution)** と **コンテキスト分離**。
-    *   **メリット**: Main Threadのコンテキスト枯渇を防ぎ、安価・高速なモデル (DeepSeek, Haiku, Flash) を大量投入可能。
+    *   **メリット**: Main Threadのコンテキスト枯渇を防ぎ、バックグラウンドで作業を完結させる。
 
 ## 2. Agent Harness & "Ralph Wiggum" Loop
 
@@ -26,20 +25,19 @@
 *   **Structured Planning (PRP)**:
     *   ループに入る前に、厳密な「要件定義書（PRP）」を作成し、それを入力としてループを回すことで、"Vibe Coding"（雰囲気コーディング）の低品質化を防ぐ。
 
-## 3. Workflow: Parallel Tracks
+## 3. Workflow: 4-Phase Parallel Execution
 
-動画3で示された「並列実装トラック」を標準フローとして採用します。
-
-1.  **Planning Phase**:
-    *   Orchestratorが `spec/implementation_plan.md` を作成。
-    *   フェーズごとに詳細な技術仕様をドキュメント化。
-2.  **Wave / Track Creation**:
-    *   依存関係のないタスク（例：UIコンポーネント実装、DBスキーマ定義、API定義）を独立した「トラック」に分割。
-3.  **Parallel Execution**:
-    *   各トラックに **Specialized Sub-agents** (UI Expert, Coder, Reviewer) を割り当て、バックグラウンドで同時並行に実行。
-    *   Main Contextを汚さず、各エージェントは自身のコンテキスト内で作業完結。
-4.  **Integration & Review**:
-    *   全トラック完了後、**Reviewer Agent** が統合されたコードを監査。
+1.  **Phase 1: プランニング（並列調査）**:
+    *   `Architect-Plan` が `spec/implementation_plan.md` を作成。
+    *   依存関係のないタスクを特定し、並列実行可能な「トラック」に分割。
+2.  **Phase 2: 並列実装とバックグラウンド実行**:
+    *   各トラックに対し、個別の `Senior-Coder` をバックグラウンドで起動。
+    *   コード変更はサブエージェント内ですべて完結。
+3.  **Phase 3: 相互レビュー・サイクル**:
+    *   `Review-Guardian` が成果物を検証。
+    *   サブエージェント間で修正ループを回す。
+4.  **Phase 4: 最終統合**:
+    *   メインエージェントが最終的な動作確認とビルドチェック。
 
 ## 4. プロジェクト構造への反映案
 
@@ -56,4 +54,4 @@
 
 ---
 **Next Step**:
-このインサイトに基づき、既存の `開発計画書.md` を更新し、「OpenCode連携」「サブエージェント並列実行」の項目を追加しますか？
+このインサイトに基づき、既存の `開発計画書.md` を更新し、「Claude Code連携」「サブエージェント並列実行」の項目を追加しますか？
