@@ -157,7 +157,8 @@
       "inputs": {
         "designMockups": "resources/mockups/",
         "designSystem": "docs/design_system.md",
-        "implementationPlan": "spec/implementation_plan.md"
+        "implementationPlan": "spec/implementation_plan.md",
+        "imageAssets": "resources/image_assets.md"
       },
       "receivesInstructionsFrom": "architect-plan",
       "outputFormat": {
@@ -298,21 +299,25 @@
         "Nano Banana でUIモックアップ生成",
         "カラーパレット・タイポグラフィ定義",
         "コンポーネントデザイン作成",
-        "レスポンシブデザイン指針策定"
+        "レスポンシブデザイン指針策定",
+        "使用画像のURL/パス一覧（image_assets.md）を作成"
       ],
       "constraints": [
         "実装前に必ずデザインを確定させる",
         "生成した画像はresources/に保存",
-        "デザインシステムをドキュメント化"
+        "デザインシステムをドキュメント化",
+        "画像はUnsplash等の外部URL、またはローカルパスで指定可能"
       ],
       "workflow": [
         "1. PRPのデザイン要件を分析",
         "2. Nano Bananaでモックアップ生成",
         "3. resources/mockups/に画像保存",
-        "4. design_system.mdを作成"
+        "4. design_system.mdを作成",
+        "5. resources/image_assets.mdに使用画像一覧を作成（URL/パス、用途、サイズを明記）"
       ],
       "outputFormat": {
         "primaryOutput": "resources/mockups/",
+        "imageAssets": "resources/image_assets.md",
         "designSystem": "docs/design_system.md",
         "reportTo": "architect-plan"
       }
