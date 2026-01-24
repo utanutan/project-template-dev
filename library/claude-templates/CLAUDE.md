@@ -1,57 +1,58 @@
 # Antigravity Life OS - Claude Code Configuration
 
-このプロジェクトはマルチエージェント・オーケストレーションを採用しています。
+このプロジェクトはマルチエージェント・オーケストレーション（11エージェント構成）を採用。
 
 ---
 
-## Agent Roles
+## Agent Team
 
 | Role | Mission | 呼び出し例 |
 |------|---------|-----------|
-| **Architect-Plan** | 設計・計画・タスク分割 | 「Architectとして設計して」 |
-| **Senior-Coder** | 実装・テスト作成 | 「Coderとして実装して」 |
-| **Review-Guardian** | コードレビュー・品質保証 | 「Guardianとしてレビューして」 |
-| **Spec-Writer** | ドキュメント作成 | 「Writerとしてドキュメント化」 |
+| **Project-Manager** | 統括・進行管理 | 「PMとしてプロジェクト管理して」 |
+| **Requirements-Analyst** | 要件明確化 | 「Analystとして要件を整理して」 |
+| **Researcher** | 調査・分析 | 「Researcherとして調査して」 |
+| **Architect-Plan** | 技術設計 | 「Architectとして設計して」 |
+| **Designer** | UIデザイン | 「Designerとしてモックアップ作成」 |
+| **Senior-Coder** | 実装 | 「Coderとして実装して」 |
+| **Review-Guardian** | レビュー | 「Guardianとしてレビューして」 |
+| **Spec-Writer** | 技術ドキュメント | 「Spec-Writerとして仕様書作成」 |
+| **Content-Writer** | コンテンツ | 「Content-Writerとして記事作成」 |
+| **Marketing** | SEO/マーケ | 「Marketingとして最適化して」 |
 
 ---
 
-## Workflow Rules
-
-1. **バックグラウンドタスク** (`Ctrl+B`)
-   - 「メインスレッドを汚さないよう、このセッション内で完結させてください」
-   - 完了時は「要約のみ報告」
-
-2. **並列実行**
-   - 独立したタスクは同時に3つ以上起動可能
-   - Trackで分けて管理（Track A: Frontend, Track B: Backend など）
-
-3. **レビューサイクル**
-   - Coder → Guardian → 修正 → Guardian（サブエージェント間で完結）
-
----
-
-## Directory Structure
+## Workflow
 
 ```
-config/agents.json       # エージェント定義（リファレンス）
-library/docs/            # ドキュメント・テンプレート
-spec/                    # 実装プラン
-projects/                # アクティブプロジェクト
+User → PRP → PM → RA → Researcher → Architect → Designer 
+                                      → Coder → Review → Marketing → 完了
 ```
 
 ---
 
-## Quick Commands
+## Rules
 
-```bash
-# 新規プロジェクト作成
-./scripts/init-project.sh <name> --type dev|creative|life
+1. **バックグラウンド起動**: `Ctrl+B`
+2. **並列実行**: 独立タスクは3つ以上同時起動
+3. **デザイン参照**: Coderは `resources/mockups/` を必ず参照
+4. **レビューループ**: Guardian ↔ Coder 間で完結
+
+---
+
+## Project Structure
+
+```
+docs/              # PRP, requirements, marketing_strategy
+spec/              # 実装プラン
+research/          # 調査結果
+resources/mockups/ # デザイン
+src/               # ソースコード
 ```
 
 ---
 
 ## References
 
-- [GUILD_REFERENCE.md](library/docs/GUILD_REFERENCE.md) - 詳細仕様
-- [QUICKSTART.md](library/docs/QUICKSTART.md) - 実行手順
-- [WORKFLOW_EXAMPLES.md](library/docs/WORKFLOW_EXAMPLES.md) - プロンプト例
+- [GUILD_REFERENCE.md](library/docs/GUILD_REFERENCE.md)
+- [PM_ORCHESTRATION.md](library/docs/PM_ORCHESTRATION.md)
+- [QUICKSTART.md](QUICKSTART.md)

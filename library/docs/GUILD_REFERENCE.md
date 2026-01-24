@@ -1,123 +1,123 @@
 # Antigravity Life OS - Guild Reference
 
-このドキュメントは、Antigravity Life OSのエージェント・ギルド構成とシステム構造をリファレンスとしてまとめたものです。
+エージェント・ギルド構成とシステム構造のリファレンス。
 
 ---
 
-## 1. System Overview
-
-```
-/workspace_root/
-├── library/                 # ナレッジベース
-│   ├── config/              # agents.json, common_settings.env
-│   ├── claude-templates/    # CLAUDE.md テンプレート
-│   ├── dev-templates/       # 開発用テンプレート
-│   ├── creative-templates/  # 制作用テンプレート
-│   ├── life-templates/      # 生活用テンプレート
-│   └── docs/                # リファレンスドキュメント
-├── spec/                    # 実装プラン・詳細仕様
-├── research/                # リサーチ資料
-├── inbox/                   # マルチモーダル・インボックス
-├── scripts/                 # 初期化スクリプト
-└── projects/                # アクティブなプロジェクト作業場
-    └── [project]/
-        ├── CLAUDE.md        # ← 自動コピー
-        └── docs/PRP.md
-```
-
----
-
-## 2. Agent Team
-
-### Architecture Diagram
+## 1. Agent Team (11 Agents)
 
 ```mermaid
 graph TB
-    subgraph Orchestrator
-        MT[Main Thread<br>Chief Architect]
+    subgraph Orchestration
+        PM[Project-Manager]
     end
     
-    subgraph Agents
-        AP[Architect-Plan<br>Opus]
-        SC[Senior-Coder<br>Sonnet]
-        RG[Review-Guardian<br>Sonnet]
-        SW[Spec-Writer<br>Haiku]
+    subgraph Analysis
+        RA[Requirements-Analyst]
+        RS[Researcher]
     end
     
-    MT --> AP
-    MT --> SC
-    MT --> SW
+    subgraph Design
+        AR[Architect-Plan]
+        DS[Designer]
+    end
+    
+    subgraph Implementation
+        SC[Senior-Coder]
+        RG[Review-Guardian]
+    end
+    
+    subgraph Content
+        SW[Spec-Writer]
+        CW[Content-Writer]
+        MK[Marketing]
+    end
+    
+    PM --> RA
+    PM --> RS
+    RA --> AR
+    RS --> AR
+    AR --> DS
+    DS --> SC
     SC --> RG
-    RG -->|修正依頼| SC
+    RG -->|修正| SC
+    PM --> SW
+    PM --> CW
+    PM --> MK
 ```
 
 ### Agent Definitions
 
-| Agent | Model | Role | Mission |
-|:------|:------|:-----|:--------|
-| **Architect-Plan** | Claude Opus | Planning | 構造設計、依存関係分析、フェーズ分割 |
-| **Senior-Coder** | Claude Sonnet | Implementation | クリーンコード、テスト作成、パフォーマンス |
-| **Review-Guardian** | Claude Sonnet | Quality | セキュリティ、バグ検出、厳格レビュー |
-| **Spec-Writer** | Claude Haiku | Documentation | 変更履歴、APIドキュメント |
+| Agent | Model | Role | Output |
+|:------|:------|:-----|:-------|
+| **Project-Manager** | Opus | 統括 | `docs/project_status.md` |
+| **Requirements-Analyst** | Sonnet | 要件分析 | `docs/requirements.md` |
+| **Researcher** | Sonnet | 調査 | `research/` |
+| **Architect-Plan** | Opus | 技術設計 | `spec/implementation_plan.md` |
+| **Designer** | Gemini Pro | UIデザイン | `resources/mockups/` |
+| **Senior-Coder** | Sonnet | 実装 | `src/` |
+| **Review-Guardian** | Sonnet | レビュー | `review_report.md` |
+| **Spec-Writer** | Haiku | 技術ドキュメント | `docs/api/` |
+| **Content-Writer** | Sonnet | コンテンツ | `src/content/` |
+| **Marketing** | Sonnet | SEO/マーケ | `docs/marketing_strategy.md` |
 
 ---
 
-## 3. Workflow Strategy
+## 2. Workflow (7 Phases)
 
-### 4-Phase Parallel Execution
-
-```mermaid
-flowchart LR
-    P1[Phase 1<br>Planning] --> P2[Phase 2<br>Parallel Implementation]
-    P2 --> P3[Phase 3<br>Review Cycle]
-    P3 --> P4[Phase 4<br>Integration]
-    P3 -->|修正| P2
+```
+Phase 0: Research      → Researcher
+Phase 1: Requirements  → Requirements-Analyst
+Phase 2: Planning      → Architect-Plan
+Phase 3: Design        → Designer (Nano Banana)
+Phase 4: Implementation→ Senior-Coder (並列)
+Phase 5: Review        → Review-Guardian
+Phase 6: Marketing     → Marketing
+Phase 7: Integration   → PM
 ```
 
-| Phase | Description | Agent |
-|:------|:------------|:------|
-| **1. Planning** | コードベース分析、実装プラン作成、トラック分割 | Architect-Plan |
-| **2. Implementation** | バックグラウンドで並列実装 | Senior-Coder (×N) |
-| **3. Review Cycle** | コードレビュー、修正ループ | Review-Guardian ↔ Senior-Coder |
-| **4. Integration** | 最終確認、ビルドチェック | Main Thread |
+---
+
+## 3. Project Structure
+
+```
+projects/[project]/
+├── CLAUDE.md           # Claude Code設定
+├── docs/
+│   ├── PRP.md          # 初期要件
+│   ├── requirements.md # 詳細要件
+│   └── marketing_strategy.md
+├── spec/               # 実装プラン
+├── research/           # 調査結果
+├── resources/mockups/  # デザイン
+├── src/                # ソースコード
+└── tests/
+```
 
 ---
 
-## 4. Constraints
+## 4. Quick Start
 
-1. **コンテキスト節約**: 1,000行超の調査はサブエージェントに委譲、メインには要約のみ
-2. **並列性の活用**: 独立タスクは3つ以上同時実行
-3. **自律性**: 各エージェントは自己判断でツールを使い解決まで遂行
+```bash
+# プロジェクト作成
+./projects/scripts/init-project.sh my-app
 
----
+# 並列エージェント起動
+./projects/scripts/launch-agents.sh my-app --agents parallel-coders
 
-## 5. Templates Reference
+# 全エージェント起動
+./projects/scripts/launch-agents.sh my-app --agents full-team
+```
 
-### Dev Templates
-- [PRP_TEMPLATE.md](file:///Users/carpediem/workspace/AntiGravity/project-template-dev/library/dev-templates/PRP_TEMPLATE.md) - プロジェクト要件定義
-- [CODE_REVIEW_CHECKLIST.md](file:///Users/carpediem/workspace/AntiGravity/project-template-dev/library/dev-templates/CODE_REVIEW_CHECKLIST.md) - レビューチェックリスト
-
-### Creative Templates
-- [CONTENT_TEMPLATE.md](file:///Users/carpediem/workspace/AntiGravity/project-template-dev/library/creative-templates/CONTENT_TEMPLATE.md) - コンテンツ制作
-
-### Life Templates
-- [WEEKLY_PLANNER.md](file:///Users/carpediem/workspace/AntiGravity/project-template-dev/library/life-templates/WEEKLY_PLANNER.md) - 週間計画
+PMに「PRPを分析して」と依頼すると、ワークフローを自動進行。
 
 ---
 
-## 6. Quick Start
+## 5. Related Docs
 
-1. **新規プロジェクト開始**: `scripts/init-project.sh <project-name>`
-2. **PRPを作成**: `library/dev-templates/PRP_TEMPLATE.md` をコピー
-3. **Architect-Plan に設計依頼**: PRPを元に実装プランを `spec/` に作成
-4. **並列実装開始**: Senior-Coder をバックグラウンドで起動
-
-## 7. Related Documents
-
-- [WORKFLOW_EXAMPLES.md](./WORKFLOW_EXAMPLES.md) - Claude Code実行サンプル
-- [AGENT_PROMPT_EXAMPLES.md](./AGENT_PROMPT_EXAMPLES.md) - 各種エージェント指示書
-- [CLAUDE_CODE_ORCHESTRATION.md](./CLAUDE_CODE_ORCHESTRATION.md) - オーケストレーション詳細
+- [PM_ORCHESTRATION.md](./PM_ORCHESTRATION.md) - PM操作ガイド
+- [DESIGN_WORKFLOW.md](./DESIGN_WORKFLOW.md) - デザインワークフロー
+- [WORKFLOW_EXAMPLES.md](./WORKFLOW_EXAMPLES.md) - プロンプト例
 
 ---
-
 *Last Updated: 2026-01-24*

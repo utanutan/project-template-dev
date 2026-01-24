@@ -1,139 +1,80 @@
 # Antigravity Life OS - クイックスタートガイド
 
-実際にマルチエージェントを動かすための手順書です。
+11エージェント構成のマルチエージェントシステムを動かす手順。
 
 ---
 
-## 🚀 Step 1: 新規プロジェクト作成
+## 🚀 Step 1: プロジェクト作成
 
 ```bash
-cd /Users/carpediem/workspace/AntiGravity/project-template-dev
-
-# 開発プロジェクトを作成
-./scripts/init-project.sh my-app --type dev
+./projects/scripts/init-project.sh my-app --type dev
+cd projects/my-app
 ```
 
 ---
 
-## 📋 Step 2: 要件定義（PRP作成）
+## 📋 Step 2: PRP作成
+
+`docs/PRP.md` に要件を記載
+
+---
+
+## 🎯 Step 3: PMに全体を任せる（推奨）
+
+```
+あなたは Project-Manager です。
+docs/PRP.md を読み、全フェーズを実行してください：
+RA → Researcher → Architect → Designer → Coder → Review → Marketing
+```
+
+---
+
+## ⚡ Step 4: 並列エージェント起動（別ターミナルで管理）
 
 ```bash
-# 作成されたPRPを編集
-code projects/my-app/docs/PRP.md
+# 並列コーダー起動（Track A, B + Reviewer）
+./projects/scripts/launch-agents.sh my-app --agents parallel-coders
+
+# 全エージェント起動
+./projects/scripts/launch-agents.sh my-app --agents full-team
+
+# 個別指定
+./projects/scripts/launch-agents.sh my-app --agents coder-a,coder-b,reviewer
 ```
 
-PRPに以下を記載：
-- 概要・目的
-- 技術スタック
-- 機能要件
-
----
-
-## 🏗️ Step 3: Architect-Plan に設計依頼
-
-**Claude Codeで実行：**
-
-```
-あなたは Architect-Plan です。
-projects/my-app/docs/PRP.md を読み、spec/my-app_implementation_plan.md に
-段階的な実装プランを作成してください。
-
-# OUTPUT
-1. 並列実行可能なトラックに分割
-2. 各タスクの依存関係を明示
-3. 見積もり時間を記載
-```
-
----
-
-## ⚡ Step 4: 並列実装（バックグラウンド起動）
-
-### Track A: Frontend（Ctrl+B でバックグラウンド起動）
-
-```
-あなたは Senior-Coder (Track A) です。
-メインスレッドを汚さず、このセッション内で作業を完結させてください。
-
-# TASK
-spec/my-app_implementation_plan.md の Track A タスクを実装する。
-
-# CONSTRAINTS
-- 完了したら「Track A: Complete」と報告
-- コードはテスト付きで作成
-```
-
-### Track B: Backend（別ウィンドウでバックグラウンド起動）
-
-```
-あなたは Senior-Coder (Track B) です。
-メインスレッドを汚さず、このセッション内で作業を完結させてください。
-
-# TASK
-spec/my-app_implementation_plan.md の Track B タスクを実装する。
-
-# CONSTRAINTS
-- 完了したら「Track B: Complete」と報告
-```
-
----
-
-## 🔍 Step 5: レビューサイクル
-
-**両トラック完了後：**
-
-```
-あなたは Review-Guardian です。
-projects/my-app/src/ のコードをレビューしてください。
-
-# CHECKLIST
-□ セキュリティ脆弱性
-□ エラーハンドリング
-□ テストカバレッジ
-
-# ACTION
-- 問題発見 → 修正を指示
-- 問題なし → 「Review Passed」を報告
-```
-
----
-
-## ✅ Step 6: 最終統合
-
-```
-すべてのエージェントが完了しました。
-最終確認を行ってください。
-
-# VERIFY
-1. ビルド成功確認
-2. テスト全パス確認
-3. 動作確認
-```
+各エージェントは**別々のTerminalウィンドウ**で起動されます。
 
 ---
 
 ## 📌 クイックリファレンス
 
-| 操作 | 方法 |
-|------|------|
+| 操作 | コマンド |
+|------|----------|
+| プロジェクト作成 | `./projects/scripts/init-project.sh <name>` |
+| 並列エージェント起動 | `./projects/scripts/launch-agents.sh <name> --agents <agents>` |
 | バックグラウンド起動 | `Ctrl+B` |
-| 新規セッション | `/clear` |
-| プロジェクト作成 | `./scripts/init-project.sh <name>` |
 
-| エージェント | 指示のキーワード |
-|--------------|------------------|
-| Architect-Plan | 「設計して」「プラン作成」 |
-| Senior-Coder | 「実装して」「コード書いて」 |
-| Review-Guardian | 「レビューして」「確認して」 |
-| Spec-Writer | 「ドキュメント作成」 |
+### 利用可能エージェント
+
+| Agent | 役割 | launch-agents引数 |
+|-------|------|-------------------|
+| PM | 統括 | `pm` |
+| RA | 要件分析 | `ra` |
+| Researcher | 調査 | `researcher` |
+| Architect | 技術設計 | `architect` |
+| Designer | UIデザイン | `designer` |
+| Coder A | 実装 (Frontend) | `coder-a` |
+| Coder B | 実装 (Backend) | `coder-b` |
+| Guardian | レビュー | `reviewer` |
+| Marketing | SEO/マーケ | `marketing` |
+
+### プリセット
+
+| Preset | 内容 |
+|--------|------|
+| `parallel-coders` | coder-a, coder-b, reviewer |
+| `full-team` | 全エージェント |
 
 ---
 
-## 💡 Tips
-
-1. **コンテキスト保護**: 大きなタスクは必ずサブエージェントに委譲
-2. **並列実行**: 独立したタスクは同時に3つ以上起動
-3. **完了報告**: 「要約のみ報告」を指示すると効率的
-
----
-
-*See: [GUILD_REFERENCE.md](./GUILD_REFERENCE.md) | [WORKFLOW_EXAMPLES.md](./WORKFLOW_EXAMPLES.md)*
+*See: [GUILD_REFERENCE](library/docs/GUILD_REFERENCE.md) | [PM_ORCHESTRATION](library/docs/PM_ORCHESTRATION.md)*

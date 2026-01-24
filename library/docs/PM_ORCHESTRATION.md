@@ -1,6 +1,6 @@
 # Project Manager (PM) Orchestration Guide
 
-Project Managerがプロジェクト全体を管理し、各エージェントを呼び出すためのガイド。
+PMがプロジェクト全体を統括し、各エージェントを呼び出すガイド。
 
 ---
 
@@ -10,57 +10,84 @@ Project Managerがプロジェクト全体を管理し、各エージェント�
 あなたは Project-Manager です。
 docs/PRP.md を読み、以下のフェーズを順番に実行してプロジェクトを完遂してください。
 
-# YOUR ROLE
-- 全エージェントの統括
-- 進捗管理とボトルネック解消
-- 品質・納期・スコープの管理
-
 # WORKFLOW
-以下の順序で各エージェントにタスクを割り当ててください：
+Phase 0: Requirements-Analyst に要件明確化を依頼
+Phase 1: Researcher に調査を依頼
+Phase 2: Architect-Plan に設計を依頼
+Phase 3: Designer にモックアップ作成を依頼
+Phase 4: Senior-Coder に並列実装を依頼
+Phase 5: Review-Guardian にレビューを依頼
+Phase 6: Content-Writer にコンテンツ執筆を依頼
+Phase 7: Marketing にSEO最適化を依頼
+Phase 8: 最終統合と完了報告
 
-## Phase 0: Research
-Researcher に以下を依頼：
-- 競合分析
-- 市場調査
-- 必要なデータ収集
+進捗は docs/project_status.md に記録してください。
+```
 
-## Phase 1: Planning
-Architect-Plan に以下を依頼：
-- 技術スタック選定
-- 実装プラン作成
-- タスクの並列トラック分割
+---
 
-## Phase 2: Design
-Designer に以下を依頼：
-- UIモックアップ生成（Nano Banana使用）
-- デザインシステム作成
-- resources/mockups/ に保存
+## 各エージェント呼び出しプロンプト
 
-## Phase 3: Implementation
-Senior-Coder を並列で起動（Ctrl+B）：
-- Track A: [フロントエンド等]
-- Track B: [バックエンド等]
-- resources/mockups/ を参照して実装
+### Requirements-Analyst
+```
+Requirements-Analyst として、PRP.md を分析し：
+1. 曖昧な点をリストアップ
+2. 確認が必要な質問を作成
+3. docs/requirements.md に詳細要件を出力
+```
 
-## Phase 4: Review
-Review-Guardian に依頼：
-- コードレビュー
-- 問題があればCoderに差し戻し
+### Researcher  
+```
+Researcher として、requirements.md を参照し：
+1. 競合3社を分析
+2. 市場データを収集
+3. research/ に結果を保存
+```
 
-## Phase 5: Marketing
-Marketing に依頼：
-- SEO最適化
-- コピーライティング
-- OGP/メタタグ設定
+### Architect-Plan
+```
+Architect-Plan として、research/ を参照し：
+1. 技術スタックを選定
+2. spec/implementation_plan.md に実装プランを作成
+3. 並列トラックに分割
+```
 
-## Phase 6: Integration
-最終確認：
-- ビルドチェック
-- テスト実行
-- 完了報告
+### Designer
+```
+Designer として、Nano Banana を使用し：
+1. resources/mockups/ にUIモックアップを生成
+2. docs/design_system.md を作成
+```
 
-# OUTPUT
-各フェーズ完了後、docs/project_status.md を更新してください。
+### Senior-Coder (並列起動 Ctrl+B)
+```
+Senior-Coder (Track A) として：
+1. resources/mockups/ を参照
+2. [担当範囲] を実装
+3. 完了したら「Track A: Complete」と報告
+```
+
+### Review-Guardian
+```
+Review-Guardian として：
+1. src/ のコードをレビュー
+2. 問題があればCoderに差し戻し
+3. 「Review Passed」を報告
+```
+
+### Content-Writer
+```
+Content-Writer として：
+1. research/ の調査結果を参照
+2. src/content/ にWebコンテンツを執筆
+```
+
+### Marketing
+```
+Marketing として：
+1. SEOキーワードを最適化
+2. メタタグ・OGPを設定
+3. docs/marketing_strategy.md を作成
 ```
 
 ---
@@ -69,29 +96,10 @@ Marketing に依頼：
 
 ```
 あなたは Project-Manager です。
-PRP.md を分析し、Researcher → Architect → Designer → Coder → Review → Marketing の順で
+PRP.md を読み、Requirements-Analyst → Researcher → Architect → Designer
+→ Coder → Review → Content-Writer → Marketing の順で
 各エージェントに指示を出し、プロジェクトを完遂してください。
-進捗は docs/project_status.md に記録してください。
 ```
 
 ---
-
-## PM が各エージェントを呼び出す例
-
-### Researcher を呼び出す
-```
-Researcher として、PRP.md の要件に基づき以下を調査してください：
-1. 競合サイト3社の分析
-2. ターゲット市場の統計データ
-3. research/ に結果を保存
-```
-
-### Architect-Plan を呼び出す
-```
-Architect-Plan として、research/ の調査結果を踏まえ、
-spec/implementation_plan.md に実装プランを作成してください。
-```
-
----
-
-*See: [agents.json](../config/agents.json) - エージェント定義*
+*See: [agents.json](../config/agents.json)*
