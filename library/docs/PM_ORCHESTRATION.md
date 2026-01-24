@@ -75,6 +75,15 @@ Review-Guardian として：
 3. 「Review Passed」を報告
 ```
 
+### QA-Tester
+```
+QA-Tester として：
+1. ブラウザで動作確認
+2. resources/mockups/ と実UIを比較
+3. Playwright/CypressでE2Eテストを tests/e2e/ に作成
+4. docs/test_report.md にテスト結果を報告
+```
+
 ### Content-Writer
 ```
 Content-Writer として：

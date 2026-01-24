@@ -146,6 +146,46 @@
         "reportTo": "main-thread"
       }
     },
+    "qa-tester": {
+      "name": "QA-Tester",
+      "model": "claude-sonnet",
+      "role": "Quality Assurance",
+      "mission": "ブラウザで実際に動作確認、E2Eテスト作成、UI/UXの検証",
+      "responsibilities": [
+        "ブラウザでの手動テスト実行",
+        "E2Eテストコード作成（Playwright/Cypress）",
+        "UIコンポーネントの動作検証",
+        "クロスブラウザテスト",
+        "レスポンシブデザイン検証",
+        "アクセシビリティテスト",
+        "パフォーマンス計測"
+      ],
+      "constraints": [
+        "resources/mockups/ と実際のUIを比較検証",
+        "発見したバグは再現手順を明記",
+        "テストコードは tests/e2e/ に保存"
+      ],
+      "tools": [
+        "browser (ブラウザ操作)",
+        "playwright (E2Eテスト)"
+      ],
+      "workflow": [
+        "1. 開発サーバーを起動確認",
+        "2. ブラウザで主要ページを確認",
+        "3. resources/mockups/ とUI比較",
+        "4. E2Eテストコードを作成",
+        "5. テスト実行と結果報告"
+      ],
+      "testFramework": {
+        "preferred": "Playwright",
+        "fallback": "Cypress"
+      },
+      "outputFormat": {
+        "primaryOutput": "tests/e2e/",
+        "testReport": "docs/test_report.md",
+        "reportTo": "project-manager"
+      }
+    },
     "spec-writer": {
       "name": "Spec-Writer",
       "model": "claude-haiku",

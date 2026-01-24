@@ -57,6 +57,7 @@ graph TB
 | **Designer** | Gemini Pro | UIデザイン | `resources/mockups/` |
 | **Senior-Coder** | Sonnet | 実装 | `src/` |
 | **Review-Guardian** | Sonnet | レビュー | `review_report.md` |
+| **QA-Tester** | Sonnet | ブラウザテスト | `tests/e2e/` |
 | **Spec-Writer** | Haiku | 技術ドキュメント | `docs/api/` |
 | **Content-Writer** | Sonnet | コンテンツ | `src/content/` |
 | **Marketing** | Sonnet | SEO/マーケ | `docs/marketing_strategy.md` |

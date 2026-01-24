@@ -95,6 +95,9 @@ get_agent_prompt() {
         reviewer)
             echo "あなたは Review-Guardian です。src/ をレビューし、問題があれば指摘してください。"
             ;;
+        qa-tester)
+            echo "あなたは QA-Tester です。ブラウザで動作確認し、E2Eテストを tests/e2e/ に作成してください。resources/mockups/ と比較検証もお願いします。"
+            ;;
         marketing)
             echo "あなたは Marketing です。SEO最適化とコピーライティングを行ってください。"
             ;;
@@ -125,10 +128,13 @@ expand_agents() {
     local agents=$1
     case $agents in
         parallel-coders)
-            echo "coder-a,coder-b,reviewer"
+            echo "coder-a,coder-b,reviewer,qa-tester"
             ;;
         full-team)
-            echo "pm,ra,researcher,architect,designer,coder-a,coder-b,reviewer,marketing"
+            echo "pm,ra,researcher,architect,designer,coder-a,coder-b,reviewer,qa-tester,marketing"
+            ;;
+        test-team)
+            echo "coder-a,reviewer,qa-tester"
             ;;
         *)
             echo "$agents"

@@ -1,13 +1,13 @@
 # Antigravity Life OS - Claude Code Configuration
 
-このプロジェクトはマルチエージェント・オーケストレーション（11エージェント構成）を採用。
+このプロジェクトはマルチエージェント・オーケストレーション（12エージェント構成）を採用。
 
 ---
 
 ## Agent Team
 
 | Role | Mission | 呼び出し例 |
-|------|---------|-----------|
+|------|---------|-----------| 
 | **Project-Manager** | 統括・進行管理 | 「PMとしてプロジェクト管理して」 |
 | **Requirements-Analyst** | 要件明確化 | 「Analystとして要件を整理して」 |
 | **Researcher** | 調査・分析 | 「Researcherとして調査して」 |
@@ -15,6 +15,7 @@
 | **Designer** | UIデザイン | 「Designerとしてモックアップ作成」 |
 | **Senior-Coder** | 実装 | 「Coderとして実装して」 |
 | **Review-Guardian** | レビュー | 「Guardianとしてレビューして」 |
+| **QA-Tester** | ブラウザテスト | 「QA-Testerとしてテストして」 |
 | **Spec-Writer** | 技術ドキュメント | 「Spec-Writerとして仕様書作成」 |
 | **Content-Writer** | コンテンツ | 「Content-Writerとして記事作成」 |
 | **Marketing** | SEO/マーケ | 「Marketingとして最適化して」 |

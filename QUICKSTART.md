@@ -66,14 +66,16 @@ RA → Researcher → Architect → Designer → Coder → Review → Marketing
 | Coder A | 実装 (Frontend) | `coder-a` |
 | Coder B | 実装 (Backend) | `coder-b` |
 | Guardian | レビュー | `reviewer` |
+| QA-Tester | ブラウザテスト | `qa-tester` |
 | Marketing | SEO/マーケ | `marketing` |
 
 ### プリセット
 
 | Preset | 内容 |
 |--------|------|
-| `parallel-coders` | coder-a, coder-b, reviewer |
-| `full-team` | 全エージェント |
+| `parallel-coders` | coder-a, coder-b, reviewer, qa-tester |
+| `test-team` | coder-a, reviewer, qa-tester |
+| `full-team` | 全エージェント（12名） |
 
 ---
 
