@@ -45,6 +45,9 @@ docs/PRP.md を読み、プロジェクトを完遂してください。
 
 # または明示的に指定
 ./projects/scripts/launch-agents.sh my-app --agents pm
+
+# 確認プロンプトをスキップして自動実行（注意して使用）
+./projects/scripts/launch-agents.sh my-app --dangerously-skip-permissions
 ```
 
 ### 方法2: Claude Code CLI
@@ -52,7 +55,16 @@ docs/PRP.md を読み、プロジェクトを完遂してください。
 ```bash
 cd projects/my-app
 claude "あなたは Project-Manager です。docs/PRP.md を読み、プロジェクトを完遂してください。"
+
+# 確認プロンプトをスキップ
+claude --dangerously-skip-permissions "あなたは Project-Manager です。docs/PRP.md を読み、プロジェクトを完遂してください。"
 ```
+
+### --dangerously-skip-permissions について
+
+このフラグを付けると、Claudeがファイルを書き換えたりターミナルコマンドを実行する際の「Yes/No」確認がスキップされます。
+
+**注意**: 信頼できるプロジェクトでのみ使用してください。
 
 ---
 

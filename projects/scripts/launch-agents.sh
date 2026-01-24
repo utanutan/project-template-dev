@@ -2,7 +2,7 @@
 # ============================================
 # Antigravity Life OS - Parallel Agent Launcher
 # ============================================
-# Usage: ./launch-agents.sh [project-name] [--agents agent1,agent2,...]
+# Usage: ./launch-agents.sh [project-name] [--agents agent1,agent2,...] [--dangerously-skip-permissions]
 # Example: ./launch-agents.sh my-app --agents coder-a,coder-b,reviewer
 
 set -e
@@ -17,6 +17,7 @@ NC='\033[0m'
 # Default values
 PROJECT_NAME=""
 AGENTS=""
+SKIP_PERMISSIONS=""
 WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 # Parse arguments
@@ -25,6 +26,10 @@ while [[ $# -gt 0 ]]; do
         --agents)
             AGENTS="$2"
             shift 2
+            ;;
+        --dangerously-skip-permissions)
+            SKIP_PERMISSIONS="--dangerously-skip-permissions"
+            shift
             ;;
         *)
             PROJECT_NAME="$1"
@@ -35,11 +40,16 @@ done
 
 if [ -z "$PROJECT_NAME" ]; then
     echo -e "${RED}Error: Project name is required${NC}"
-    echo "Usage: ./launch-agents.sh <project-name> [--agents agent1,agent2,...]"
+    echo "Usage: ./launch-agents.sh <project-name> [--agents agent1,agent2,...] [--dangerously-skip-permissions]"
     echo ""
     echo "Examples:"
     echo "  ./launch-agents.sh my-app --agents pm,architect,coder-a,coder-b"
     echo "  ./launch-agents.sh my-app --agents parallel-coders"
+    echo "  ./launch-agents.sh my-app --dangerously-skip-permissions"
+    echo ""
+    echo "Options:"
+    echo "  --agents <list>                 Comma-separated list of agents to launch"
+    echo "  --dangerously-skip-permissions  Skip Yes/No confirmation prompts in Claude"
     echo ""
     echo "Available agent presets:"
     echo "  pm              - Project Manager"
@@ -50,7 +60,10 @@ if [ -z "$PROJECT_NAME" ]; then
     echo "  coder-a         - Senior-Coder Track A"
     echo "  coder-b         - Senior-Coder Track B"
     echo "  reviewer        - Review-Guardian"
+    echo "  qa-tester       - QA-Tester"
     echo "  marketing       - Marketing"
+    echo "  monetization    - Monetization-Strategist"
+    echo "  legal           - Legal-Advisor"
     echo ""
     echo "  parallel-coders - Launch coder-a + coder-b + reviewer"
     echo "  full-team       - Launch all agents"
@@ -89,6 +102,8 @@ get_agent_prompt() {
         marketing) agent_key="marketing" ;;
         spec-writer) agent_key="spec-writer" ;;
         content-writer) agent_key="content-writer" ;;
+        monetization) agent_key="monetization" ;;
+        legal) agent_key="legal-advisor" ;;
         *) agent_key="$agent" ;;
     esac
     
@@ -234,13 +249,23 @@ launch_agent() {
     local agent=$1
     local prompt=$(get_agent_prompt "$agent")
     local title="Agent: ${agent}"
-    
+    local claude_cmd="claude"
+
+    # Add --dangerously-skip-permissions if specified
+    if [ -n "$SKIP_PERMISSIONS" ]; then
+        claude_cmd="claude --dangerously-skip-permissions"
+    fi
+
     echo -e "${GREEN}✓${NC} Launching ${YELLOW}${agent}${NC}..."
-    
+
+    if [ -n "$SKIP_PERMISSIONS" ]; then
+        echo -e "  ${YELLOW}⚠ Running with --dangerously-skip-permissions${NC}"
+    fi
+
     osascript <<EOF
 tell application "Terminal"
     activate
-    do script "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && claude '${prompt}'"
+    do script "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} '${prompt}'"
 end tell
 EOF
 }
@@ -253,7 +278,7 @@ expand_agents() {
             echo "coder-a,coder-b,reviewer,qa-tester"
             ;;
         full-team)
-            echo "pm,ra,researcher,architect,designer,coder-a,coder-b,reviewer,qa-tester,marketing"
+            echo "pm,ra,researcher,architect,designer,coder-a,coder-b,reviewer,qa-tester,marketing,monetization,legal"
             ;;
         test-team)
             echo "coder-a,reviewer,qa-tester"
