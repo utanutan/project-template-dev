@@ -2,60 +2,60 @@
 
 **Project Name:** Personal Agent Guild "Antigravity Life OS"
 **Date:** 2026-01-24
-**Version:** 2.0 (English Edition)
+**Version:** 2.0 (Japanese Edition)
 **Author:** Antigravity (Assistant)
 
 ---
 
-## 1. Development Policy
+## 1. 開発方針 (Development Policy)
 
-### 1.1 Technology Stack & Guild Members
+### 1.1 技術選定とギルド構成 (Technology Stack & Guild Members)
 
-This project utilizes a hybrid approach with a smart Orchestrator and specialized Executors.
+本プロジェクトは、賢明な「指揮官 (Orchestrator)」と、強力な「実行部隊 (Executor)」によるハイブリッド構成を採用する。
 
 *   **Core Platform**: Google Antigravity (Orchestration & Planning)
 *   **Execution Engine**: OpenCode (Parallel Execution & Sub-agents)
 *   **Agent Models**:
-    *   **Orchestrator**: Gemini 1.5 Pro (Strategy, Inbox Triage)
-    *   **Implementation**: DeepSeek-V3 (Coding Loop)
-    *   **Review/Safety**: Claude 3.5 Sonnet (Logic Check), ELYZA (JP Compliance)
-    *   **Creative**: GPT-4o, Sakana AI (Trends)
+    *   **Orchestrator**: Gemini 1.5 Pro (戦略、高レベル判断、Inbox振り分け)
+    *   **Implementation**: DeepSeek-V3 (実装、コーディングループ)
+    *   **Review/Safety**: Claude 3.5 Sonnet (論理整合性), ELYZA (国内法・日本語対応)
+    *   **Creative**: GPT-4o, Sakana AI (トレンド分析・発信)
 
-### 1.2 Architecture Design
-Refer to `03_SYSTEM_ARCHITECTURE.md` for the detailed directory structure.
-Key concept: **Separation of Planning (`spec/`) and Execution (`projects/`)**.
+### 1.2 アーキテクチャ設計 (Architecture Design)
+詳細は `03_SYSTEM_ARCHITECTURE.md` を参照。
+重要コンセプト: **計画 (`spec/`) と実行 (`projects/`) の分離**。
 
-## 2. Implementation Steps
+## 2. 実装計画 (Implementation Steps)
 
-### Phase 1: Foundation Setup
-*   [x] **Directory Structure**: Establish `config`, `library`, `spec` directories.
-*   [ ] **Configuration**: Create `config/agents.json` defining the "Guild Members".
-*   [ ] **Environment**: Set up multiple API keys (Gemini, Anthropic, OpenRouter) in `.env`.
+### Phase 1: Foundation Setup (基盤構築)
+*   [x] **Directory Structure**: `config`, `library`, `spec` ディレクトリの整備。
+*   [ ] **Configuration**: `config/agents.json` にギルドメンバー（役割定義）を作成。
+*   [ ] **Environment**: 複数のAPIキー (Gemini, Anthropic, OpenRouter) を `.env` に設定。
 
-### Phase 2: Agent Harness & Loop Implementation
-*   [ ] **Ralph Wiggum Loop Integration**: Implement the script/hook to allow agents to run in a loop until "DONE".
-*   [ ] **PRP Template**: Create a Product Requirement Prompt template in `library/docs/PRP_TEMPLATE.md` to standardize input for the loop.
-*   [ ] **Multimodal Inbox**: Implement the auto-transcription pipeline for `inbox/voice/`.
+### Phase 2: Agent Harness & Loop Implementation (自律ループの実装)
+*   [ ] **Ralph Wiggum Loop Integration**: エージェントが完了条件 ("DONE") を満たすまで自律的に修正を繰り返すスクリプト/Hookの実装。
+*   [ ] **PRP Template**: ループへの入力品質を担保するための「要件定義シート (PRP)」テンプレートを `library/docs/PRP_TEMPLATE.md` に作成。
+*   [ ] **Multimodal Inbox**: 音声メモ (`inbox/voice/`) を自動でテキスト化するパイプラインの構築。
 
-### Phase 3: Workflow Automation
-*   [ ] **Parallel Track Script**: Create a workflow to spawn multiple OpenCode instances (sub-agents) for different tracks.
-*   [ ] **Review Pipeline**: Automated hand-off from Executor to Reviewer agent.
+### Phase 3: Workflow Automation (ワークフロー自動化)
+*   [ ] **Parallel Track Script**: 複数のOpenCodeインスタンス（サブエージェント）を並列トラックとして起動するワークフローの作成。
+*   [ ] **Review Pipeline**: ExecutorからReviewerエージェントへ成果物を自動で引き渡すパイプラインの構築。
 
-## 3. Verification Plan
+## 3. テスト・検証計画 (Verification Plan)
 
 ### 3.1 Scenario: "The Loop" Test
-1.  **Input**: Create a PRP in `spec/` for a simple "Todo App Feature".
-2.  **Execute**: Trigger the "Ralph Wiggum Loop" with a generic coding model.
-3.  **Verify**: Does the agent iterate (fix errors, refactor) automatically until it outputs the Safety Phrase?
+1.  **Input**: 単純な「Todoアプリ機能」のPRPを `spec/` に作成。
+2.  **Execute**: 汎用のCoding Modelを用いて "Ralph Wiggum Loop" を起動。
+3.  **Verify**: エージェントがエラー修正やリファクタリングを自律的に繰り返し、最終的に "DONE" を出力するか検証。
 
 ### 3.2 Scenario: Parallel Tracks
-1.  **Input**: Request to build "Frontend UI" and "Backend API" simultaneously.
-2.  **Verify**: Are two distinct sub-agents running without context collision?
+1.  **Input**: 「フロントエンドUI」と「バックエンドAPI」の同時構築を指示。
+2.  **Verify**: 2つのサブエージェントが、互いのコンテキスト（変数やファイル操作）を衝突させずに並列動作するか検証。
 
-## 4. Deployment Strategy
-*   **Local-First**: deeper integration with local tools (Obsidian, local git).
-*   **Git Strategy**: `library/` templates are versioned; `projects/` are treated as ephemeral workspaces until finalized.
+## 4. デプロイ・運用戦略 (Deployment Strategy)
+*   **Local-First**: ObsidianやローカルGitとの深い統合。
+*   **Git Strategy**: `library/` のテンプレート群はバージョン管理し、`projects/` は成果物が確定するまでの一時的なワークスペースとして扱う（確定後にGit化）。
 
 ---
-*Approver:*
-*Date:*
+*承認者:*
+*承認日:*

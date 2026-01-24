@@ -1,4 +1,4 @@
-# [Project Name] - Project Plan
+# [Project Name] - プロジェクト計画書
 
 **Date:** YYYY-MM-DD
 **Version:** 0.1
@@ -6,44 +6,44 @@
 
 ---
 
-## 1. Executive Summary
+## 1. プロジェクト概要 (Executive Summary)
 
-### 1.1 Background
-*   (Context explaining why this project is needed)
+### 1.1 背景 (Background)
+*   （プロジェクトが必要とされた背景・コンテキスト）
 
-### 1.2 Objectives
+### 1.2 目的 (Objectives)
 *   **Goal 1**: ...
 *   **Goal 2**: ...
 
-## 2. User Requirements & Experience
+## 2. ユーザー要件と体験 (User Requirements & Experience)
 
-### 2.1 Expectations
+### 2.1 期待値 (Expectations)
 *   ...
 
-### 2.2 Usage Scenarios
+### 2.2 利用シナリオ (Usage Scenarios)
 *   **Scenario A**: ...
 *   **Scenario B**: ...
 
-## 3. Guild Organization (Resource Plan)
+## 3. ギルドメンバー構成 (Resource Plan)
 
 | Role | Responsibility | Proposed Model |
 | :--- | :--- | :--- |
-| **Project Lead** | Overall Management | Gemini 1.5 Pro |
-| **Developer** | Implementation | DeepSeek-V3 |
+| **Project Lead** | 全体進行管理 | Gemini 1.5 Pro |
+| **Developer** | 実装担当 | DeepSeek-V3 |
 | ... | ... | ... |
 
-## 4. Architecture Strategy
-*   (Reference `03_SYSTEM_ARCHITECTURE.md` unless specific deviation is needed)
-*   **Target Directory**: `projects/[project-name]/`
+## 4. アーキテクチャ戦略 (Architecture Strategy)
+*   詳細は `03_SYSTEM_ARCHITECTURE.md` に準拠する。
+*   **ターゲットディレクトリ**: `projects/[project-name]/`
 
-## 5. Acceptance Criteria
+## 5. 完了要件 (Acceptance Criteria)
 *   [AC-1] ...
 *   [AC-2] ...
 
-## 6. Schedule
+## 6. スケジュール (Schedule)
 *   **Phase 1**: ...
 *   **Phase 2**: ...
 
 ---
-*Approver:*
-*Date:*
+*承認者:*
+*承認日:*

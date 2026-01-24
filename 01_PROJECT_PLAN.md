@@ -48,24 +48,16 @@
 | **Life** | **Personal Concierge** | Gemini 1.5 Pro | リサーチ、スケジュール調整、メモ整理 |
 | **Legal** | **Legal & Compliance** | ELYZA | 規約作成、リスクチェック |
 
-## 4. システムアーキテクチャ (Architecture)
-
-汎用性を最大化するため、特定の何かに特化しない「器」としての構造にする。
+詳細は `03_SYSTEM_ARCHITECTURE.md` を参照。
 
 ```
-/my-life-os-root/
-├── config/                  
-│   ├── agents.json          # 全エージェント定義
-│   └── common_settings.env  
-├── library/                 
-│   ├── dev-templates/       # 技術開発用テンプレート
-│   ├── creative-templates/  # 執筆・制作系テンプレート
-│   └── life-templates/      # 生活・実務系テンプレート
-├── inbox/                   # 全ての「種」が入る場所
-└── projects/                # 生成された全プロジェクト
-    ├── dev-project-x/       
-    ├── blog-tech-trend/     
-    └── plan-summer-trip/    
+/workspace_root/
+├── config/
+├── library/
+├── spec/
+├── research/
+├── inbox/
+└── projects/
 ```
 
 ## 5. 完了要件と受入基準 (Acceptance Criteria)
