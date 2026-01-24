@@ -109,6 +109,12 @@ flowchart LR
 3. **Architect-Plan に設計依頼**: PRPを元に実装プランを `spec/` に作成
 4. **並列実装開始**: Senior-Coder をバックグラウンドで起動
 
+## 7. Related Documents
+
+- [WORKFLOW_EXAMPLES.md](./WORKFLOW_EXAMPLES.md) - Claude Code実行サンプル
+- [AGENT_PROMPT_EXAMPLES.md](./AGENT_PROMPT_EXAMPLES.md) - 各種エージェント指示書
+- [CLAUDE_CODE_ORCHESTRATION.md](./CLAUDE_CODE_ORCHESTRATION.md) - オーケストレーション詳細
+
 ---
 
 *Last Updated: 2026-01-24*

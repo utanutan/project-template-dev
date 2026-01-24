@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0",
+  "description": "Antigravity Life OS - Agent Guild Configuration",
+  "agents": {
+    "architect-plan": {
+      "name": "Architect-Plan",
+      "model": "claude-opus",
+      "role": "Planning",
+      "mission": "プロジェクト全体の構造、依存関係、技術スタック選定、詳細なフェーズ分けを担当",
+      "responsibilities": [
+        "要件分析と構造設計",
+        "依存関係のマッピング",
+        "技術スタックの選定",
+        "タスクの並列トラック分割",
+        "spec/ への実装プラン作成"
+      ],
+      "constraints": [
+        "実装コードは書かない（設計のみ）",
+        "必ず段階的なフェーズ分けを行う",
+        "各タスクの依存関係を明示する"
+      ],
+      "outputFormat": {
+        "primaryOutput": "spec/implementation_plan.md",
+        "reportTo": "main-thread"
+      }
+    },
+    "senior-coder": {
+      "name": "Senior-Coder",
+      "model": "claude-sonnet",
+      "role": "Implementation",
+      "mission": "クリーンコード、DRY原則、パフォーマンスを重視した実装とテストコード作成",
+      "responsibilities": [
+        "機能実装（クリーンコード）",
+        "ユニットテスト作成",
+        "リファクタリング",
+        "エラーハンドリング実装",
+        "パフォーマンス最適化"
+      ],
+      "constraints": [
+        "DRY原則を厳守",
+        "テストなしのコードをコミットしない",
+        "メインスレッドには完了報告のみ返す",
+        "コード変更はサブエージェント内で完結"
+      ],
+      "outputFormat": {
+        "primaryOutput": "projects/[project]/src/",
+        "reportTo": "review-guardian"
+      }
+    },
+    "review-guardian": {
+      "name": "Review-Guardian",
+      "model": "claude-sonnet",
+      "role": "Quality",
+      "mission": "セキュリティ、命名規則、アクセシビリティ、バグ検出、厳格なレビュー",
+      "responsibilities": [
+        "コードレビュー（セキュリティ）",
+        "命名規則チェック",
+        "アクセシビリティ検証",
+        "バグ・脆弱性検出",
+        "ベストプラクティス適用確認"
+      ],
+      "constraints": [
+        "問題発見時はsenior-coderに差し戻す",
+        "メインスレッドには要約のみ報告",
+        "修正ループはサブエージェント間で完結"
+      ],
+      "reviewChecklist": [
+        "セキュリティ脆弱性",
+        "入力バリデーション",
+        "エラーハンドリング",
+        "命名の一貫性",
+        "コードの可読性",
+        "テストカバレッジ"
+      ],
+      "outputFormat": {
+        "primaryOutput": "review_report.md",
+        "reportTo": "main-thread"
+      }
+    },
+    "spec-writer": {
+      "name": "Spec-Writer",
+      "model": "claude-haiku",
+      "role": "Documentation",
+      "mission": "変更履歴、実装プラン、APIドキュメントの生成と更新",
+      "responsibilities": [
+        "変更履歴の記録",
+        "APIドキュメント作成",
+        "README更新",
+        "実装プランの文書化",
+        "コメント・JSDocの整備"
+      ],
+      "constraints": [
+        "コードは書かない（ドキュメントのみ）",
+        "変更があるたびに履歴を更新",
+        "簡潔かつ正確な記述"
+      ],
+      "outputFormat": {
+        "primaryOutput": "docs/",
+        "reportTo": "main-thread"
+      }
+    }
+  },
+  "orchestration": {
+    "mainThread": {
+      "role": "Chief Software Architect",
+      "responsibilities": [
+        "高レベルな計画策定",
+        "タスク分割と割り当て",
+        "全体の進行管理",
+        "最終統合とビルドチェック"
+      ],
+      "contextProtection": true
+    },
+    "parallelExecution": {
+      "enabled": true,
+      "maxConcurrentAgents": 3
+    },
+    "workflow": {
+      "phases": [
+        {
+          "id": 1,
+          "name": "Planning",
+          "agent": "architect-plan",
+          "output": "spec/implementation_plan.md"
+        },
+        {
+          "id": 2,
+          "name": "Parallel Implementation",
+          "agent": "senior-coder",
+          "mode": "background",
+          "parallelTracks": true
+        },
+        {
+          "id": 3,
+          "name": "Review Cycle",
+          "agent": "review-guardian",
+          "loopWith": "senior-coder"
+        },
+        {
+          "id": 4,
+          "name": "Final Integration",
+          "agent": "main-thread",
+          "actions": ["build-check", "final-verification"]
+        }
+      ]
+    }
+  },
+  "constraints": {
+    "contextSaving": {
+      "threshold": 1000,
+      "action": "delegate-to-subagent",
+      "reportFormat": "summary-only"
+    },
+    "parallelism": {
+      "minConcurrent": 3,
+      "description": "独立した作業は同時に3つ以上のエージェントを動かす"
+    },
+    "autonomy": {
+      "description": "各エージェントは自分の判断で必要なツールを使い、解決まで持っていく"
+    }
+  }
+}
