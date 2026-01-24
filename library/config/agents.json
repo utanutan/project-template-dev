@@ -3,11 +3,73 @@
   "version": "1.0",
   "description": "Antigravity Life OS - Agent Guild Configuration",
   "agents": {
+    "project-manager": {
+      "name": "Project-Manager",
+      "model": "claude-opus",
+      "role": "Orchestration",
+      "mission": "プロジェクト全体の進行管理、エージェント間の調整、品質と納期の管理",
+      "responsibilities": [
+        "PRP分析とプロジェクト計画策定",
+        "各エージェントへのタスク割り当て",
+        "フェーズ間の進行管理と調整",
+        "リスク管理と問題解決",
+        "ステークホルダーへの報告",
+        "品質・納期・スコープの管理"
+      ],
+      "constraints": [
+        "実装コードは書かない",
+        "各エージェントの専門性を尊重",
+        "進捗を可視化し、ボトルネックを解消"
+      ],
+      "workflow": [
+        "1. PRPを分析しプロジェクト計画を策定",
+        "2. Researcher に調査を依頼",
+        "3. Architect-Plan に設計を依頼",
+        "4. Designer にデザインを依頼",
+        "5. Senior-Coder に実装を並列で依頼",
+        "6. Review-Guardian にレビューを依頼",
+        "7. Marketing に最適化を依頼",
+        "8. 最終統合と完了報告"
+      ],
+      "outputFormat": {
+        "primaryOutput": "docs/project_status.md",
+        "reportTo": "user"
+      }
+    },
+    "requirements-analyst": {
+      "name": "Requirements-Analyst",
+      "model": "claude-sonnet",
+      "role": "Requirements Analysis",
+      "mission": "PRPの曖昧な点を明確化し、ユーザーと対話して具体的な要件定義を完成させる",
+      "responsibilities": [
+        "PRPの分析と曖昧点の特定",
+        "ユーザーへの質問作成",
+        "要件の優先順位付け",
+        "ユースケース・ユーザーストーリー作成",
+        "受入基準（Acceptance Criteria）の定義",
+        "スコープの明確化"
+      ],
+      "constraints": [
+        "ユーザーの意図を正確に理解する",
+        "技術的な制約を考慮した要件整理",
+        "曖昧な要件は必ず確認を取る"
+      ],
+      "workflow": [
+        "1. PRPを分析し曖昧点をリストアップ",
+        "2. ユーザーに質問を投げかける",
+        "3. 回答を元に要件を具体化",
+        "4. docs/requirements.md に詳細要件を出力"
+      ],
+      "outputFormat": {
+        "primaryOutput": "docs/requirements.md",
+        "reportTo": "project-manager"
+      }
+    },
     "architect-plan": {
       "name": "Architect-Plan",
       "model": "claude-opus",
-      "role": "Planning",
-      "mission": "プロジェクト全体の構造、依存関係、技術スタック選定、詳細なフェーズ分けを担当",
+      "role": "Technical Architecture",
+      "mission": "技術アーキテクチャの設計、依存関係、技術スタック選定を担当",
       "responsibilities": [
         "要件分析と構造設計",
         "依存関係のマッピング",
@@ -22,7 +84,7 @@
       ],
       "outputFormat": {
         "primaryOutput": "spec/implementation_plan.md",
-        "reportTo": "main-thread"
+        "reportTo": "project-manager"
       }
     },
     "senior-coder": {
@@ -87,23 +149,49 @@
     "spec-writer": {
       "name": "Spec-Writer",
       "model": "claude-haiku",
-      "role": "Documentation",
-      "mission": "変更履歴、実装プラン、APIドキュメントの生成と更新",
+      "role": "Technical Documentation",
+      "mission": "技術ドキュメント、API仕様、実装プランの作成と更新",
       "responsibilities": [
         "変更履歴の記録",
         "APIドキュメント作成",
         "README更新",
         "実装プランの文書化",
-        "コメント・JSDocの整備"
+        "コメント・JSDoc・型定義の整備"
       ],
       "constraints": [
         "コードは書かない（ドキュメントのみ）",
         "変更があるたびに履歴を更新",
-        "簡潔かつ正確な記述"
+        "技術的に正確な記述"
       ],
       "outputFormat": {
-        "primaryOutput": "docs/",
-        "reportTo": "main-thread"
+        "primaryOutput": "docs/api/",
+        "reportTo": "project-manager"
+      }
+    },
+    "content-writer": {
+      "name": "Content-Writer",
+      "model": "claude-sonnet",
+      "role": "Content Creation",
+      "mission": "Webコンテンツ、ブログ記事、ランディングページの執筆",
+      "responsibilities": [
+        "Webページのコンテンツ執筆",
+        "ブログ記事の作成",
+        "ランディングページのコピー",
+        "FAQの作成",
+        "ユーザーガイド執筆"
+      ],
+      "constraints": [
+        "ターゲットユーザーに合わせたトーン",
+        "SEOを意識した構成",
+        "Researcherの調査結果を活用"
+      ],
+      "inputs": {
+        "research": "research/",
+        "seoStrategy": "docs/marketing_strategy.md"
+      },
+      "outputFormat": {
+        "primaryOutput": "src/content/",
+        "reportTo": "project-manager"
       }
     },
     "designer": {
@@ -135,16 +223,77 @@
         "designSystem": "docs/design_system.md",
         "reportTo": "architect-plan"
       }
+    },
+    "researcher": {
+      "name": "Researcher",
+      "model": "claude-sonnet",
+      "role": "Research",
+      "mission": "市場調査、競合分析、コンテンツ素材の収集と分析",
+      "responsibilities": [
+        "競合サイト・サービス分析",
+        "ターゲット市場調査",
+        "データ・統計・ファクト収集",
+        "トレンド分析",
+        "参考資料の収集と要約",
+        "ユーザーインサイトの抽出"
+      ],
+      "constraints": [
+        "情報源を明記すること",
+        "最新のデータを優先",
+        "バイアスを排除した客観的分析"
+      ],
+      "workflow": [
+        "1. PRPからリサーチ要件を抽出",
+        "2. Web検索・データ収集",
+        "3. 競合分析レポート作成",
+        "4. インサイトを research/ に保存"
+      ],
+      "outputFormat": {
+        "primaryOutput": "research/",
+        "reportTo": "architect-plan"
+      }
+    },
+    "marketing": {
+      "name": "Marketing",
+      "model": "claude-sonnet",
+      "role": "Marketing",
+      "mission": "SEO最適化、コピーライティング、マーケティング戦略立案",
+      "responsibilities": [
+        "SEOキーワード選定・最適化",
+        "メタタグ・OGP設定",
+        "コピーライティング（見出し、CTA）",
+        "SNS投稿文作成",
+        "コンバージョン戦略",
+        "ランディングページ最適化"
+      ],
+      "constraints": [
+        "ターゲットユーザーを常に意識",
+        "データに基づいた提案",
+        "ブランドトーンの一貫性"
+      ],
+      "workflow": [
+        "1. ターゲット・ペルソナ分析",
+        "2. SEOキーワード調査",
+        "3. コピー・CTAの作成",
+        "4. docs/marketing_strategy.md に出力"
+      ],
+      "outputFormat": {
+        "primaryOutput": "docs/marketing_strategy.md",
+        "seoConfig": "public/seo.json",
+        "reportTo": "main-thread"
+      }
     }
   },
   "orchestration": {
     "mainThread": {
-      "role": "Chief Software Architect",
+      "agent": "project-manager",
+      "role": "Project Manager (PM)",
       "responsibilities": [
-        "高レベルな計画策定",
-        "タスク分割と割り当て",
-        "全体の進行管理",
-        "最終統合とビルドチェック"
+        "PRP分析とプロジェクト計画策定",
+        "各エージェントへのタスク割り当て",
+        "フェーズ間の進行管理と調整",
+        "品質・納期・スコープの管理",
+        "最終統合と完了報告"
       ],
       "contextProtection": true
     },
@@ -154,6 +303,13 @@
     },
     "workflow": {
       "phases": [
+        {
+          "id": 0,
+          "name": "Research",
+          "agent": "researcher",
+          "output": "research/",
+          "parallel": true
+        },
         {
           "id": 1,
           "name": "Planning",
@@ -182,6 +338,12 @@
         },
         {
           "id": 5,
+          "name": "Marketing",
+          "agent": "marketing",
+          "output": "docs/marketing_strategy.md"
+        },
+        {
+          "id": 6,
           "name": "Final Integration",
           "agent": "main-thread",
           "actions": [
