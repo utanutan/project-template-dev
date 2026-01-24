@@ -67,44 +67,113 @@ fi
 echo -e "${BLUE}🚀 Launching agents for project: ${PROJECT_NAME}${NC}"
 echo ""
 
-# Agent prompts
+# Path to agents.json
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+AGENTS_JSON="${REPO_ROOT}/library/config/agents.json"
+
+# Agent prompts - now reads from agents.json
 get_agent_prompt() {
     local agent=$1
+    local agent_key=""
+    
+    # Map CLI agent name to agents.json key
     case $agent in
-        pm)
-            echo "あなたは Project-Manager です。docs/PRP.md を読み、プロジェクト全体を管理してください。"
-            ;;
-        ra)
-            echo "あなたは Requirements-Analyst です。docs/PRP.md を分析し、曖昧な点を明確化してください。"
-            ;;
-        researcher)
-            echo "あなたは Researcher です。市場調査・競合分析を行い、research/ に保存してください。"
-            ;;
-        architect)
-            echo "あなたは Architect-Plan です。spec/implementation_plan.md に実装プランを作成してください。"
-            ;;
-        designer)
-            echo "あなたは Designer です。Nano Banana で resources/mockups/ にモックアップを生成してください。"
-            ;;
-        coder-a)
-            echo "あなたは Senior-Coder (Track A: Frontend) です。resources/mockups/ を参照し実装してください。完了したら Track A: Complete と報告。"
-            ;;
-        coder-b)
-            echo "あなたは Senior-Coder (Track B: Backend) です。実装してください。完了したら Track B: Complete と報告。"
-            ;;
-        reviewer)
-            echo "あなたは Review-Guardian です。src/ をレビューし、問題があれば指摘してください。"
-            ;;
-        qa-tester)
-            echo "あなたは QA-Tester です。ブラウザで動作確認し、E2Eテストを tests/e2e/ に作成してください。resources/mockups/ と比較検証もお願いします。"
-            ;;
-        marketing)
-            echo "あなたは Marketing です。SEO最適化とコピーライティングを行ってください。"
-            ;;
-        *)
-            echo "あなたは ${agent} です。"
-            ;;
+        pm) agent_key="project-manager" ;;
+        ra) agent_key="requirements-analyst" ;;
+        researcher) agent_key="researcher" ;;
+        architect) agent_key="architect-plan" ;;
+        designer) agent_key="designer" ;;
+        coder-a|coder-b) agent_key="senior-coder" ;;
+        reviewer) agent_key="review-guardian" ;;
+        qa-tester) agent_key="qa-tester" ;;
+        marketing) agent_key="marketing" ;;
+        spec-writer) agent_key="spec-writer" ;;
+        content-writer) agent_key="content-writer" ;;
+        *) agent_key="$agent" ;;
     esac
+    
+    # Check if jq is available
+    if ! command -v jq &> /dev/null; then
+        echo "あなたは ${agent} です。"
+        return
+    fi
+    
+    # Check if agents.json exists
+    if [ ! -f "$AGENTS_JSON" ]; then
+        echo "あなたは ${agent} です。"
+        return
+    fi
+    
+    # Read agent config from JSON
+    local name=$(jq -r ".agents[\"${agent_key}\"].name // \"${agent}\"" "$AGENTS_JSON")
+    local role=$(jq -r ".agents[\"${agent_key}\"].role // \"Agent\"" "$AGENTS_JSON")
+    local mission=$(jq -r ".agents[\"${agent_key}\"].mission // \"\"" "$AGENTS_JSON")
+    local constraints=$(jq -r ".agents[\"${agent_key}\"].constraints // [] | join(\"\n- \")" "$AGENTS_JSON")
+    local workflow=$(jq -r ".agents[\"${agent_key}\"].workflow // [] | join(\"\n\")" "$AGENTS_JSON")
+    local forbidden=$(jq -r ".agents[\"${agent_key}\"].forbiddenTools // [] | join(\", \")" "$AGENTS_JSON")
+    local receives_from=$(jq -r ".agents[\"${agent_key}\"].receivesInstructionsFrom // \"\"" "$AGENTS_JSON")
+    local delegates_to=$(jq -r ".agents[\"${agent_key}\"].delegatesTo // [] | join(\", \")" "$AGENTS_JSON")
+    
+    # Build comprehensive prompt
+    local prompt="あなたは **${name}** (Role: ${role}) です。
+
+## Mission
+${mission}
+
+## 制約事項（厳守）"
+    
+    if [ -n "$constraints" ]; then
+        prompt="${prompt}
+- ${constraints}"
+    fi
+    
+    if [ -n "$forbidden" ]; then
+        prompt="${prompt}
+
+## 使用禁止ツール
+${forbidden}"
+    fi
+    
+    if [ -n "$receives_from" ]; then
+        prompt="${prompt}
+
+## 指示系統
+あなたは **${receives_from}** から指示を受けます。Project-Managerから直接指示を受けません。"
+    fi
+    
+    if [ -n "$delegates_to" ]; then
+        prompt="${prompt}
+
+## 委譲先
+実装作業は **${delegates_to}** に委譲してください。"
+    fi
+    
+    if [ -n "$workflow" ]; then
+        prompt="${prompt}
+
+## ワークフロー
+${workflow}"
+    fi
+    
+    # Add track-specific info for coders
+    if [ "$agent" = "coder-a" ]; then
+        prompt="${prompt}
+
+## Track Assignment
+あなたは **Track A (Frontend)** 担当です。完了したら「Track A: Complete」と報告。"
+    elif [ "$agent" = "coder-b" ]; then
+        prompt="${prompt}
+
+## Track Assignment
+あなたは **Track B (Backend)** 担当です。完了したら「Track B: Complete」と報告。"
+    fi
+    
+    prompt="${prompt}
+
+---
+docs/PRP.md を参照して作業を開始してください。"
+    
+    echo "$prompt"
 }
 
 # Launch agent in new Terminal window (macOS)

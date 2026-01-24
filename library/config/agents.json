@@ -17,24 +17,36 @@
         "品質・納期・スコープの管理"
       ],
       "constraints": [
-        "実装コードは書かない",
-        "各エージェントの専門性を尊重",
-        "進捗を可視化し、ボトルネックを解消"
+        "【絶対禁止】実装コードを書かない・編集しない",
+        "【絶対禁止】src/ 配下のファイルを直接操作しない",
+        "【絶対禁止】write_to_file, replace_file_content をソースコードに使用しない",
+        "各エージェントの専門性を尊重し、タスクを委譲する",
+        "進捗を可視化し、ボトルネックを解消",
+        "コーディング作業はすべてArchitect-Plan経由でSenior-Coderに委譲"
+      ],
+      "forbiddenTools": [
+        "write_to_file (for src/)",
+        "replace_file_content (for src/)",
+        "multi_replace_file_content (for src/)"
       ],
       "workflow": [
         "1. PRPを分析しプロジェクト計画を策定",
         "2. Researcher に調査を依頼",
-        "3. Architect-Plan に設計を依頼",
+        "3. Architect-Plan に設計・タスク分割・実装プラン作成を依頼",
         "4. Designer にデザインを依頼",
-        "5. Senior-Coder に実装を並列で依頼",
+        "5. 【委譲】Architect-Planが実装プランに基づきSenior-Coderに指示（PMは直接指示しない）",
         "6. Review-Guardian にレビューを依頼",
         "7. Marketing に最適化を依頼",
-        "8. 最終統合と完了報告"
+        "8. 最終統合と完了報告（コードには触れない）"
       ],
       "outputFormat": {
         "primaryOutput": "docs/project_status.md",
         "reportTo": "user"
-      }
+      },
+      "notes": [
+        "実装指示は直接Coderに出さず、Architect-Planに設計と分割を依頼する",
+        "Architect-PlanがCoderへの具体的なタスク指示を行う"
+      ]
     },
     "requirements-analyst": {
       "name": "Requirements-Analyst",
@@ -80,12 +92,23 @@
       "constraints": [
         "実装コードは書かない（設計のみ）",
         "必ず段階的なフェーズ分けを行う",
-        "各タスクの依存関係を明示する"
+        "各タスクの依存関係を明示する",
+        "タスク分割と実装プラン作成を完了してからCoderに指示を出す"
+      ],
+      "workflow": [
+        "1. PRPと要件を分析し技術選定を行う",
+        "2. タスクを並列トラック(Track A/B/C)に分割",
+        "3. spec/implementation_plan.md に実装プランを作成",
+        "4. 各トラックのタスクをSenior-Coderに指示",
+        "5. 実装中の技術的問題をサポート"
       ],
       "outputFormat": {
         "primaryOutput": "spec/implementation_plan.md",
         "reportTo": "project-manager"
-      }
+      },
+      "delegatesTo": [
+        "senior-coder"
+      ]
     },
     "senior-coder": {
       "name": "Senior-Coder",
@@ -109,12 +132,18 @@
       ],
       "inputs": {
         "designMockups": "resources/mockups/",
-        "designSystem": "docs/design_system.md"
+        "designSystem": "docs/design_system.md",
+        "implementationPlan": "spec/implementation_plan.md"
       },
+      "receivesInstructionsFrom": "architect-plan",
       "outputFormat": {
         "primaryOutput": "projects/[project]/src/",
         "reportTo": "review-guardian"
-      }
+      },
+      "notes": [
+        "Project Managerから直接指示を受けない",
+        "Architect-Planからspec/implementation_plan.mdに基づいた具体的なタスク指示を受ける"
+      ]
     },
     "review-guardian": {
       "name": "Review-Guardian",
