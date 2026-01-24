@@ -49,7 +49,7 @@
         {
           "timing": "起動直後",
           "action": "今回のプロジェクトで必要なエージェントを選択",
-          "options": ["RA", "Researcher", "Designer", "Architect", "Coder", "Reviewer", "QA", "Content-Writer", "Marketing"]
+          "options": ["RA", "Researcher", "Designer", "Architect", "Coder", "Reviewer", "QA", "Content-Writer", "Marketing", "Monetization", "Legal"]
         },
         {
           "timing": "要件・調査完了後",

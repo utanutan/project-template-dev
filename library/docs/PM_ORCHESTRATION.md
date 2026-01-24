@@ -225,7 +225,7 @@ Requirements-Analyst → Researcher → Architect-Plan → Designer
 
 ---
 
-## 12エージェント一覧
+## 14エージェント一覧
 
 | Agent | Model | 指示元 | 出力 |
 |-------|-------|-------|------|
@@ -240,6 +240,8 @@ Requirements-Analyst → Researcher → Architect-Plan → Designer
 | Spec-Writer | Haiku | PM | `docs/api/` |
 | Content-Writer | Sonnet | PM | `src/content/` |
 | Marketing | Sonnet | PM | `docs/marketing_strategy.md` |
+| **Monetization-Strategist** | Sonnet | PM | `docs/monetization_strategy.md` |
+| **Legal-Advisor** | Opus | PM | `docs/legal/` |
 
 ---
 *See: [agents.json](../config/agents.json) | [subagent-prompt-generator.sh](../../projects/scripts/subagent-prompt-generator.sh)*
