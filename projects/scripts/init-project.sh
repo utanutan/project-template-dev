@@ -51,6 +51,7 @@ mkdir -p "${PROJECT_PATH}/src"
 mkdir -p "${PROJECT_PATH}/tests"
 mkdir -p "${PROJECT_PATH}/docs"
 mkdir -p "${PROJECT_PATH}/spec"
+mkdir -p "${PROJECT_PATH}/resources/mockups"
 mkdir -p "${PROJECT_PATH}/tracks"
 
 # Copy appropriate template

@@ -35,11 +35,16 @@
 あなたは Senior-Coder (Track A: Frontend) です。
 メインスレッドを汚さないよう、すべての作業をこのセッション内で完結させてください。
 
+# DESIGN REFERENCE
+まず resources/mockups/ の画像を確認し、デザインに忠実に実装してください。
+デザインシステムは docs/design_system.md を参照。
+
 # TASK
 projects/todo-app/src/components/ にReactコンポーネントを実装する。
 
 # CONSTRAINTS
 - DRY原則厳守
+- resources/mockups/ のデザインに忠実に実装
 - 各コンポーネントにテストを作成
 - 完了したら「Track A: Complete」と報告
 

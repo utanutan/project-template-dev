@@ -35,14 +35,20 @@
         "ユニットテスト作成",
         "リファクタリング",
         "エラーハンドリング実装",
-        "パフォーマンス最適化"
+        "パフォーマンス最適化",
+        "resources/mockups/ のデザインに忠実な実装"
       ],
       "constraints": [
         "DRY原則を厳守",
         "テストなしのコードをコミットしない",
         "メインスレッドには完了報告のみ返す",
-        "コード変更はサブエージェント内で完結"
+        "コード変更はサブエージェント内で完結",
+        "実装前に resources/mockups/ のモックアップを必ず参照する"
       ],
+      "inputs": {
+        "designMockups": "resources/mockups/",
+        "designSystem": "docs/design_system.md"
+      },
       "outputFormat": {
         "primaryOutput": "projects/[project]/src/",
         "reportTo": "review-guardian"
@@ -99,6 +105,36 @@
         "primaryOutput": "docs/",
         "reportTo": "main-thread"
       }
+    },
+    "designer": {
+      "name": "Designer",
+      "model": "gemini-pro",
+      "tool": "Nano Banana",
+      "role": "Design",
+      "mission": "UIモックアップ、デザインシステム、ビジュアルアセットの生成",
+      "responsibilities": [
+        "PRPからデザイン要件を抽出",
+        "Nano Banana でUIモックアップ生成",
+        "カラーパレット・タイポグラフィ定義",
+        "コンポーネントデザイン作成",
+        "レスポンシブデザイン指針策定"
+      ],
+      "constraints": [
+        "実装前に必ずデザインを確定させる",
+        "生成した画像はresources/に保存",
+        "デザインシステムをドキュメント化"
+      ],
+      "workflow": [
+        "1. PRPのデザイン要件を分析",
+        "2. Nano Bananaでモックアップ生成",
+        "3. resources/mockups/に画像保存",
+        "4. design_system.mdを作成"
+      ],
+      "outputFormat": {
+        "primaryOutput": "resources/mockups/",
+        "designSystem": "docs/design_system.md",
+        "reportTo": "architect-plan"
+      }
     }
   },
   "orchestration": {
@@ -126,22 +162,32 @@
         },
         {
           "id": 2,
+          "name": "Design",
+          "agent": "designer",
+          "tool": "Nano Banana",
+          "output": "resources/mockups/"
+        },
+        {
+          "id": 3,
           "name": "Parallel Implementation",
           "agent": "senior-coder",
           "mode": "background",
           "parallelTracks": true
         },
         {
-          "id": 3,
+          "id": 4,
           "name": "Review Cycle",
           "agent": "review-guardian",
           "loopWith": "senior-coder"
         },
         {
-          "id": 4,
+          "id": 5,
           "name": "Final Integration",
           "agent": "main-thread",
-          "actions": ["build-check", "final-verification"]
+          "actions": [
+            "build-check",
+            "final-verification"
+          ]
         }
       ]
     }
