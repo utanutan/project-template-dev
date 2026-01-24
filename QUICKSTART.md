@@ -1,6 +1,6 @@
 # Antigravity Life OS - クイックスタートガイド
 
-12エージェント構成のマルチエージェントシステム。
+14エージェント構成のマルチエージェントシステム。
 **PMエージェントを起動するだけで、サブエージェントが自動的に呼び出され、必要に応じて並列実行されます。**
 
 ---
@@ -107,7 +107,9 @@ PM (Project-Manager)
 ├── QA-Tester
 ├── Spec-Writer
 ├── Content-Writer
-└── Marketing
+├── Marketing
+├── Monetization-Strategist ─→ Legal-Advisor と連携
+└── Legal-Advisor
 ```
 
 **重要**: PMは Senior-Coder に直接指示しません。実装タスクは Architect-Plan が設計・分割し、Senior-Coder に委譲します。
@@ -145,7 +147,7 @@ PM (Project-Manager)
 
 ---
 
-## エージェント一覧（12名）
+## エージェント一覧（14名）
 
 | Agent | Model | 役割 |
 |-------|-------|------|
@@ -160,6 +162,8 @@ PM (Project-Manager)
 | Spec-Writer | Haiku | 技術ドキュメント |
 | Content-Writer | Sonnet | Webコンテンツ |
 | Marketing | Sonnet | SEO・マーケティング |
+| **Monetization-Strategist** | Sonnet | 収益化戦略・ビジネスモデル |
+| **Legal-Advisor** | Opus | 利用規約・法的リスク評価 |
 
 ---
 
@@ -168,7 +172,7 @@ PM (Project-Manager)
 | 操作 | コマンド |
 |------|----------|
 | プロジェクト作成 | `./projects/scripts/init-project.sh <name>` |
-| PM起動 | `claude` → PMプロンプト入力 |
+| PM起動 | `./projects/scripts/launch-agents.sh <name>` |
 | 並列エージェント起動 | `./projects/scripts/launch-agents.sh <name> --agents <agents>` |
 | プロンプト生成 | `./projects/scripts/subagent-prompt-generator.sh <agent>` |
 
@@ -178,7 +182,7 @@ PM (Project-Manager)
 |--------|------|
 | `parallel-coders` | coder-a, coder-b, reviewer, qa-tester |
 | `test-team` | coder-a, reviewer, qa-tester |
-| `full-team` | 全エージェント（12名） |
+| `full-team` | 全エージェント（14名） |
 
 ---
 

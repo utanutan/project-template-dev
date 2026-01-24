@@ -4,7 +4,7 @@
 
 ---
 
-## 1. Agent Team (12 Agents)
+## 1. Agent Team (14 Agents)
 
 ```mermaid
 graph TB
@@ -34,6 +34,11 @@ graph TB
         MK[Marketing<br/>Sonnet]
     end
 
+    subgraph Business
+        MO[Monetization-Strategist<br/>Sonnet]
+        LA[Legal-Advisor<br/>Opus]
+    end
+
     PM --> RA
     PM --> RS
     RA --> AR
@@ -48,6 +53,9 @@ graph TB
     PM --> SW
     PM --> CW
     PM --> MK
+    PM --> MO
+    PM --> LA
+    MO -->|法的確認| LA
 ```
 
 ### 委譲構造
@@ -74,8 +82,12 @@ graph TB
 | **Spec-Writer** | Haiku | 技術ドキュメント | `docs/api/` | PM |
 | **Content-Writer** | Sonnet | コンテンツ | `src/content/` | PM |
 | **Marketing** | Sonnet | SEO/マーケ | `docs/marketing_strategy.md` | PM |
+| **Monetization-Strategist** | Sonnet | 収益化戦略 | `docs/monetization_strategy.md` | PM |
+| **Legal-Advisor** | Opus | 法務・利用規約 | `docs/legal/` | PM |
 
-**注**: Senior-Coderは**Architect-Plan**から直接タスク指示を受けます（PMから直接指示しない）
+**注**:
+- Senior-Coderは**Architect-Plan**から直接タスク指示を受けます（PMから直接指示しない）
+- Legal-Advisorの出力は参考資料であり、公開前に専門家レビューを推奨
 
 ---
 

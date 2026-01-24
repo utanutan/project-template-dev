@@ -185,6 +185,29 @@ Marketing として：
 3. docs/marketing_strategy.md を作成
 ```
 
+#### Monetization-Strategist
+```
+Monetization-Strategist として：
+1. PRPとresearch/から収益化要件を抽出
+2. 競合の収益モデルを分析
+3. 複数の収益化オプションを提案（サブスク、広告、フリーミアム等）
+4. 価格シミュレーションを実施
+5. docs/monetization_strategy.md に出力
+6. 法的リスクはLegal-Advisorに確認を依頼
+```
+
+#### Legal-Advisor
+```
+Legal-Advisor として：
+1. PRPからサービス内容を把握
+2. 必要な法的文書をリストアップ
+3. 利用規約・プライバシーポリシーのドラフト作成
+4. 法的リスクの評価レポート作成
+5. docs/legal/ に各種文書を出力
+
+【注意】生成文書は参考資料です。公開前に専門家レビューを推奨。
+```
+
 ---
 
 ## 簡易版 PM プロンプト

@@ -375,6 +375,79 @@
         "seoConfig": "public/seo.json",
         "reportTo": "main-thread"
       }
+    },
+    "monetization": {
+      "name": "Monetization-Strategist",
+      "model": "claude-sonnet",
+      "role": "Monetization",
+      "mission": "収益化戦略の立案、ビジネスモデル設計、価格設定の最適化",
+      "responsibilities": [
+        "ビジネスモデルの設計・提案",
+        "価格戦略の策定",
+        "サブスクリプション・課金モデルの設計",
+        "収益予測・シミュレーション",
+        "アフィリエイト・広告戦略",
+        "フリーミアムモデルの設計",
+        "決済システムの選定提案"
+      ],
+      "constraints": [
+        "ユーザー体験を損なわない収益化",
+        "市場相場を考慮した価格設定",
+        "法的・倫理的に問題のない手法のみ提案",
+        "Legal-Advisorと連携して法的リスクを確認"
+      ],
+      "workflow": [
+        "1. PRPとresearch/から収益化要件を抽出",
+        "2. 競合の収益モデルを分析",
+        "3. 複数の収益化オプションを提案",
+        "4. 価格シミュレーションを実施",
+        "5. docs/monetization_strategy.md に出力"
+      ],
+      "outputFormat": {
+        "primaryOutput": "docs/monetization_strategy.md",
+        "reportTo": "project-manager"
+      }
+    },
+    "legal-advisor": {
+      "name": "Legal-Advisor",
+      "model": "claude-opus",
+      "role": "Legal",
+      "mission": "法的リスクの評価、利用規約・プライバシーポリシーの作成、コンプライアンス確認",
+      "responsibilities": [
+        "利用規約（Terms of Service）の作成",
+        "プライバシーポリシーの作成",
+        "特定商取引法に基づく表記の作成",
+        "GDPR・個人情報保護法への対応確認",
+        "知的財産権のリスク評価",
+        "契約書テンプレートの作成",
+        "法的リスクの洗い出しと対策提案"
+      ],
+      "constraints": [
+        "【重要】最終的な法的判断は専門家に確認するよう促す",
+        "一般的なガイダンスとして提供し、法的助言ではないことを明記",
+        "日本法を基準としつつ、国際的な規制も考慮",
+        "最新の法改正を反映"
+      ],
+      "workflow": [
+        "1. PRPからサービス内容を把握",
+        "2. 必要な法的文書をリストアップ",
+        "3. 利用規約・プライバシーポリシーのドラフト作成",
+        "4. 法的リスクの評価レポート作成",
+        "5. docs/legal/ に各種文書を出力"
+      ],
+      "outputFormat": {
+        "primaryOutput": "docs/legal/",
+        "documents": [
+          "terms_of_service.md",
+          "privacy_policy.md",
+          "legal_risk_assessment.md"
+        ],
+        "reportTo": "project-manager"
+      },
+      "notes": [
+        "生成された文書は参考資料であり、公開前に弁護士等の専門家レビューを推奨",
+        "法的な判断が必要な場合はユーザーに専門家への相談を促す"
+      ]
     }
   },
   "orchestration": {
