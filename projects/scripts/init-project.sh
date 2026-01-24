@@ -50,6 +50,7 @@ echo ""
 mkdir -p "${PROJECT_PATH}/src"
 mkdir -p "${PROJECT_PATH}/tests"
 mkdir -p "${PROJECT_PATH}/docs"
+mkdir -p "${PROJECT_PATH}/spec"
 mkdir -p "${PROJECT_PATH}/tracks"
 
 # Copy appropriate template
@@ -67,6 +68,18 @@ case $PROJECT_TYPE in
         echo -e "${GREEN}✓${NC} Copied Planner template"
         ;;
 esac
+
+# Copy CLAUDE.md for Claude Code
+if [ -f "${WORKSPACE_ROOT}/library/claude-templates/CLAUDE.md" ]; then
+    cp "${WORKSPACE_ROOT}/library/claude-templates/CLAUDE.md" "${PROJECT_PATH}/CLAUDE.md"
+    echo -e "${GREEN}✓${NC} Copied CLAUDE.md"
+fi
+
+# Copy .claude directory if exists
+if [ -d "${WORKSPACE_ROOT}/library/claude-templates/.claude" ]; then
+    cp -r "${WORKSPACE_ROOT}/library/claude-templates/.claude" "${PROJECT_PATH}/.claude"
+    echo -e "${GREEN}✓${NC} Copied .claude directory"
+fi
 
 # Create project README
 cat > "${PROJECT_PATH}/README.md" << EOF
@@ -86,7 +99,8 @@ cat > "${PROJECT_PATH}/README.md" << EOF
 ${PROJECT_NAME}/
 ├── src/        # ソースコード
 ├── tests/      # テスト
-├── docs/       # ドキュメント
+├── docs/       # PRP等ドキュメント
+├── spec/       # 実装プラン
 └── tracks/     # 並列実行トラック
 \`\`\`
 
@@ -104,6 +118,7 @@ echo -e "${GREEN}✓${NC} Created README.md"
 # Create .gitkeep files
 touch "${PROJECT_PATH}/src/.gitkeep"
 touch "${PROJECT_PATH}/tests/.gitkeep"
+touch "${PROJECT_PATH}/spec/.gitkeep"
 touch "${PROJECT_PATH}/tracks/.gitkeep"
 
 echo ""

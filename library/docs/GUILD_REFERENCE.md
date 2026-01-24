@@ -8,10 +8,9 @@
 
 ```
 /workspace_root/
-├── config/                  # システム設定
-│   ├── agents.json          # エージェント定義
-│   └── common_settings.env  # 環境変数
 ├── library/                 # ナレッジベース
+│   ├── config/              # agents.json, common_settings.env
+│   ├── claude-templates/    # CLAUDE.md テンプレート
 │   ├── dev-templates/       # 開発用テンプレート
 │   ├── creative-templates/  # 制作用テンプレート
 │   ├── life-templates/      # 生活用テンプレート
@@ -19,7 +18,11 @@
 ├── spec/                    # 実装プラン・詳細仕様
 ├── research/                # リサーチ資料
 ├── inbox/                   # マルチモーダル・インボックス
+├── scripts/                 # 初期化スクリプト
 └── projects/                # アクティブなプロジェクト作業場
+    └── [project]/
+        ├── CLAUDE.md        # ← 自動コピー
+        └── docs/PRP.md
 ```
 
 ---
