@@ -106,24 +106,45 @@ get_agent_prompt() {
     
     # Read agent config from JSON
     local name=$(jq -r ".agents[\"${agent_key}\"].name // \"${agent}\"" "$AGENTS_JSON")
+    local model=$(jq -r ".agents[\"${agent_key}\"].model // \"\"" "$AGENTS_JSON")
     local role=$(jq -r ".agents[\"${agent_key}\"].role // \"Agent\"" "$AGENTS_JSON")
     local mission=$(jq -r ".agents[\"${agent_key}\"].mission // \"\"" "$AGENTS_JSON")
+    local responsibilities=$(jq -r ".agents[\"${agent_key}\"].responsibilities // [] | join(\"\n- \")" "$AGENTS_JSON")
     local constraints=$(jq -r ".agents[\"${agent_key}\"].constraints // [] | join(\"\n- \")" "$AGENTS_JSON")
     local workflow=$(jq -r ".agents[\"${agent_key}\"].workflow // [] | join(\"\n\")" "$AGENTS_JSON")
     local forbidden=$(jq -r ".agents[\"${agent_key}\"].forbiddenTools // [] | join(\", \")" "$AGENTS_JSON")
     local receives_from=$(jq -r ".agents[\"${agent_key}\"].receivesInstructionsFrom // \"\"" "$AGENTS_JSON")
     local delegates_to=$(jq -r ".agents[\"${agent_key}\"].delegatesTo // [] | join(\", \")" "$AGENTS_JSON")
+    local notes=$(jq -r ".agents[\"${agent_key}\"].notes // [] | join(\"\n- \")" "$AGENTS_JSON")
+    local review_checklist=$(jq -r ".agents[\"${agent_key}\"].reviewChecklist // [] | join(\"\n- \")" "$AGENTS_JSON")
+    local inputs=$(jq -r ".agents[\"${agent_key}\"].inputs // {} | to_entries | map(\"\(.key): \(.value)\") | join(\"\n\")" "$AGENTS_JSON")
+    local primary_output=$(jq -r ".agents[\"${agent_key}\"].outputFormat.primaryOutput // \"\"" "$AGENTS_JSON")
+    local report_to=$(jq -r ".agents[\"${agent_key}\"].outputFormat.reportTo // \"\"" "$AGENTS_JSON")
     
     # Build comprehensive prompt
-    local prompt="あなたは **${name}** (Role: ${role}) です。
+    local prompt="あなたは **${name}** (Role: ${role}) です。"
+    
+    if [ -n "$model" ]; then
+        prompt="${prompt}
+推奨モデル: ${model}"
+    fi
+    
+    prompt="${prompt}
 
 ## Mission
-${mission}
+${mission}"
+    
+    if [ -n "$responsibilities" ]; then
+        prompt="${prompt}
 
-## 制約事項（厳守）"
+## 責務 (Responsibilities)
+- ${responsibilities}"
+    fi
     
     if [ -n "$constraints" ]; then
         prompt="${prompt}
+
+## 制約事項（厳守）
 - ${constraints}"
     fi
     
@@ -132,6 +153,13 @@ ${mission}
 
 ## 使用禁止ツール
 ${forbidden}"
+    fi
+    
+    if [ -n "$notes" ]; then
+        prompt="${prompt}
+
+## 重要な注意事項
+- ${notes}"
     fi
     
     if [ -n "$receives_from" ]; then
@@ -148,11 +176,36 @@ ${forbidden}"
 実装作業は **${delegates_to}** に委譲してください。"
     fi
     
+    if [ -n "$inputs" ]; then
+        prompt="${prompt}
+
+## 参照すべきファイル (Inputs)
+${inputs}"
+    fi
+    
     if [ -n "$workflow" ]; then
         prompt="${prompt}
 
 ## ワークフロー
 ${workflow}"
+    fi
+    
+    if [ -n "$review_checklist" ]; then
+        prompt="${prompt}
+
+## レビューチェックリスト
+- ${review_checklist}"
+    fi
+    
+    if [ -n "$primary_output" ]; then
+        prompt="${prompt}
+
+## 出力先
+- Primary Output: ${primary_output}"
+        if [ -n "$report_to" ]; then
+            prompt="${prompt}
+- Report To: ${report_to}"
+        fi
     fi
     
     # Add track-specific info for coders
