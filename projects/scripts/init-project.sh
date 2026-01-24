@@ -14,7 +14,8 @@ NC='\033[0m' # No Color
 
 # Default values
 PROJECT_TYPE="dev"
-WORKSPACE_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+WORKSPACE_ROOT="${REPO_ROOT}/projects"
 
 # Parse arguments
 if [ -z "$1" ]; then
@@ -39,7 +40,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-PROJECT_PATH="${WORKSPACE_ROOT}/projects/${PROJECT_NAME}"
+PROJECT_PATH="${WORKSPACE_ROOT}/${PROJECT_NAME}"
 
 echo -e "${BLUE}🚀 Initializing project: ${PROJECT_NAME}${NC}"
 echo "   Type: ${PROJECT_TYPE}"
@@ -58,28 +59,28 @@ mkdir -p "${PROJECT_PATH}/tracks"
 # Copy appropriate template
 case $PROJECT_TYPE in
     dev)
-        cp "${WORKSPACE_ROOT}/library/dev-templates/PRP_TEMPLATE.md" "${PROJECT_PATH}/docs/PRP.md"
+        cp "${REPO_ROOT}/library/dev-templates/PRP_TEMPLATE.md" "${PROJECT_PATH}/docs/PRP.md"
         echo -e "${GREEN}✓${NC} Copied PRP template"
         ;;
     creative)
-        cp "${WORKSPACE_ROOT}/library/creative-templates/CONTENT_TEMPLATE.md" "${PROJECT_PATH}/docs/CONTENT.md"
+        cp "${REPO_ROOT}/library/creative-templates/CONTENT_TEMPLATE.md" "${PROJECT_PATH}/docs/CONTENT.md"
         echo -e "${GREEN}✓${NC} Copied Content template"
         ;;
     life)
-        cp "${WORKSPACE_ROOT}/library/life-templates/WEEKLY_PLANNER.md" "${PROJECT_PATH}/docs/PLANNER.md"
+        cp "${REPO_ROOT}/library/life-templates/WEEKLY_PLANNER.md" "${PROJECT_PATH}/docs/PLANNER.md"
         echo -e "${GREEN}✓${NC} Copied Planner template"
         ;;
 esac
 
 # Copy CLAUDE.md for Claude Code
-if [ -f "${WORKSPACE_ROOT}/library/claude-templates/CLAUDE.md" ]; then
-    cp "${WORKSPACE_ROOT}/library/claude-templates/CLAUDE.md" "${PROJECT_PATH}/CLAUDE.md"
+if [ -f "${REPO_ROOT}/library/claude-templates/CLAUDE.md" ]; then
+    cp "${REPO_ROOT}/library/claude-templates/CLAUDE.md" "${PROJECT_PATH}/CLAUDE.md"
     echo -e "${GREEN}✓${NC} Copied CLAUDE.md"
 fi
 
 # Copy .claude directory if exists
-if [ -d "${WORKSPACE_ROOT}/library/claude-templates/.claude" ]; then
-    cp -r "${WORKSPACE_ROOT}/library/claude-templates/.claude" "${PROJECT_PATH}/.claude"
+if [ -d "${REPO_ROOT}/library/claude-templates/.claude" ]; then
+    cp -r "${REPO_ROOT}/library/claude-templates/.claude" "${PROJECT_PATH}/.claude"
     echo -e "${GREEN}✓${NC} Copied .claude directory"
 fi
 

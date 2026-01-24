@@ -57,7 +57,7 @@ if [ -z "$PROJECT_NAME" ]; then
     exit 1
 fi
 
-PROJECT_PATH="${WORKSPACE_ROOT}/projects/${PROJECT_NAME}"
+PROJECT_PATH="${WORKSPACE_ROOT}/${PROJECT_NAME}"
 
 if [ ! -d "$PROJECT_PATH" ]; then
     echo -e "${RED}Error: Project not found at ${PROJECT_PATH}${NC}"
