@@ -4,77 +4,93 @@
 
 ---
 
-## 1. Agent Team (11 Agents)
+## 1. Agent Team (12 Agents)
 
 ```mermaid
 graph TB
     subgraph Orchestration
-        PM[Project-Manager]
+        PM[Project-Manager<br/>Opus]
     end
-    
+
     subgraph Analysis
-        RA[Requirements-Analyst]
-        RS[Researcher]
+        RA[Requirements-Analyst<br/>Sonnet]
+        RS[Researcher<br/>Sonnet]
     end
-    
+
     subgraph Design
-        AR[Architect-Plan]
-        DS[Designer]
+        AR[Architect-Plan<br/>Opus]
+        DS[Designer<br/>Gemini Pro]
     end
-    
+
     subgraph Implementation
-        SC[Senior-Coder]
-        RG[Review-Guardian]
+        SC[Senior-Coder<br/>Sonnet]
+        RG[Review-Guardian<br/>Sonnet]
+        QA[QA-Tester<br/>Sonnet]
     end
-    
+
     subgraph Content
-        SW[Spec-Writer]
-        CW[Content-Writer]
-        MK[Marketing]
+        SW[Spec-Writer<br/>Haiku]
+        CW[Content-Writer<br/>Sonnet]
+        MK[Marketing<br/>Sonnet]
     end
-    
+
     PM --> RA
     PM --> RS
     RA --> AR
     RS --> AR
     AR --> DS
+    AR -->|委譲| SC
     DS --> SC
     SC --> RG
     RG -->|修正| SC
+    RG --> QA
+    QA -->|バグ報告| SC
     PM --> SW
     PM --> CW
     PM --> MK
 ```
 
+### 委譲構造
+
+| From | To | 説明 |
+|------|----|----|
+| PM | Architect-Plan | 設計・タスク分割を依頼（Coderに直接指示しない） |
+| Architect-Plan | Senior-Coder | 実装プランに基づく具体的なタスク指示 |
+| Designer | Architect-Plan | モックアップ完成報告 |
+| Researcher | Architect-Plan | 調査結果報告 |
+
 ### Agent Definitions
 
-| Agent | Model | Role | Output |
-|:------|:------|:-----|:-------|
-| **Project-Manager** | Opus | 統括 | `docs/project_status.md` |
-| **Requirements-Analyst** | Sonnet | 要件分析 | `docs/requirements.md` |
-| **Researcher** | Sonnet | 調査 | `research/` |
-| **Architect-Plan** | Opus | 技術設計 | `spec/implementation_plan.md` |
-| **Designer** | Gemini Pro | UIデザイン | `resources/mockups/` |
-| **Senior-Coder** | Sonnet | 実装 | `src/` |
-| **Review-Guardian** | Sonnet | レビュー | `review_report.md` |
-| **QA-Tester** | Sonnet | ブラウザテスト | `tests/e2e/` |
-| **Spec-Writer** | Haiku | 技術ドキュメント | `docs/api/` |
-| **Content-Writer** | Sonnet | コンテンツ | `src/content/` |
-| **Marketing** | Sonnet | SEO/マーケ | `docs/marketing_strategy.md` |
+| Agent | Model | Role | Output | 指示元 |
+|:------|:------|:-----|:-------|:------|
+| **Project-Manager** | Opus | 統括 | `docs/project_status.md` | user |
+| **Requirements-Analyst** | Sonnet | 要件分析 | `docs/requirements.md` | PM |
+| **Researcher** | Sonnet | 調査 | `research/` | PM |
+| **Architect-Plan** | Opus | 技術設計 | `spec/implementation_plan.md` | PM |
+| **Designer** | Gemini Pro | UIデザイン | `resources/mockups/` | PM |
+| **Senior-Coder** | Sonnet | 実装 | `src/` | **Architect-Plan** |
+| **Review-Guardian** | Sonnet | レビュー | `review_report.md` | PM |
+| **QA-Tester** | Sonnet | ブラウザテスト | `tests/e2e/` | PM |
+| **Spec-Writer** | Haiku | 技術ドキュメント | `docs/api/` | PM |
+| **Content-Writer** | Sonnet | コンテンツ | `src/content/` | PM |
+| **Marketing** | Sonnet | SEO/マーケ | `docs/marketing_strategy.md` | PM |
+
+**注**: Senior-Coderは**Architect-Plan**から直接タスク指示を受けます（PMから直接指示しない）
 
 ---
 
-## 2. Workflow (7 Phases)
+## 2. Workflow (8 Phases)
 
 ```
-Phase 0: Research      → Researcher
-Phase 1: Requirements  → Requirements-Analyst
-Phase 2: Planning      → Architect-Plan
-Phase 3: Design        → Designer (Nano Banana)
-Phase 4: Implementation→ Senior-Coder (並列)
-Phase 5: Review        → Review-Guardian
-Phase 6: Marketing     → Marketing
-Phase 7: Integration   → PM
+Phase 0: Research       → Researcher
+Phase 1: Requirements   → Requirements-Analyst
+Phase 2: Planning       → Architect-Plan
+Phase 3: Design         → Designer (Nano Banana)
+Phase 4: Implementation → Senior-Coder (並列・Architect経由で指示)
+Phase 5: Review         → Review-Guardian
+Phase 6: QA Testing     → QA-Tester (ブラウザテスト・E2E)
+Phase 7: Marketing      → Marketing
+Phase 8: Integration    → PM
 ```
 
 ---
@@ -108,6 +124,18 @@ projects/[project]/
 
 # 全エージェント起動
 ./projects/scripts/launch-agents.sh my-app --agents full-team
+```
+
+### プロンプト生成（推奨）
+
+`agents.json` から動的にサブエージェント用プロンプトを生成：
+
+```bash
+# 特定エージェントのプロンプト表示
+./projects/scripts/subagent-prompt-generator.sh architect-plan
+
+# 利用可能なエージェント一覧
+./projects/scripts/subagent-prompt-generator.sh list
 ```
 
 PMに「PRPを分析して」と依頼すると、ワークフローを自動進行。

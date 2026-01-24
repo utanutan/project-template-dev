@@ -4,6 +4,27 @@ PMがプロジェクト全体を統括し、各エージェントを呼び出す
 
 ---
 
+## プロンプト生成スクリプト（推奨）
+
+`agents.json` から動的にサブエージェント用プロンプトを生成できます：
+
+```bash
+# 特定エージェントのプロンプトを表示
+./projects/scripts/subagent-prompt-generator.sh architect-plan
+
+# 利用可能なエージェント一覧
+./projects/scripts/subagent-prompt-generator.sh list
+```
+
+このスクリプトは以下の情報を含むプロンプトを生成します：
+- Mission, Responsibilities, Constraints
+- Forbidden Tools, Important Notes
+- Command Chain（指示元）, Delegation（委譲先）
+- Required Inputs, Workflow, Review Checklist
+- Output（出力先と報告先）
+
+---
+
 ## PM 起動プロンプト
 
 ```
@@ -13,22 +34,51 @@ docs/PRP.md を読み、以下のフェーズを順番に実行してプロジ�
 # WORKFLOW
 Phase 0: Requirements-Analyst に要件明確化を依頼
 Phase 1: Researcher に調査を依頼
-Phase 2: Architect-Plan に設計を依頼
+Phase 2: Architect-Plan に設計・タスク分割・実装プラン作成を依頼
 Phase 3: Designer にモックアップ作成を依頼
-Phase 4: Senior-Coder に並列実装を依頼
+Phase 4: 【委譲】Architect-Plan が実装プランに基づき Senior-Coder に指示（PMは直接指示しない）
 Phase 5: Review-Guardian にレビューを依頼
-Phase 6: Content-Writer にコンテンツ執筆を依頼
-Phase 7: Marketing にSEO最適化を依頼
-Phase 8: 最終統合と完了報告
+Phase 6: QA-Tester にブラウザテスト・E2Eテストを依頼
+Phase 7: Content-Writer にコンテンツ執筆を依頼
+Phase 8: Marketing にSEO最適化を依頼
+Phase 9: 最終統合と完了報告
+
+【重要】実装指示は直接Coderに出さず、Architect-Planに設計と分割を依頼する。
 
 進捗は docs/project_status.md に記録してください。
+```
+
+### 委譲構造
+
+```
+PM
+├── Requirements-Analyst
+├── Researcher
+├── Architect-Plan ─────→ Senior-Coder（実装タスク委譲）
+├── Designer
+├── Review-Guardian
+├── QA-Tester
+├── Spec-Writer
+├── Content-Writer
+└── Marketing
 ```
 
 ---
 
 ## 各エージェント呼び出しプロンプト
 
-### Requirements-Analyst
+### 推奨方法: プロンプト生成スクリプト
+
+```bash
+# プロンプトを取得
+./projects/scripts/subagent-prompt-generator.sh architect-plan
+
+# スクリプト出力をそのままサブエージェントに渡す
+```
+
+### 従来のプロンプト例
+
+#### Requirements-Analyst
 ```
 Requirements-Analyst として、PRP.md を分析し：
 1. 曖昧な点をリストアップ
@@ -36,7 +86,7 @@ Requirements-Analyst として、PRP.md を分析し：
 3. docs/requirements.md に詳細要件を出力
 ```
 
-### Researcher  
+#### Researcher
 ```
 Researcher として、requirements.md を参照し：
 1. 競合3社を分析
@@ -44,38 +94,43 @@ Researcher として、requirements.md を参照し：
 3. research/ に結果を保存
 ```
 
-### Architect-Plan
+#### Architect-Plan
 ```
 Architect-Plan として、research/ を参照し：
 1. 技術スタックを選定
 2. spec/implementation_plan.md に実装プランを作成
-3. 並列トラックに分割
+3. タスクを並列トラック(Track A/B/C)に分割
+4. 【委譲】各トラックのタスクをSenior-Coderに指示
 ```
 
-### Designer
+#### Designer
 ```
 Designer として、Nano Banana を使用し：
 1. resources/mockups/ にUIモックアップを生成
 2. docs/design_system.md を作成
 ```
 
-### Senior-Coder (並列起動 Ctrl+B)
+#### Senior-Coder (Architect-Plan経由で起動)
+
+**注意**: PMは直接指示せず、Architect-Planから指示を受ける
+
 ```
 Senior-Coder (Track A) として：
-1. resources/mockups/ を参照
-2. [担当範囲] を実装
-3. 完了したら「Track A: Complete」と報告
+1. spec/implementation_plan.md を参照
+2. resources/mockups/ のデザインに忠実に実装
+3. [担当範囲] を実装
+4. 完了したら Review-Guardian に報告
 ```
 
-### Review-Guardian
+#### Review-Guardian
 ```
 Review-Guardian として：
 1. src/ のコードをレビュー
-2. 問題があればCoderに差し戻し
+2. 問題があれば Senior-Coder に差し戻し
 3. 「Review Passed」を報告
 ```
 
-### QA-Tester
+#### QA-Tester
 ```
 QA-Tester として：
 1. ブラウザで動作確認
@@ -84,14 +139,23 @@ QA-Tester として：
 4. docs/test_report.md にテスト結果を報告
 ```
 
-### Content-Writer
+#### Spec-Writer
+```
+Spec-Writer として：
+1. 変更履歴を docs/CHANGELOG.md に記録
+2. APIドキュメントを docs/api/ に作成
+3. READMEを更新
+```
+
+#### Content-Writer
 ```
 Content-Writer として：
 1. research/ の調査結果を参照
-2. src/content/ にWebコンテンツを執筆
+2. docs/marketing_strategy.md のSEO戦略を活用
+3. src/content/ にWebコンテンツを執筆
 ```
 
-### Marketing
+#### Marketing
 ```
 Marketing として：
 1. SEOキーワードを最適化
@@ -105,10 +169,32 @@ Marketing として：
 
 ```
 あなたは Project-Manager です。
-PRP.md を読み、Requirements-Analyst → Researcher → Architect → Designer
-→ Coder → Review → Content-Writer → Marketing の順で
-各エージェントに指示を出し、プロジェクトを完遂してください。
+PRP.md を読み、以下の順で各エージェントに指示を出し、プロジェクトを完遂してください：
+
+Requirements-Analyst → Researcher → Architect-Plan → Designer
+→ (Architect経由でCoder) → Review-Guardian → QA-Tester
+→ Content-Writer → Marketing
+
+【重要】実装指示は直接Coderに出さず、Architect-Planに設計と分割を依頼する。
 ```
 
 ---
-*See: [agents.json](../config/agents.json)*
+
+## 12エージェント一覧
+
+| Agent | Model | 指示元 | 出力 |
+|-------|-------|-------|------|
+| Project-Manager | Opus | user | `docs/project_status.md` |
+| Requirements-Analyst | Sonnet | PM | `docs/requirements.md` |
+| Researcher | Sonnet | PM | `research/` |
+| Architect-Plan | Opus | PM | `spec/implementation_plan.md` |
+| Designer | Gemini Pro | PM | `resources/mockups/` |
+| Senior-Coder | Sonnet | **Architect-Plan** | `src/` |
+| Review-Guardian | Sonnet | PM | `review_report.md` |
+| QA-Tester | Sonnet | PM | `tests/e2e/` |
+| Spec-Writer | Haiku | PM | `docs/api/` |
+| Content-Writer | Sonnet | PM | `src/content/` |
+| Marketing | Sonnet | PM | `docs/marketing_strategy.md` |
+
+---
+*See: [agents.json](../config/agents.json) | [subagent-prompt-generator.sh](../../projects/scripts/subagent-prompt-generator.sh)*
