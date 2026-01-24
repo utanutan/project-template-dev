@@ -4,56 +4,81 @@
 
 ---
 
+## 🔑 サブエージェント起動方法（重要）
+
+### PM がサブエージェントを起動する際の手順
+
+### PM がサブエージェントを起動する際の手順
+
+1. **プロンプト生成スクリプトを実行**して、完全な制約付きプロンプトを取得する:
+   ```bash
+   ./projects/scripts/subagent-prompt-generator.sh architect-plan
+   ```
+
+2. **出力されたプロンプト**をそのままコピーし、サブエージェントへの指示として使用する。
+   - `agents.json` の全フィールド（制約、責務、禁止ツール、Workflow）が含まれているため、確実にルールが適用されます。
+
+3. **起動例** (PM → Architect):
+   ```
+   (上記スクリプトの出力をペースト)
+   ```
+
+---
+
+## 指揮系統
+
+```
+PM (統括) ────────────────────────────────────────────┐
+   │                                                  │
+   ├→ Researcher (調査) → research/                   │
+   │                                                  │
+   ├→ Architect-Plan (設計) → spec/                   │
+   │      │                                           │
+   │      └→ Senior-Coder (実装) → src/               │
+   │            │                                     │
+   │            └→ Review-Guardian (レビュー)         │
+   │                                                  │
+   ├→ Designer (デザイン) → resources/mockups/        │
+   │                                                  │
+   └→ Marketing (最適化) → docs/marketing_strategy.md │
+                                                      │
+最終統合 ←────────────────────────────────────────────┘
+```
+
+**重要**: PM は Coder に直接指示しない。必ず Architect 経由。
+
+---
+
 ## Agent Team
 
-| Role | Mission | 呼び出し例 |
-|------|---------|-----------| 
-| **Project-Manager** | 統括・進行管理 | 「PMとしてプロジェクト管理して」 |
-| **Requirements-Analyst** | 要件明確化 | 「Analystとして要件を整理して」 |
-| **Researcher** | 調査・分析 | 「Researcherとして調査して」 |
-| **Architect-Plan** | 技術設計 | 「Architectとして設計して」 |
-| **Designer** | UIデザイン | 「Designerとしてモックアップ作成」 |
-| **Senior-Coder** | 実装 | 「Coderとして実装して」 |
-| **Review-Guardian** | レビュー | 「Guardianとしてレビューして」 |
-| **QA-Tester** | ブラウザテスト | 「QA-Testerとしてテストして」 |
-| **Spec-Writer** | 技術ドキュメント | 「Spec-Writerとして仕様書作成」 |
-| **Content-Writer** | コンテンツ | 「Content-Writerとして記事作成」 |
-| **Marketing** | SEO/マーケ | 「Marketingとして最適化して」 |
-
----
-
-## Workflow
-
-```
-User → PRP → PM → RA → Researcher → Architect → Designer 
-                                      → Coder → Review → Marketing → 完了
-```
-
----
-
-## Rules
-
-1. **バックグラウンド起動**: `Ctrl+B`
-2. **並列実行**: 独立タスクは3つ以上同時起動
-3. **デザイン参照**: Coderは `resources/mockups/` を必ず参照
-4. **レビューループ**: Guardian ↔ Coder 間で完結
+| Role | Mission | agents.json key |
+|------|---------|-----------------|
+| **Project-Manager** | 統括・進行管理 | `project-manager` |
+| **Architect-Plan** | 技術設計・タスク分割 | `architect-plan` |
+| **Senior-Coder** | 実装 | `senior-coder` |
+| **Review-Guardian** | レビュー | `review-guardian` |
+| **Designer** | UIデザイン | `designer` |
+| **Researcher** | 調査・分析 | `researcher` |
+| **Marketing** | SEO/マーケ | `marketing` |
 
 ---
 
 ## Project Structure
 
 ```
-docs/              # PRP, requirements, marketing_strategy
-spec/              # 実装プラン
-research/          # 調査結果
-resources/mockups/ # デザイン
-src/               # ソースコード
+library/config/agents.json  # エージェント定義（必読）
+docs/PRP.md                 # 要件
+docs/requirements.md        # 詳細要件
+spec/                       # 実装プラン
+research/                   # 調査結果
+src/resource/mock3/         # デザインモックアップ
+src/                        # ソースコード
 ```
 
 ---
 
 ## References
 
-- [GUILD_REFERENCE.md](library/docs/GUILD_REFERENCE.md)
-- [PM_ORCHESTRATION.md](library/docs/PM_ORCHESTRATION.md)
-- [QUICKSTART.md](QUICKSTART.md)
+- [agents.json](../../library/config/agents.json) - 全エージェント定義
+- [subagent-prompt-generator.sh](../../projects/scripts/subagent-prompt-generator.sh) - プロンプト生成
+
