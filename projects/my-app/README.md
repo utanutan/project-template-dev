@@ -1,7 +1,7 @@
 # my-app
 
 **Type:** dev
-**Created:** 2026-01-24
+**Created:** 2026-01-25
 **Status:** Initial
 
 ---
@@ -14,7 +14,8 @@
 my-app/
 ├── src/        # ソースコード
 ├── tests/      # テスト
-├── docs/       # ドキュメント
+├── docs/       # PRP等ドキュメント
+├── spec/       # 実装プラン
 └── tracks/     # 並列実行トラック
 ```
 
