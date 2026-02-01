@@ -49,6 +49,7 @@
         {
           "timing": "起動直後",
           "action": "今回のプロジェクトで必要なエージェントを選択",
+          "notificationMessage": "🤖【ユーザー確認】プロジェクトで使用するエージェントを選択してください",
           "options": [
             "RA",
             "Researcher",
@@ -66,14 +67,26 @@
         {
           "timing": "要件・調査完了後",
           "action": "docs/requirements.md と research/ の内容を確認",
+          "notificationMessage": "🤖【ユーザー確認】requirements.md と調査結果を確認してください (y/n)",
           "requiredApproval": true
         },
         {
           "timing": "コンテンツ作成後",
           "action": "src/content/ の内容を確認",
+          "notificationMessage": "🤖【ユーザー確認】コンテンツを確認してください (y/n)",
           "requiredApproval": true
         }
       ],
+      "notificationConfig": {
+        "enabled": true,
+        "triggerPatterns": [
+          "【ユーザー確認】",
+          "(y/n)",
+          "?"
+        ],
+        "configFile": "library/config/notification.env",
+        "watcherScript": "projects/scripts/claude-watcher.sh"
+      },
       "outputFormat": {
         "primaryOutput": "docs/project_status.md",
         "reportTo": "user"
