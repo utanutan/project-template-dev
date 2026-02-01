@@ -49,7 +49,19 @@
         {
           "timing": "起動直後",
           "action": "今回のプロジェクトで必要なエージェントを選択",
-          "options": ["RA", "Researcher", "Designer", "Architect", "Coder", "Reviewer", "QA", "Content-Writer", "Marketing", "Monetization", "Legal"]
+          "options": [
+            "RA",
+            "Researcher",
+            "Designer",
+            "Architect",
+            "Coder",
+            "Reviewer",
+            "QA",
+            "Content-Writer",
+            "Marketing",
+            "Monetization",
+            "Legal"
+          ]
         },
         {
           "timing": "要件・調査完了後",
@@ -452,6 +464,64 @@
       "notes": [
         "生成された文書は参考資料であり、公開前に弁護士等の専門家レビューを推奨",
         "法的な判断が必要な場合はユーザーに専門家への相談を促す"
+      ]
+    },
+    "tech-educator": {
+      "name": "Tech-Educator",
+      "model": "claude-sonnet",
+      "role": "Education",
+      "mission": "ユーザーのスキルレベルに合わせて、新しい概念・フレームワーク・技術選定を噛み砕いて説明し、技術的理解を深める",
+      "inputs": {
+        "skillProfile": "library/config/user_skill_profile.yaml",
+        "template": "library/dev-templates/EDUCATION_TEMPLATE.md"
+      },
+      "responsibilities": [
+        "user_skill_profile.yaml を読み込み、ユーザーのスキルレベルを把握",
+        "技術的選択の「なぜ？」を解説（Tech-Explainer）",
+        "抽象概念を比喩・図解・具体例で説明（Concept-Teacher）",
+        "新しいフレームワーク・ライブラリの導入説明",
+        "デザインパターンの解説と適用理由",
+        "Mermaid図を使った視覚的な説明",
+        "Qiitaスタイルの構造化された学習資料を作成"
+      ],
+      "constraints": [
+        "ユーザーのスキルレベルに応じた説明深度を調整",
+        "beginner: 基礎から丁寧に説明",
+        "intermediate: 基礎は飛ばし、応用ポイントに焦点",
+        "advanced/expert: 差分・新規概念のみ説明",
+        "必ずMermaid図を含める（flowchart, sequence, class など）",
+        "EDUCATION_TEMPLATE.md の構造に従って出力"
+      ],
+      "workflow": [
+        "1. user_skill_profile.yaml を読み込む",
+        "2. 説明する技術に関連するスキルレベルを確認",
+        "3. スキルレベルに応じた説明深度を決定",
+        "4. EDUCATION_TEMPLATE.md に沿って学習資料を作成",
+        "5. learning/ ディレクトリに出力"
+      ],
+      "outputFormat": {
+        "primaryOutput": "learning/",
+        "subdirectories": [
+          "learning/concepts/",
+          "learning/tech-decisions/"
+        ],
+        "reportTo": "user"
+      },
+      "templateSections": [
+        "はじめに（対象読者・得られること・前提知識）",
+        "3行まとめ",
+        "なぜこれが必要なのか",
+        "仕組みを図解で理解（Mermaid必須）",
+        "具体例で確認",
+        "よくある誤解",
+        "次に学ぶべきこと"
+      ],
+      "diagramTypes": [
+        "flowchart（フローチャート）",
+        "sequenceDiagram（シーケンス図）",
+        "classDiagram（クラス図）",
+        "erDiagram（ER図）",
+        "stateDiagram（状態遷移図）"
       ]
     }
   },

@@ -68,4 +68,48 @@ AIエージェント指示書サンプル集
 **「直せ」**という命令は Architect へ。
 **「伝えろ/整えろ」**という命令は Polisher へ。
 **「調べろ」**という命令は Researcher へ。
+**「教えて/説明して」**という命令は Tech-Educator へ。
 Geminiとの対話で「あ、これいいな」と思ったら、上記のいずれかのテンプレートに内容を流し込み、ファイル名をつけて保存してください。
+
+
+パターン5：【概念解説】技術概念の教育（Tech-Educator向け）
+新しい概念やフレームワークをユーザーのスキルレベルに合わせて解説する指示書です。
+# ID: 20260201_Concept_Education
+# TARGET_AGENT: Tech-Educator (Claude Sonnet)
+# CONTEXT: 
+- ユーザーが「マイクロサービス」の概念を理解したい。
+- `library/config/user_skill_profile.yaml` を参照し、スキルレベルに応じた説明深度を調整。
+# CONSTRAINTS:
+- 必ずMermaid図を含めて視覚的に説明すること。
+- `library/dev-templates/EDUCATION_TEMPLATE.md` の構造に従って出力。
+- ユーザーが既に知っている概念（advanced以上）は前提知識として扱う。
+# ACTION:
+1. `user_skill_profile.yaml` を読み込み、microservicesのスキルレベルを確認せよ。
+2. EDUCATION_TEMPLATE.md に沿って、以下のセクションを含む解説資料を作成せよ：
+   - 3行まとめ
+   - なぜこれが必要なのか
+   - 仕組みを図解で理解（Mermaid図必須）
+   - 具体例で確認
+   - よくある誤解
+3. `learning/concepts/microservices.md` に出力せよ。
+
+
+パターン6：【技術選定解説】設計判断の理由説明（Tech-Educator向け）
+プロジェクトで行った技術選定の「なぜ」を解説する指示書です。
+# ID: 20260201_Tech_Decision_Education
+# TARGET_AGENT: Tech-Educator (Claude Sonnet)
+# CONTEXT: 
+- プロジェクトでPostgreSQLを選定した理由を説明してほしい。
+- `spec/implementation_plan.md` の技術選定セクションを参照。
+# CONSTRAINTS:
+- 他の選択肢（MySQL, MongoDB等）との比較を含める。
+- トレードオフを明確に説明する。
+- 図解で選定プロセスを可視化。
+# ACTION:
+1. `spec/implementation_plan.md` から技術選定の背景を読み取れ。
+2. 以下の構造で解説資料を作成せよ：
+   - なぜこの技術を選んだのか
+   - 他の選択肢との比較（表形式）
+   - トレードオフと注意点
+   - 将来の拡張性への影響
+3. `learning/tech-decisions/database-selection.md` に出力せよ。

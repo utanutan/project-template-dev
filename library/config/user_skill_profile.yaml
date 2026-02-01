@@ -1,0 +1,91 @@
+# Antigravity Life OS - ユーザースキルプロファイル
+# =============================================
+# Tech-Educator エージェントがこのファイルを参照し、
+# ユーザーのスキルレベルに合わせた説明深度を調整します。
+
+user:
+  name: "Yuta Nakanishi (utanutan5)"
+  role: "ITエンジニア（SI / システムインテグレーション）"
+  focus:
+    - "生成AI × 開発（実務で使えるアプリ・エージェント）"
+    - "レポーティング/データパイプライン（金融系ドメイン）"
+    - "iOS/Flutterアプリ開発"
+
+# スキルレベル定義
+# - beginner: 基礎から丁寧に説明
+# - intermediate: 基礎は飛ばし、応用ポイントに焦点
+# - advanced: 差分・新規概念のみ説明
+# - expert: 最新動向・高度な最適化のみ
+
+skills:
+  languages:
+    java: advanced
+    sql: advanced
+    javascript: intermediate
+    typescript: intermediate
+    python: intermediate
+    dart: intermediate
+    swift: beginner
+    go: beginner
+    rust: beginner
+
+  concepts:
+    restful_api: advanced
+    graphql: beginner
+    microservices: advanced
+    event_driven: intermediate
+    clean_architecture: intermediate
+    design_patterns: intermediate
+    solid_principles: intermediate
+    database_design: advanced
+    authentication: intermediate
+    caching: beginner
+    messaging_kafka: intermediate
+    reporting_bi: intermediate
+    data_modeling: advanced
+
+  frameworks:
+    spring_boot: advanced
+    react: intermediate
+    nextjs: beginner
+    vue: beginner
+    express: intermediate
+    fastapi: beginner
+    django: beginner
+    flutter: intermediate
+    swiftui: beginner
+
+  devops:
+    docker: intermediate
+    kubernetes: beginner
+    cicd: intermediate
+    github_actions: beginner
+    jenkins: intermediate
+    gitlab_ci: intermediate
+    aws: intermediate
+    gcp: beginner
+    observability: beginner
+
+  databases:
+    postgresql: advanced
+    mysql: intermediate
+    dynamodb: intermediate
+    mongodb: beginner
+    redis: beginner
+    sqlite: intermediate
+
+# 説明スタイルの好み
+preferences:
+  preferred_language: "日本語"
+  explanation_style: "結論→理由→手順。比喩より具体例・実務ユースケース重視。テンプレ/コピペ可能な形が嬉しい"
+  include_diagrams: true
+  diagram_types:
+    - flowchart
+    - sequence
+    - class
+    - erd
+  preferred_examples: "SI/金融系のマイクロサービス、API設計、SQL/データ集計、レポート出力、AWS構成（APIGW/EC2/Cognito等）"
+  interaction_style:
+    - "前提は最小限、必要なら要点だけ補足"
+    - "落とし穴・検証観点・デバッグ観点も添える"
+    - "コマンド/設定/SQL/XMLなどは完成形で提示してほしい"
