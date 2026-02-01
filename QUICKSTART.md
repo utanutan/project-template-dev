@@ -10,7 +10,17 @@
 ### Step 1: プロジェクト作成
 
 ```bash
+# 空のプロジェクトを作成
 ./projects/scripts/init-project.sh my-app --type dev
+
+# または、テンプレートから作成（推奨）
+./projects/scripts/init-project.sh my-app --template user-mgmt
+
+# 利用可能なテンプレート一覧
+./projects/scripts/init-project.sh --list-templates
+```
+
+```bash
 cd projects/my-app
 ```
 
@@ -184,6 +194,8 @@ PM (Project-Manager)
 | 操作 | コマンド |
 |------|----------|
 | プロジェクト作成 | `./projects/scripts/init-project.sh <name>` |
+| テンプレートから作成 | `./projects/scripts/init-project.sh <name> --template user-mgmt` |
+| テンプレート一覧 | `./projects/scripts/init-project.sh --list-templates` |
 | PM起動 | `./projects/scripts/launch-agents.sh <name>` |
 | 並列エージェント起動 | `./projects/scripts/launch-agents.sh <name> --agents <agents>` |
 | プロンプト生成 | `./projects/scripts/subagent-prompt-generator.sh <agent>` |
