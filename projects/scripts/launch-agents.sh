@@ -273,51 +273,31 @@ launch_agent() {
         echo -e "  ${YELLOW}⚠ Running with --dangerously-skip-permissions${NC}"
     fi
 
-    # Escape single quotes in prompt for shell
-    local escaped_prompt=$(echo "$prompt" | sed "s/'/'\\\\''/g")
-    local full_cmd="cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} '${escaped_prompt}'"
+    # Write prompt to temp file to avoid shell escaping issues
+    local prompt_file=$(mktemp)
+    echo "$prompt" > "$prompt_file"
 
-    case "$os_type" in
-        macos)
-            osascript <<EOF
+    if [[ "$(uname)" == "Darwin" ]]; then
+        # macOS: use osascript to open new Terminal window
+        osascript <<EOF
 tell application "Terminal"
     activate
-    do script "${full_cmd}"
+    do script "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'"
 end tell
 EOF
-            ;;
-        linux)
-            # Try various terminal emulators
-            if command -v gnome-terminal &> /dev/null; then
-                gnome-terminal --title="${title}" -- bash -c "${full_cmd}; exec bash" &
-            elif command -v konsole &> /dev/null; then
-                konsole --new-tab -p tabtitle="${title}" -e bash -c "${full_cmd}; exec bash" &
-            elif command -v xfce4-terminal &> /dev/null; then
-                xfce4-terminal --title="${title}" -e "bash -c \"${full_cmd}; exec bash\"" &
-            elif command -v xterm &> /dev/null; then
-                xterm -title "${title}" -e "bash -c \"${full_cmd}; exec bash\"" &
-            elif command -v tmux &> /dev/null; then
-                # Fallback to tmux if available
-                tmux new-window -n "${agent}" "${full_cmd}"
-            else
-                echo -e "${RED}Error: No supported terminal emulator found${NC}"
-                echo "Install gnome-terminal, konsole, xfce4-terminal, xterm, or tmux"
-                echo ""
-                echo "Alternatively, run manually:"
-                echo "  cd ${PROJECT_PATH}"
-                echo "  ${claude_cmd} '<agent-prompt>'"
-                return 1
-            fi
-            ;;
-        windows)
-            echo -e "${YELLOW}Windows detected. Please use launch-agents.ps1 instead.${NC}"
-            return 1
-            ;;
-        *)
-            echo -e "${RED}Unsupported OS${NC}"
-            return 1
-            ;;
-    esac
+    elif command -v tmux &> /dev/null && [ -n "$TMUX" ]; then
+        # Linux with tmux: create new window
+        tmux new-window -n "${agent}" "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'; exec bash"
+    elif command -v screen &> /dev/null; then
+        # Linux with screen: create new window
+        screen -dmS "agent-${agent}" bash -c "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'"
+        echo -e "  ${BLUE}→ screen session: agent-${agent} (attach with: screen -r agent-${agent})${NC}"
+    else
+        # Fallback: run in background with nohup, output to log
+        local log_file="${PROJECT_PATH}/agent-${agent}.log"
+        nohup bash -c "cd '${PROJECT_PATH}' && ${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'" > "$log_file" 2>&1 &
+        echo -e "  ${BLUE}→ Running in background (PID: $!, log: ${log_file})${NC}"
+    fi
 }
 
 # Expand presets
