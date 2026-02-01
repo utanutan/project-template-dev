@@ -244,12 +244,23 @@ docs/PRP.md を参照して作業を開始してください。"
     echo "$prompt"
 }
 
-# Launch agent in new Terminal window (macOS)
+# Detect OS
+detect_os() {
+    case "$(uname -s)" in
+        Darwin) echo "macos" ;;
+        Linux)  echo "linux" ;;
+        CYGWIN*|MINGW*|MSYS*) echo "windows" ;;
+        *)      echo "unknown" ;;
+    esac
+}
+
+# Launch agent in new Terminal window (cross-platform)
 launch_agent() {
     local agent=$1
     local prompt=$(get_agent_prompt "$agent")
     local title="Agent: ${agent}"
     local claude_cmd="claude"
+    local os_type=$(detect_os)
 
     # Add --dangerously-skip-permissions if specified
     if [ -n "$SKIP_PERMISSIONS" ]; then
@@ -262,12 +273,51 @@ launch_agent() {
         echo -e "  ${YELLOW}⚠ Running with --dangerously-skip-permissions${NC}"
     fi
 
-    osascript <<EOF
+    # Escape single quotes in prompt for shell
+    local escaped_prompt=$(echo "$prompt" | sed "s/'/'\\\\''/g")
+    local full_cmd="cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} '${escaped_prompt}'"
+
+    case "$os_type" in
+        macos)
+            osascript <<EOF
 tell application "Terminal"
     activate
-    do script "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} '${prompt}'"
+    do script "${full_cmd}"
 end tell
 EOF
+            ;;
+        linux)
+            # Try various terminal emulators
+            if command -v gnome-terminal &> /dev/null; then
+                gnome-terminal --title="${title}" -- bash -c "${full_cmd}; exec bash" &
+            elif command -v konsole &> /dev/null; then
+                konsole --new-tab -p tabtitle="${title}" -e bash -c "${full_cmd}; exec bash" &
+            elif command -v xfce4-terminal &> /dev/null; then
+                xfce4-terminal --title="${title}" -e "bash -c \"${full_cmd}; exec bash\"" &
+            elif command -v xterm &> /dev/null; then
+                xterm -title "${title}" -e "bash -c \"${full_cmd}; exec bash\"" &
+            elif command -v tmux &> /dev/null; then
+                # Fallback to tmux if available
+                tmux new-window -n "${agent}" "${full_cmd}"
+            else
+                echo -e "${RED}Error: No supported terminal emulator found${NC}"
+                echo "Install gnome-terminal, konsole, xfce4-terminal, xterm, or tmux"
+                echo ""
+                echo "Alternatively, run manually:"
+                echo "  cd ${PROJECT_PATH}"
+                echo "  ${claude_cmd} '<agent-prompt>'"
+                return 1
+            fi
+            ;;
+        windows)
+            echo -e "${YELLOW}Windows detected. Please use launch-agents.ps1 instead.${NC}"
+            return 1
+            ;;
+        *)
+            echo -e "${RED}Unsupported OS${NC}"
+            return 1
+            ;;
+    esac
 }
 
 # Expand presets
