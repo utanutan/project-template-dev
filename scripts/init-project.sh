@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 # Default values
 PROJECT_TYPE="dev"
 TEMPLATE_NAME=""
-REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 WORKSPACE_ROOT="${REPO_ROOT}/projects"
 TEMPLATES_JSON="${REPO_ROOT}/library/config/templates.json"
 

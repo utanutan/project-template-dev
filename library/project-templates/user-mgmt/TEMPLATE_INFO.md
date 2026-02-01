@@ -20,7 +20,7 @@ Node.js + Express によるユーザー認証・管理の再利用可能なテ�
 ## 使用方法
 
 ```bash
-./projects/scripts/init-project.sh my-app --template user-mgmt
+./scripts/init-project.sh my-app --template user-mgmt
 ```
 
 ## セットアップ後

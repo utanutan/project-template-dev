@@ -39,7 +39,7 @@ tmux new -s pm
 
 # Claude Watcher経由でPM起動
 cd ~/project-template-dev
-./projects/scripts/claude-watcher.sh
+./scripts/claude-watcher.sh
 ```
 
 ### 外出中の対応

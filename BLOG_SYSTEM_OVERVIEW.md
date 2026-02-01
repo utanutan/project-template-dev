@@ -109,8 +109,8 @@ PMがPRPを読み込み → 各エージェントを順序立てて呼び出し 
 | **life** | 生活管理・計画 | 週間プランナー |
 
 ```bash
-./projects/scripts/init-project.sh my-blog --type creative
-./projects/scripts/init-project.sh weekly-plan --type life
+./scripts/init-project.sh my-blog --type creative
+./scripts/init-project.sh weekly-plan --type life
 ```
 
 ### 2.5 マルチプラットフォーム対応
@@ -121,7 +121,7 @@ PMがPRPを読み込み → 各エージェントを順序立てて呼び出し 
 ### 2.6 ワンコマンド・プロジェクト初期化
 
 ```bash
-./projects/scripts/init-project.sh my-app --type dev
+./scripts/init-project.sh my-app --type dev
 ```
 
 これだけで以下の構造が自動生成：
@@ -295,7 +295,7 @@ docs/PRP.md を読み、以下のフェーズを順番に実行してくださ�
 **並列起動コマンド**:
 
 ```bash
-./projects/scripts/launch-agents.sh my-app --agents parallel-coders
+./scripts/launch-agents.sh my-app --agents parallel-coders
 # → coder-a, coder-b, reviewer, qa-tester が別ターミナルで起動
 ```
 
@@ -501,7 +501,7 @@ Gitログに "update" が複数存在：
 ### Step 1: プロジェクト作成
 
 ```bash
-./projects/scripts/init-project.sh my-app --type dev
+./scripts/init-project.sh my-app --type dev
 cd projects/my-app
 ```
 
@@ -521,10 +521,10 @@ RA → Researcher → Architect → Designer → Coder → Review → Marketing
 
 ```bash
 # 並列コーダー起動
-./projects/scripts/launch-agents.sh my-app --agents parallel-coders
+./scripts/launch-agents.sh my-app --agents parallel-coders
 
 # 全エージェント起動
-./projects/scripts/launch-agents.sh my-app --agents full-team
+./scripts/launch-agents.sh my-app --agents full-team
 ```
 
 ---

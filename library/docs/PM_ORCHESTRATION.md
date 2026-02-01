@@ -10,10 +10,10 @@ PMがプロジェクト全体を統括し、各エージェントを呼び出す
 
 ```bash
 # 特定エージェントのプロンプトを表示
-./projects/scripts/subagent-prompt-generator.sh architect-plan
+./scripts/subagent-prompt-generator.sh architect-plan
 
 # 利用可能なエージェント一覧
-./projects/scripts/subagent-prompt-generator.sh list
+./scripts/subagent-prompt-generator.sh list
 ```
 
 このスクリプトは以下の情報を含むプロンプトを生成します：
@@ -93,7 +93,7 @@ PM
 
 ```bash
 # プロンプトを取得
-./projects/scripts/subagent-prompt-generator.sh architect-plan
+./scripts/subagent-prompt-generator.sh architect-plan
 
 # スクリプト出力をそのままサブエージェントに渡す
 ```
@@ -244,4 +244,4 @@ Requirements-Analyst → Researcher → Architect-Plan → Designer
 | **Legal-Advisor** | Opus | PM | `docs/legal/` |
 
 ---
-*See: [agents.json](../config/agents.json) | [subagent-prompt-generator.sh](../../projects/scripts/subagent-prompt-generator.sh)*
+*See: [agents.json](../config/agents.json) | [subagent-prompt-generator.sh](../../scripts/subagent-prompt-generator.sh)*

@@ -12,7 +12,7 @@
 
 1. **プロンプト生成スクリプトを実行**して、完全な制約付きプロンプトを取得する:
    ```bash
-   ./projects/scripts/subagent-prompt-generator.sh architect-plan
+   ./scripts/subagent-prompt-generator.sh architect-plan
    ```
 
 2. **出力されたプロンプト**をそのままコピーし、サブエージェントへの指示として使用する。
@@ -80,5 +80,5 @@ src/                        # ソースコード
 ## References
 
 - [agents.json](../../library/config/agents.json) - 全エージェント定義
-- [subagent-prompt-generator.sh](../../projects/scripts/subagent-prompt-generator.sh) - プロンプト生成
+- [subagent-prompt-generator.sh](../../scripts/subagent-prompt-generator.sh) - プロンプト生成
 

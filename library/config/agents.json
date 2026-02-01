@@ -85,7 +85,7 @@
           "?"
         ],
         "configFile": "library/config/notification.env",
-        "watcherScript": "projects/scripts/claude-watcher.sh"
+        "watcherScript": "scripts/claude-watcher.sh"
       },
       "outputFormat": {
         "primaryOutput": "docs/project_status.md",

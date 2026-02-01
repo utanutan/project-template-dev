@@ -81,7 +81,7 @@ echo -e "${BLUE}🚀 Launching agents for project: ${PROJECT_NAME}${NC}"
 echo ""
 
 # Path to agents.json
-REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 AGENTS_JSON="${REPO_ROOT}/library/config/agents.json"
 
 # Agent prompts - now reads from agents.json

@@ -5,7 +5,7 @@
 ### Step 1: プロジェクト作成
 
 ```bash
-./projects/scripts/init-project.sh <project-name> --type dev
+./scripts/init-project.sh <project-name> --type dev
 ```
 
 ### Step 2: PRP作成
