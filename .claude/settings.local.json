@@ -3,7 +3,8 @@
     "allow": [
       "Bash(Test-Path \"library/config/agents.json\")",
       "Bash(powershell -File:*)",
-      "Bash(powershell -Command \"Get-Content projects/scripts/launch-agents.ps1 -Encoding UTF8 | Select-Object -Index 111,138 | Format-Hex\")"
+      "Bash(powershell -Command \"Get-Content projects/scripts/launch-agents.ps1 -Encoding UTF8 | Select-Object -Index 111,138 | Format-Hex\")",
+      "Bash(python:*)"
     ]
   }
 }
