@@ -1,0 +1,60 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "version": "1.0",
+    "description": "Antigravity Life OS - Project Templates Registry",
+    "templates": {
+        "user-mgmt": {
+            "name": "User Management Template",
+            "path": "library/project-templates/user-mgmt",
+            "description": "Node.js + Express ユーザー認証・管理テンプレート。セッション管理、CRUD API、ダッシュボードを含む。",
+            "techStack": [
+                "Node.js",
+                "Express",
+                "SQLite",
+                "bcrypt",
+                "express-session"
+            ],
+            "features": [
+                "user-auth",
+                "session-management",
+                "crud-api",
+                "dashboard",
+                "google-oauth"
+            ],
+            "matchKeywords": [
+                "ユーザー管理",
+                "認証",
+                "ログイン",
+                "会員",
+                "アカウント",
+                "セッション",
+                "Auth"
+            ],
+            "copyIncludes": {
+                "src": {
+                    "target": "src",
+                    "description": "実装ベース（直接使用可能）"
+                },
+                "spec": {
+                    "target": "spec/BASE_REFERENCE",
+                    "description": "設計・実装プラン資料"
+                },
+                "research": {
+                    "target": "research/BASE_REFERENCE",
+                    "description": "技術調査資料"
+                },
+                "learning": {
+                    "target": "learning",
+                    "description": "技術解説ドキュメント"
+                }
+            },
+            "copyExcludes": [
+                "docs",
+                "node_modules",
+                "data",
+                ".git",
+                "*.db"
+            ]
+        }
+    }
+}

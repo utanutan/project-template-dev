@@ -129,13 +129,13 @@ projects/[project]/
 
 ```bash
 # プロジェクト作成
-./projects/scripts/init-project.sh my-app
+./scripts/init-project.sh my-app
 
 # 並列エージェント起動
-./projects/scripts/launch-agents.sh my-app --agents parallel-coders
+./scripts/launch-agents.sh my-app --agents parallel-coders
 
 # 全エージェント起動
-./projects/scripts/launch-agents.sh my-app --agents full-team
+./scripts/launch-agents.sh my-app --agents full-team
 ```
 
 ### プロンプト生成（推奨）
@@ -144,10 +144,10 @@ projects/[project]/
 
 ```bash
 # 特定エージェントのプロンプト表示
-./projects/scripts/subagent-prompt-generator.sh architect-plan
+./scripts/subagent-prompt-generator.sh architect-plan
 
 # 利用可能なエージェント一覧
-./projects/scripts/subagent-prompt-generator.sh list
+./scripts/subagent-prompt-generator.sh list
 ```
 
 PMに「PRPを分析して」と依頼すると、ワークフローを自動進行。

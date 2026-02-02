@@ -1,0 +1,67 @@
+# Antigravity Life OS - ユーザースキルプロファイル
+# =============================================
+# Tech-Educator エージェントがこのファイルを参照し、
+# ユーザーのスキルレベルに合わせた説明深度を調整します。
+
+user:
+  name: "Your Name"
+
+# スキルレベル定義
+# - beginner: 基礎から丁寧に説明
+# - intermediate: 基礎は飛ばし、応用ポイントに焦点
+# - advanced: 差分・新規概念のみ説明
+# - expert: 最新動向・高度な最適化のみ
+
+skills:
+  languages:
+    javascript: intermediate
+    typescript: beginner
+    python: intermediate
+    go: beginner
+    rust: beginner
+
+  concepts:
+    restful_api: intermediate
+    graphql: beginner
+    microservices: beginner
+    event_driven: beginner
+    clean_architecture: beginner
+    design_patterns: beginner
+    solid_principles: beginner
+    database_design: intermediate
+    authentication: intermediate
+    caching: beginner
+
+  frameworks:
+    react: intermediate
+    nextjs: beginner
+    vue: beginner
+    express: intermediate
+    fastapi: beginner
+    django: beginner
+
+  devops:
+    docker: beginner
+    kubernetes: beginner
+    cicd: beginner
+    github_actions: beginner
+    aws: beginner
+    gcp: beginner
+
+  databases:
+    postgresql: intermediate
+    mysql: intermediate
+    mongodb: beginner
+    redis: beginner
+    sqlite: intermediate
+
+# 説明スタイルの好み
+preferences:
+  explanation_style: "比喩と具体例を多用してほしい"
+  preferred_language: "日本語"
+  include_diagrams: true
+  diagram_types:
+    - flowchart
+    - sequence
+    - class
+  preferred_examples: "実務に近いユースケース"

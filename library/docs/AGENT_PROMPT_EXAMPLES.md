@@ -68,4 +68,64 @@ AIエージェント指示書サンプル集
 **「直せ」**という命令は Architect へ。
 **「伝えろ/整えろ」**という命令は Polisher へ。
 **「調べろ」**という命令は Researcher へ。
+**「教えて/説明して」**という命令は Tech-Educator へ。
 Geminiとの対話で「あ、これいいな」と思ったら、上記のいずれかのテンプレートに内容を流し込み、ファイル名をつけて保存してください。
+
+
+パターン5：【概念解説】技術概念の教育（Tech-Educator向け）
+新しい概念やフレームワークをユーザーのスキルレベルに合わせて解説する指示書です。
+# ID: 20260201_Concept_Education
+# TARGET_AGENT: Tech-Educator (Claude Sonnet)
+# CONTEXT: 
+- ユーザーが「マイクロサービス」の概念を理解したい。
+- `library/config/user_skill_profile.yaml` を参照し、スキルレベルに応じた説明深度を調整。
+- `docs/PRP.md` からプロジェクト文脈を把握。
+# CONSTRAINTS:
+- 冒頭に「概要」セクションを設け、目的・得られること・対象読者を明記。
+- 目次を番号付きで作成し、各セクションにアンカーリンク。
+- PRPからの繋がりを持たせ、プロジェクト文脈を説明。
+- 必ずMermaid図を含めて視覚的に説明すること。
+- コード例は完成形・コピペ可能な形式で提示。
+- 落とし穴・検証観点・デバッグ観点を添える。
+- 結論→理由→手順の順序で説明。
+# ACTION:
+1. `docs/PRP.md` を読み込み、プロジェクト全体像を把握せよ。
+2. `user_skill_profile.yaml` を読み込み、関連スキルレベルを確認せよ。
+3. EDUCATION_TEMPLATE.md に沿って、以下のセクションを含む解説資料を作成せよ：
+   - 概要（目的・得られること・対象読者・前提知識）
+   - 目次（番号付き）
+   - 全体像・アーキテクチャ（Mermaid図）
+   - 設定手順・コード例（コピペ可能）
+   - 処理フロー（Mermaid sequenceDiagram）
+   - 実装Tips・落とし穴
+   - 検証チェックリスト
+   - まとめとおすすめの使い方
+4. `learning/concepts/microservices.md` に出力せよ。
+
+
+パターン6：【プロジェクト全体解説】プロジェクトの技術スタック解説（Tech-Educator向け）
+プロジェクト全体の技術構成とアーキテクチャを解説する指示書です。
+# ID: 20260201_Project_Overview_Education
+# TARGET_AGENT: Tech-Educator (Claude Sonnet)
+# CONTEXT: 
+- プロジェクト全体の技術スタックと設計思想を理解したい。
+- `docs/PRP.md` と `spec/architecture.md` を参照。
+- `library/config/user_skill_profile.yaml` でスキルレベルを確認。
+# CONSTRAINTS:
+- PRPの目的・スコープから繋がりを持たせる。
+- 各技術の選定理由と役割を表形式で整理。
+- Mermaid図で全体アーキテクチャを可視化。
+- 実際のコード例（コピペ可能）を提示。
+- 落とし穴・デバッグ観点・検証チェックリストを含める。
+# ACTION:
+1. `docs/PRP.md` と `spec/architecture.md` を読み込めよ。
+2. プロジェクト全体の技術解説ドキュメントを以下の構造で作成せよ：
+   - 概要（目的・得られること・PRPからの繋がり）
+   - 目次（番号付き）
+   - 技術スタック一覧（表形式）
+   - アーキテクチャ図解（Mermaid flowchart）
+   - 各コンポーネントの役割と実装例
+   - 処理フロー（Mermaid sequenceDiagram）
+   - 実装Tips・落とし穴
+   - 検証チェックリスト
+3. `learning/00-project-overview.md` に出力せよ。

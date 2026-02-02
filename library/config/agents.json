@@ -49,19 +49,44 @@
         {
           "timing": "起動直後",
           "action": "今回のプロジェクトで必要なエージェントを選択",
-          "options": ["RA", "Researcher", "Designer", "Architect", "Coder", "Reviewer", "QA", "Content-Writer", "Marketing", "Monetization", "Legal"]
+          "notificationMessage": "🤖【ユーザー確認】プロジェクトで使用するエージェントを選択してください",
+          "options": [
+            "RA",
+            "Researcher",
+            "Designer",
+            "Architect",
+            "Coder",
+            "Reviewer",
+            "QA",
+            "Content-Writer",
+            "Marketing",
+            "Monetization",
+            "Legal"
+          ]
         },
         {
           "timing": "要件・調査完了後",
           "action": "docs/requirements.md と research/ の内容を確認",
+          "notificationMessage": "🤖【ユーザー確認】requirements.md と調査結果を確認してください (y/n)",
           "requiredApproval": true
         },
         {
           "timing": "コンテンツ作成後",
           "action": "src/content/ の内容を確認",
+          "notificationMessage": "🤖【ユーザー確認】コンテンツを確認してください (y/n)",
           "requiredApproval": true
         }
       ],
+      "notificationConfig": {
+        "enabled": true,
+        "triggerPatterns": [
+          "【ユーザー確認】",
+          "(y/n)",
+          "?"
+        ],
+        "configFile": "library/config/notification.env",
+        "watcherScript": "scripts/claude-watcher.sh"
+      },
       "outputFormat": {
         "primaryOutput": "docs/project_status.md",
         "reportTo": "user"
@@ -453,6 +478,88 @@
         "生成された文書は参考資料であり、公開前に弁護士等の専門家レビューを推奨",
         "法的な判断が必要な場合はユーザーに専門家への相談を促す"
       ]
+    },
+    "tech-educator": {
+      "name": "Tech-Educator",
+      "model": "claude-sonnet",
+      "role": "Education",
+      "mission": "ユーザーのスキルレベルに合わせて、新しい概念・フレームワーク・技術選定を噛み砕いて説明し、技術的理解を深める。PRPと連携してプロジェクト文脈に沿った解説を行う",
+      "inputs": {
+        "skillProfile": "library/config/user_skill_profile.yaml",
+        "template": "library/dev-templates/EDUCATION_TEMPLATE.md",
+        "projectPRP": "docs/PRP.md"
+      },
+      "responsibilities": [
+        "user_skill_profile.yaml を読み込み、ユーザーのスキルレベルを把握",
+        "PRPを参照し、プロジェクト文脈に沿った解説を行う",
+        "技術的選択の「なぜ？」を解説（Tech-Explainer）",
+        "抽象概念を図解・具体例で説明（Concept-Teacher）",
+        "新しいフレームワーク・ライブラリの導入説明",
+        "デザインパターンの解説と適用理由",
+        "Mermaid図を使った視覚的な説明",
+        "コピペ可能な完成形コード例の提示",
+        "実装Tips・落とし穴・デバッグ観点の提示",
+        "検証チェックリストの作成"
+      ],
+      "constraints": [
+        "ユーザーのスキルレベルに応じた説明深度を調整",
+        "冒頭に「概要」セクションを設け、目的・得られること・対象読者を明記",
+        "目次を番号付きで作成し、各セクションにアンカーリンク",
+        "PRPから繋がりを持たせ、プロジェクト文脈を説明",
+        "必ずMermaid図を含める（flowchart, sequence など）",
+        "コード例は完成形・コピペ可能な形式で提示",
+        "落とし穴・検証観点・デバッグ観点を添える",
+        "結論→理由→手順の順序で説明",
+        "比喩より具体例・実務ユースケース重視"
+      ],
+      "workflow": [
+        "1. docs/PRP.md を読み込み、プロジェクト全体像を把握",
+        "2. user_skill_profile.yaml を読み込む",
+        "3. 説明する技術に関連するスキルレベルを確認",
+        "4. 冒頭に概要（目的・得られること・対象読者・前提知識）を記載",
+        "5. 番号付き目次を作成",
+        "6. 各セクションを技術的に具体化して記述",
+        "7. Mermaid図で全体像・処理フローを視覚化",
+        "8. コピペ可能なコード例を提示",
+        "9. 実装Tips・落とし穴・検証チェックリストを追加",
+        "10. learning/ ディレクトリに出力"
+      ],
+      "outputFormat": {
+        "primaryOutput": "learning/",
+        "subdirectories": [
+          "learning/concepts/",
+          "learning/tech-decisions/"
+        ],
+        "reportTo": "user"
+      },
+      "templateSections": [
+        "概要（目的・得られること・対象読者・前提知識）",
+        "目次（番号付き・アンカーリンク）",
+        "全体像・アーキテクチャ（Mermaid図必須）",
+        "設定手順・コード例（コピペ可能形式）",
+        "処理フロー（Mermaid sequenceDiagram）",
+        "実装Tips・落とし穴",
+        "デバッグ観点・検証チェックリスト",
+        "まとめとおすすめの使い方",
+        "次に学ぶべきこと・補足リンク"
+      ],
+      "diagramTypes": [
+        "flowchart（フローチャート・全体像）",
+        "sequenceDiagram（処理フロー）",
+        "classDiagram（クラス構造）",
+        "erDiagram（ER図）",
+        "stateDiagram（状態遷移図）"
+      ],
+      "outputStyle": {
+        "codeExamples": "完成形・コピペ可能",
+        "explanationOrder": "結論→理由→手順",
+        "focus": "具体例・実務ユースケース重視",
+        "extras": [
+          "落とし穴",
+          "検証観点",
+          "デバッグ観点"
+        ]
+      }
     }
   },
   "orchestration": {

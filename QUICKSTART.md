@@ -10,7 +10,17 @@
 ### Step 1: プロジェクト作成
 
 ```bash
-./projects/scripts/init-project.sh my-app --type dev
+# 空のプロジェクトを作成
+./scripts/init-project.sh my-app --type dev
+
+# または、テンプレートから作成（推奨）
+./scripts/init-project.sh my-app --template user-mgmt
+
+# 利用可能なテンプレート一覧
+./scripts/init-project.sh --list-templates
+```
+
+```bash
 cd projects/my-app
 ```
 
@@ -41,13 +51,13 @@ docs/PRP.md を読み、プロジェクトを完遂してください。
 
 ```bash
 # PMを起動（新しいTerminalウィンドウで開く）
-./projects/scripts/launch-agents.sh my-app
+./scripts/launch-agents.sh my-app
 
 # または明示的に指定
-./projects/scripts/launch-agents.sh my-app --agents pm
+./scripts/launch-agents.sh my-app --agents pm
 
 # 確認プロンプトをスキップして自動実行（注意して使用）
-./projects/scripts/launch-agents.sh my-app --dangerously-skip-permissions
+./scripts/launch-agents.sh my-app --dangerously-skip-permissions
 ```
 
 ### 方法2: Claude Code CLI
@@ -136,13 +146,13 @@ PM (Project-Manager)
 
 ```bash
 # 並列コーダー起動（Track A, B + Reviewer）
-./projects/scripts/launch-agents.sh my-app --agents parallel-coders
+./scripts/launch-agents.sh my-app --agents parallel-coders
 
 # 全エージェント起動
-./projects/scripts/launch-agents.sh my-app --agents full-team
+./scripts/launch-agents.sh my-app --agents full-team
 
 # 個別指定
-./projects/scripts/launch-agents.sh my-app --agents coder-a,coder-b,reviewer
+./scripts/launch-agents.sh my-app --agents coder-a,coder-b,reviewer
 ```
 
 ### プロンプト生成スクリプト
@@ -151,10 +161,10 @@ PM (Project-Manager)
 
 ```bash
 # 特定エージェントのプロンプト表示
-./projects/scripts/subagent-prompt-generator.sh architect-plan
+./scripts/subagent-prompt-generator.sh architect-plan
 
 # 利用可能なエージェント一覧
-./projects/scripts/subagent-prompt-generator.sh list
+./scripts/subagent-prompt-generator.sh list
 ```
 
 ---
@@ -183,10 +193,12 @@ PM (Project-Manager)
 
 | 操作 | コマンド |
 |------|----------|
-| プロジェクト作成 | `./projects/scripts/init-project.sh <name>` |
-| PM起動 | `./projects/scripts/launch-agents.sh <name>` |
-| 並列エージェント起動 | `./projects/scripts/launch-agents.sh <name> --agents <agents>` |
-| プロンプト生成 | `./projects/scripts/subagent-prompt-generator.sh <agent>` |
+| プロジェクト作成 | `./scripts/init-project.sh <name>` |
+| テンプレートから作成 | `./scripts/init-project.sh <name> --template user-mgmt` |
+| テンプレート一覧 | `./scripts/init-project.sh --list-templates` |
+| PM起動 | `./scripts/launch-agents.sh <name>` |
+| 並列エージェント起動 | `./scripts/launch-agents.sh <name> --agents <agents>` |
+| プロンプト生成 | `./scripts/subagent-prompt-generator.sh <agent>` |
 
 ### プリセット
 
