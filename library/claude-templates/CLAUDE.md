@@ -11,6 +11,7 @@
 ### PM がサブエージェントを起動する際の手順
 
 1. **プロンプト生成スクリプトを実行**して、完全な制約付きプロンプトを取得する:
+
    ```bash
    ./scripts/subagent-prompt-generator.sh architect-plan
    ```
@@ -19,6 +20,7 @@
    - `agents.json` の全フィールド（制約、責務、禁止ツール、Workflow）が含まれているため、確実にルールが適用されます。
 
 3. **起動例** (PM → Architect):
+
    ```
    (上記スクリプトの出力をペースト)
    ```
@@ -69,11 +71,49 @@ PM (統括) ──────────────────────�
 library/config/agents.json  # エージェント定義（必読）
 docs/PRP.md                 # 要件
 docs/requirements.md        # 詳細要件
-spec/                       # 実装プラン
+spec/                       # 実装プラン（読み取り専用）
+tracks/                     # 進捗管理（開発エージェント必読・更新）
+  └── PROGRESS.md           # タスク進捗一覧
 research/                   # 調査結果
-src/resource/mock3/         # デザインモックアップ
+resources/mockups/          # デザインモックアップ
 src/                        # ソースコード
 ```
+
+---
+
+## 📊 進捗管理ルール
+
+### 進捗管理の責任分担
+
+| エージェント | 責任 |
+|-------------|------|
+| **Project-Manager** | `tracks/PROGRESS.md` の初期化・進捗報告 |
+| **Senior-Coder** | タスク開始/完了時にステータス更新 |
+| **Review-Guardian** | レビュー結果の反映 |
+| **QA-Tester** | テスト結果の反映 |
+
+### ステータス一覧
+
+| ステータス | 意味 |
+|-----------|------|
+| ⏳ 待機 | 未着手 |
+| 🔄 進行中 | 作業中 |
+| ✅ 完了 | 完了 |
+| 🔙 差し戻し | レビューで差し戻し |
+| ⛔ ブロック | 依存関係でブロック中 |
+
+### 更新ルール
+
+1. **タスク開始時**
+   - `tracks/PROGRESS.md` のステータスを `🔄 進行中` に変更
+   - 開始日と担当エージェント名を記入
+
+2. **タスク完了時**
+   - ステータスを `✅ 完了` に変更
+   - 完了日を記入
+
+3. **差し戻し/ブロック時**
+   - ステータスを `🔙 差し戻し` または `⛔ ブロック` に変更
 
 ---
 
@@ -81,4 +121,3 @@ src/                        # ソースコード
 
 - [agents.json](../../library/config/agents.json) - 全エージェント定義
 - [subagent-prompt-generator.sh](../../scripts/subagent-prompt-generator.sh) - プロンプト生成
-

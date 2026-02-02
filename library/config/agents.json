@@ -14,7 +14,8 @@
         "フェーズ間の進行管理と調整",
         "リスク管理と問題解決",
         "ステークホルダーへの報告",
-        "品質・納期・スコープの管理"
+        "品質・納期・スコープの管理",
+        "tracks/PROGRESS.md の初期化と進捗報告"
       ],
       "constraints": [
         "【絶対禁止】実装コードを書かない・編集しない",
@@ -37,13 +38,15 @@
         "5. 【ユーザー確認】requirements.md と調査結果を確認してもらう",
         "6. Designer にデザインを依頼",
         "7. Architect-Plan に設計・タスク分割・実装プラン作成を依頼",
-        "8. 【委譲】Architect-PlanがSenior-Coderに指示（PMは直接指示しない）",
-        "9. Review-Guardian にレビューを依頼",
-        "10. QA-Tester にテストを依頼",
-        "11. Content-Writer にコンテンツ執筆を依頼",
-        "12. 【ユーザー確認】コンテンツを確認してもらう",
-        "13. Marketing に最適化を依頼",
-        "14. 最終統合と完了報告（コードには触れない）"
+        "8. spec/implementation_plan.md を確認し tracks/PROGRESS.md を初期化",
+        "9. 【委譲】Architect-PlanがSenior-Coderに指示（PMは直接指示しない）",
+        "10. Review-Guardian にレビューを依頼",
+        "11. QA-Tester にテストを依頼",
+        "12. Content-Writer にコンテンツ執筆を依頼",
+        "13. 【ユーザー確認】コンテンツを確認してもらう",
+        "14. Marketing に最適化を依頼",
+        "15. tracks/PROGRESS.md を確認し進捗報告",
+        "16. 最終統合と完了報告（コードには触れない）"
       ],
       "userCheckpoints": [
         {
@@ -89,12 +92,15 @@
       },
       "outputFormat": {
         "primaryOutput": "docs/project_status.md",
+        "progressTracker": "tracks/PROGRESS.md",
         "reportTo": "user"
       },
       "notes": [
         "実装指示は直接Coderに出さず、Architect-Planに設計と分割を依頼する",
         "Architect-PlanがCoderへの具体的なタスク指示を行う",
-        "ユーザー確認ポイントでは必ず承認を得てから次フェーズへ進む"
+        "ユーザー確認ポイントでは必ず承認を得てから次フェーズへ進む",
+        "実装計画確定後、spec/implementation_plan.md を元に tracks/PROGRESS.md を初期化する",
+        "進捗報告時は tracks/PROGRESS.md を参照してステータスを報告する"
       ]
     },
     "requirements-analyst": {
@@ -177,12 +183,15 @@
         "テストなしのコードをコミットしない",
         "メインスレッドには完了報告のみ返す",
         "コード変更はサブエージェント内で完結",
-        "実装前に resources/mockups/ のモックアップを必ず参照する"
+        "実装前に resources/mockups/ のモックアップを必ず参照する",
+        "タスク開始時: tracks/PROGRESS.md のステータスを「🔄 進行中」に更新",
+        "タスク完了時: tracks/PROGRESS.md のステータスを「✅ 完了」に更新し完了日を記入"
       ],
       "inputs": {
         "designMockups": "resources/mockups/",
         "designSystem": "docs/design_system.md",
         "implementationPlan": "spec/implementation_plan.md",
+        "progressTracker": "tracks/PROGRESS.md",
         "imageAssets": "resources/image_assets.md"
       },
       "receivesInstructionsFrom": "architect-plan",
@@ -192,7 +201,8 @@
       },
       "notes": [
         "Project Managerから直接指示を受けない",
-        "Architect-Planからspec/implementation_plan.mdに基づいた具体的なタスク指示を受ける"
+        "Architect-Planからspec/implementation_plan.mdに基づいた具体的なタスク指示を受ける",
+        "進捗は tracks/PROGRESS.md で管理し、タスク開始・完了時に必ず更新する"
       ]
     },
     "review-guardian": {
@@ -210,8 +220,12 @@
       "constraints": [
         "問題発見時はsenior-coderに差し戻す",
         "メインスレッドには要約のみ報告",
-        "修正ループはサブエージェント間で完結"
+        "修正ループはサブエージェント間で完結",
+        "レビュー完了時: tracks/PROGRESS.md に結果を反映（差し戻しは「🔙 差し戻し」ステータス）"
       ],
+      "inputs": {
+        "progressTracker": "tracks/PROGRESS.md"
+      },
       "reviewChecklist": [
         "セキュリティ脆弱性",
         "入力バリデーション",
@@ -242,8 +256,14 @@
       "constraints": [
         "resources/mockups/ と実際のUIを比較検証",
         "発見したバグは再現手順を明記",
-        "テストコードは tests/e2e/ に保存"
+        "テストコードは tests/e2e/ に保存",
+        "テスト開始時: tracks/PROGRESS.md を確認し該当タスクのテスト状況を記録",
+        "テスト完了時: tracks/PROGRESS.md にテスト結果を反映"
       ],
+      "inputs": {
+        "progressTracker": "tracks/PROGRESS.md",
+        "designMockups": "resources/mockups/"
+      },
       "tools": [
         "browser (ブラウザ操作)",
         "playwright (E2Eテスト)"
@@ -253,7 +273,8 @@
         "2. ブラウザで主要ページを確認",
         "3. resources/mockups/ とUI比較",
         "4. E2Eテストコードを作成",
-        "5. テスト実行と結果報告"
+        "5. テスト実行と結果報告",
+        "6. tracks/PROGRESS.md にテスト結果を記録"
       ],
       "testFramework": {
         "preferred": "Playwright",
