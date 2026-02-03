@@ -110,3 +110,64 @@ payload = json.loads(form_data.get("payload", "{}"))
 # 3秒以内に 200 を返さないとリトライされる
 # 重い処理はバックグラウンドタスクで
 ```
+
+### Claude Code CLI の subprocess 呼び出し (2026-02-03)
+
+**stdin経由でプロンプトを渡す正しい方法:**
+
+```python
+# ❌ 動作しない（"command too long" エラー）
+subprocess.run(
+    [claude_cmd, "-p", "-", "--dangerously-skip-permissions"],
+    input=prompt,
+    ...
+)
+
+# ✅ 正しい方法（-p フラグなしでstdinを使用）
+subprocess.run(
+    [claude_cmd, "--dangerously-skip-permissions"],
+    input=prompt,
+    capture_output=True,
+    text=True,
+    timeout=120,
+)
+```
+
+**注意点:**
+- `-p` フラグは位置引数としてプロンプトを渡す用途
+- stdin経由の場合は `-p` なしで `input=` パラメータを使用
+- daemonプロセスからの実行時は `--dangerously-skip-permissions` が必須
+
+### Claude Code によるファイル操作の制御 (2026-02-03)
+
+Claude Code が `--dangerously-skip-permissions` でファイル操作可能な場合、プロンプトで保存先を明示しないと意図しない場所にファイルが作成される:
+
+```markdown
+# プロンプト内で保存先を明示する例
+If `insight.generate` is true:
+1. Create an Insight file at `30_Insight/{YYYY-MM-DD}_{title}_insight.md`
+2. Add a link to the original note: `[[30_Insight/...]]`
+```
+
+**ポイント:**
+- フォルダパスを絶対パスまたはvault相対パスで明示
+- ファイル名パターンも具体的に指定
+- 双方向リンクの形式も指定
+
+### uvicorn のコード変更反映 (2026-02-03)
+
+uvicorn はデフォルトで自動リロードしないため、コード変更後はサーバー再起動が必要:
+
+```bash
+# 強制終了して再起動
+pkill -9 -f uvicorn
+sleep 2
+
+# キャッシュクリア（必要に応じて）
+find src -name "__pycache__" -type d -exec rm -rf {} +
+
+# 再起動
+uv run uvicorn main:app --host 0.0.0.0 --port 8741 &
+```
+
+開発中は `--reload` オプションを検討（ただしproductionでは非推奨）
