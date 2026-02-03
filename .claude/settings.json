@@ -16,7 +16,9 @@
             "Bash(git checkout *)",
             "Bash(git merge *)",
             "Bash(git pull*)",
-            "Bash(gh *)"
+            "Bash(gh *)",
+            "Bash(vercel *)",
+            "Bash(vercel)"
         ],
         "deny": []
     }

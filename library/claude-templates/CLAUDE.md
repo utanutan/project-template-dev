@@ -117,6 +117,21 @@ src/                        # ソースコード
 
 ---
 
+## 知見管理ルール
+
+### `.claude/rules/` の参照・更新
+
+- セッション開始時に `.claude/rules/` 配下のファイルを読み、過去の知見を適用する
+- プロジェクト中に得た技術的知見（トラブルシュート、設計判断、ベストプラクティス等）は `.claude/rules/` に記録する
+- ファイル名は `<topic>.md` 形式（例: `docker-tips.md`, `api-design.md`）
+
+### セッション終了時の知見フィードバック
+
+- セッション終了前に、新たに得た知見が `.claude/rules/` に記録されているか確認する
+- グローバルに有用な知見がある場合は、テンプレートリポジトリの `.claude/rules/global-learnings.md` へのフィードバックを提案する
+
+---
+
 ## References
 
 - [agents.json](../../library/config/agents.json) - 全エージェント定義

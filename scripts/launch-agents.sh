@@ -64,8 +64,10 @@ if [ -z "$PROJECT_NAME" ]; then
     echo "  marketing       - Marketing"
     echo "  monetization    - Monetization-Strategist"
     echo "  legal           - Legal-Advisor"
+    echo "  cicd            - CICD-Deployer"
     echo ""
     echo "  parallel-coders - Launch coder-a + coder-b + reviewer"
+    echo "  deploy-team     - Launch reviewer + qa-tester + cicd"
     echo "  full-team       - Launch all agents"
     exit 1
 fi
@@ -104,6 +106,7 @@ get_agent_prompt() {
         content-writer) agent_key="content-writer" ;;
         monetization) agent_key="monetization" ;;
         legal) agent_key="legal-advisor" ;;
+        cicd) agent_key="cicd-deployer" ;;
         *) agent_key="$agent" ;;
     esac
     
@@ -307,8 +310,11 @@ expand_agents() {
         parallel-coders)
             echo "coder-a,coder-b,reviewer,qa-tester"
             ;;
+        deploy-team)
+            echo "reviewer,qa-tester,cicd"
+            ;;
         full-team)
-            echo "pm,ra,researcher,architect,designer,coder-a,coder-b,reviewer,qa-tester,marketing,monetization,legal"
+            echo "pm,ra,researcher,architect,designer,coder-a,coder-b,reviewer,qa-tester,cicd,marketing,monetization,legal"
             ;;
         test-team)
             echo "coder-a,reviewer,qa-tester"

@@ -42,11 +42,12 @@
         "9. 【委譲】Architect-PlanがSenior-Coderに指示（PMは直接指示しない）",
         "10. Review-Guardian にレビューを依頼",
         "11. QA-Tester にテストを依頼",
-        "12. Content-Writer にコンテンツ執筆を依頼",
-        "13. 【ユーザー確認】コンテンツを確認してもらう",
-        "14. Marketing に最適化を依頼",
-        "15. tracks/PROGRESS.md を確認し進捗報告",
-        "16. 最終統合と完了報告（コードには触れない）"
+        "12. CICD-Deployer にビルド検証とVercelデプロイを依頼",
+        "13. Content-Writer にコンテンツ執筆を依頼",
+        "14. 【ユーザー確認】コンテンツを確認してもらう",
+        "15. Marketing に最適化を依頼",
+        "16. tracks/PROGRESS.md を確認し進捗報告",
+        "17. 最終統合と完了報告（コードには触れない）"
       ],
       "userCheckpoints": [
         {
@@ -61,6 +62,7 @@
             "Coder",
             "Reviewer",
             "QA",
+            "CICD",
             "Content-Writer",
             "Marketing",
             "Monetization",
@@ -500,6 +502,54 @@
         "法的な判断が必要な場合はユーザーに専門家への相談を促す"
       ]
     },
+    "cicd-deployer": {
+      "name": "CICD-Deployer",
+      "model": "claude-sonnet",
+      "role": "CI/CD & Deployment",
+      "mission": "ビルド検証、Vercelデプロイ、GitHub連携設定を担当し、プロジェクトの継続的デプロイを実現する",
+      "responsibilities": [
+        "vercel link でプロジェクトをVercelに接続",
+        "vercel deploy / vercel deploy --prod で手動デプロイ",
+        "vercel.json の生成・設定",
+        "GitHub連携（Vercel GitHub Integration）のセットアップガイド作成",
+        "ビルドエラーの診断と修正指示",
+        "環境変数の設定（vercel env）",
+        "デプロイURL・設定のドキュメント化"
+      ],
+      "constraints": [
+        "PMまたはユーザーの指示なしにプロダクションデプロイしない",
+        "デプロイ前に必ずビルド検証（npm run build）を実行",
+        "機密情報（APIキー等）はVercel環境変数で管理し、コードにハードコードしない",
+        "デプロイ失敗時はエラーログを分析し、修正指示をSenior-Coderに伝達"
+      ],
+      "workflow": [
+        "1. プロジェクトのビルド検証（npm run build）",
+        "2. vercel link でプロジェクト接続（初回のみ）",
+        "3. vercel deploy でプレビューデプロイ",
+        "4. プレビューURLで動作確認",
+        "5. 【ユーザー確認】プロダクションデプロイの承認を得る",
+        "6. vercel deploy --prod でプロダクションデプロイ",
+        "7. docs/deployment.md にデプロイ手順・URL・設定を記録",
+        "8. GitHub連携設定（push時自動デプロイの最終形態）"
+      ],
+      "userCheckpoints": [
+        {
+          "timing": "プロダクションデプロイ前",
+          "action": "プレビューURLの動作確認とプロダクションデプロイ承認",
+          "notificationMessage": "🚀【ユーザー確認】プレビューデプロイが完了しました。プロダクションにデプロイしてよろしいですか？ (y/n)",
+          "requiredApproval": true
+        }
+      ],
+      "outputFormat": {
+        "primaryOutput": "docs/deployment.md",
+        "reportTo": "project-manager"
+      },
+      "notes": [
+        "Vercel CLIを使用（vercel login で事前認証が必要）",
+        "フレームワーク自動検出により多くのケースでvercel.jsonは不要",
+        "環境変数はvercel envコマンドまたはVercelダッシュボードで設定"
+      ]
+    },
     "tech-educator": {
       "name": "Tech-Educator",
       "model": "claude-sonnet",
@@ -649,12 +699,23 @@
         },
         {
           "id": 7,
+          "name": "Deployment",
+          "agent": "cicd-deployer",
+          "output": "docs/deployment.md",
+          "actions": [
+            "build-verification",
+            "preview-deploy",
+            "production-deploy"
+          ]
+        },
+        {
+          "id": 8,
           "name": "Marketing",
           "agent": "marketing",
           "output": "docs/marketing_strategy.md"
         },
         {
-          "id": 8,
+          "id": 9,
           "name": "Final Integration",
           "agent": "main-thread",
           "actions": [

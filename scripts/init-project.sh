@@ -210,6 +210,13 @@ if [ -d "${REPO_ROOT}/library/claude-templates/.claude" ]; then
     echo -e "${GREEN}✓${NC} Copied .claude directory"
 fi
 
+# Ensure .claude/rules/ exists with template rules
+if [ -d "${REPO_ROOT}/library/claude-templates/.claude/rules" ]; then
+    mkdir -p "${PROJECT_PATH}/.claude/rules"
+    cp -r "${REPO_ROOT}/library/claude-templates/.claude/rules/." "${PROJECT_PATH}/.claude/rules/"
+    echo -e "${GREEN}✓${NC} Copied .claude/rules/ (knowledge base)"
+fi
+
 # Apply template overlay if specified
 if [ -n "$TEMPLATE_NAME" ]; then
     echo ""
