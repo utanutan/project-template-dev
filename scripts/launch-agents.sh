@@ -138,7 +138,8 @@ get_agent_prompt() {
     local inputs=$(jq -r ".agents[\"${agent_key}\"].inputs // {} | to_entries | map(\"\(.key): \(.value)\") | join(\"\n\")" "$AGENTS_JSON")
     local primary_output=$(jq -r ".agents[\"${agent_key}\"].outputFormat.primaryOutput // \"\"" "$AGENTS_JSON")
     local report_to=$(jq -r ".agents[\"${agent_key}\"].outputFormat.reportTo // \"\"" "$AGENTS_JSON")
-    
+    local learnings_file=$(jq -r ".agents[\"${agent_key}\"].learningsFile // \"\"" "$AGENTS_JSON")
+
     # Build comprehensive prompt
     local prompt="あなたは **${name}** (Role: ${role}) です。"
     
@@ -226,6 +227,28 @@ ${workflow}"
         fi
     fi
     
+    # Add learnings file reference and content
+    if [ -n "$learnings_file" ]; then
+        prompt="${prompt}
+
+## 過去の知見 (Learnings)
+- 知見ファイル: ${learnings_file}
+- 起動時にこのファイルを参照し、過去の学びを適用すること
+- ユーザーからの指摘・修正があった場合は、このファイルに知見を追記すること"
+
+        # If learnings file exists in template repo, include its content
+        local learnings_path="${REPO_ROOT}/${learnings_file}"
+        if [ -f "$learnings_path" ]; then
+            local learnings_content=$(cat "$learnings_path" 2>/dev/null | head -100)
+            if [ -n "$learnings_content" ]; then
+                prompt="${prompt}
+
+### 蓄積された知見:
+${learnings_content}"
+            fi
+        fi
+    fi
+
     # Add track-specific info for coders
     if [ "$agent" = "coder-a" ]; then
         prompt="${prompt}
