@@ -47,7 +47,8 @@
         "14. 【ユーザー確認】コンテンツを確認してもらう",
         "15. Marketing に最適化を依頼",
         "16. tracks/PROGRESS.md を確認し進捗報告",
-        "17. 最終統合と完了報告（コードには触れない）"
+        "17. 最終統合と完了報告（コードには触れない）",
+        "18. /retro を実行してプロジェクトの振り返りを行う"
       ],
       "userCheckpoints": [
         {
@@ -102,7 +103,8 @@
         "Architect-PlanがCoderへの具体的なタスク指示を行う",
         "ユーザー確認ポイントでは必ず承認を得てから次フェーズへ進む",
         "実装計画確定後、spec/implementation_plan.md を元に tracks/PROGRESS.md を初期化する",
-        "進捗報告時は tracks/PROGRESS.md を参照してステータスを報告する"
+        "進捗報告時は tracks/PROGRESS.md を参照してステータスを報告する",
+        "プロジェクト完了時は必ず /retro を実行して振り返りを行い、知見を永続化する"
       ]
     },
     "requirements-analyst": {
