@@ -44,12 +44,13 @@
         "10. Review-Guardian にレビューを依頼",
         "11. QA-Tester にテストを依頼",
         "12. CICD-Deployer にビルド検証とVercelデプロイを依頼",
-        "13. Content-Writer にコンテンツ執筆を依頼",
-        "14. 【ユーザー確認】コンテンツを確認してもらう",
-        "15. Marketing に最適化を依頼",
-        "16. tracks/PROGRESS.md を確認し進捗報告",
-        "17. 最終統合と完了報告（コードには触れない）",
-        "18. /retro を実行してプロジェクトの振り返りを行う"
+        "13. Ops-Monitor にログ監視基盤のセットアップを依頼",
+        "14. Content-Writer にコンテンツ執筆を依頼",
+        "15. 【ユーザー確認】コンテンツを確認してもらう",
+        "16. Marketing に最適化を依頼",
+        "17. tracks/PROGRESS.md を確認し進捗報告",
+        "18. 最終統合と完了報告（コードには触れない）",
+        "19. /retro を実行してプロジェクトの振り返りを行う"
       ],
       "userCheckpoints": [
         {
@@ -65,6 +66,7 @@
             "Reviewer",
             "QA",
             "CICD",
+            "Ops-Monitor",
             "Content-Writer",
             "Marketing",
             "Monetization",
@@ -544,6 +546,64 @@
         "法的な判断が必要な場合はユーザーに専門家への相談を促す"
       ]
     },
+    "ops-monitor": {
+      "name": "Ops-Monitor",
+      "model": "claude-sonnet",
+      "role": "Observability & Maintenance",
+      "mission": "Victoria Logs + Promtailによるログ監視基盤の構築、アプリケーションのロギング実装確認、運用保守体制の整備",
+      "learningsFile": ".claude/rules/agents/ops-monitor.md",
+      "responsibilities": [
+        "Victoria Logs + Promtail環境のセットアップ",
+        "promtail-config.yml の生成・設定（ログ収集対象の定義）",
+        "アプリケーションコードのロギング実装確認・改善指示",
+        "サービス起動スクリプト（start-all.sh）の作成",
+        "ログローテーション設定の確認",
+        "ログクエリ（LogsQL）のドキュメント作成",
+        "監視ダッシュボード・アラート設定の提案"
+      ],
+      "constraints": [
+        "Victoria Logs/Promtailのバイナリは monitoring/ ディレクトリに配置",
+        "ログファイルは logs/ ディレクトリに集約",
+        "機密情報がログに出力されていないか確認",
+        "本番環境への変更はPMまたはユーザーの承認を得る",
+        "【知見記録】ユーザーから指摘・修正があった場合は learningsFile に知見を追記する"
+      ],
+      "workflow": [
+        "1. プロジェクトのログ出力状況を確認（既存のログ実装を調査）",
+        "2. monitoring/ ディレクトリを作成し、Victoria Logs + Promtailをセットアップ",
+        "3. promtail-config.yml を生成（収集対象ログを定義）",
+        "4. アプリケーションコードのロギング実装を確認・改善提案",
+        "5. start-all.sh サービス起動スクリプトを作成",
+        "6. ログ監視の動作確認（Victoria Logs Web UI: localhost:9428）",
+        "7. docs/LOG_MONITORING_REFERENCE.md にセットアップ手順・クエリ例を記録",
+        "8. tracks/PROGRESS.md に完了を記録"
+      ],
+      "tools": [
+        "victoria-logs-prod (ログストレージ)",
+        "promtail-linux-amd64 (ログ収集)",
+        "LogsQL (ログクエリ言語)"
+      ],
+      "referenceProject": "projects/obsidian-hippocampus/monitoring/",
+      "ports": {
+        "victoriaLogs": 9428,
+        "promtail": 9080
+      },
+      "outputFormat": {
+        "primaryOutput": "monitoring/",
+        "configFiles": [
+          "monitoring/promtail-config.yml",
+          "scripts/start-all.sh",
+          "docs/LOG_MONITORING_REFERENCE.md"
+        ],
+        "reportTo": "project-manager"
+      },
+      "notes": [
+        "Victoria Logs Web UI: http://localhost:9428/select/vmui",
+        "Promtail は Loki API 互換エンドポイント（/insert/loki/api/v1/push）を使用",
+        "ログクエリ例: source:app AND error, _time:1h",
+        "参考実装: projects/obsidian-hippocampus/monitoring/"
+      ]
+    },
     "cicd-deployer": {
       "name": "CICD-Deployer",
       "model": "claude-sonnet",
@@ -756,12 +816,23 @@
         },
         {
           "id": 8,
+          "name": "Observability Setup",
+          "agent": "ops-monitor",
+          "output": "monitoring/",
+          "actions": [
+            "victoria-logs-setup",
+            "promtail-config",
+            "logging-verification"
+          ]
+        },
+        {
+          "id": 9,
           "name": "Marketing",
           "agent": "marketing",
           "output": "docs/marketing_strategy.md"
         },
         {
-          "id": 9,
+          "id": 10,
           "name": "Final Integration",
           "agent": "main-thread",
           "actions": [

@@ -1,0 +1,86 @@
+# Promtail Configuration Template
+# Victoria Logs + Promtail によるログ収集設定
+#
+# 使用方法:
+#   1. このファイルを monitoring/promtail-config.yml にコピー
+#   2. __path__ のパスをプロジェクトに合わせて変更
+#   3. 必要なジョブを追加/削除
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: ${PROJECT_DIR}/monitoring/positions.yaml
+
+clients:
+  # Victoria Logs の Loki 互換エンドポイント
+  - url: http://localhost:9428/insert/loki/api/v1/push
+    tenant_id: ""
+
+scrape_configs:
+  # ===========================================
+  # アプリケーションログ
+  # ===========================================
+  - job_name: app
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: app
+          source: app
+          __path__: ${PROJECT_DIR}/logs/app.log
+
+  # ===========================================
+  # サーバーログ（FastAPI/Express等）
+  # ===========================================
+  - job_name: server
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: server
+          source: server
+          __path__: ${PROJECT_DIR}/logs/server.log
+
+  # ===========================================
+  # エラーログ（マルチライン対応）
+  # ===========================================
+  - job_name: error
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: error
+          source: error
+          __path__: ${PROJECT_DIR}/logs/error.log
+    pipeline_stages:
+      - multiline:
+          # タイムスタンプで新しいエントリを開始
+          firstline: '^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}'
+          max_wait_time: 3s
+          max_lines: 128
+
+  # ===========================================
+  # スタートアップログ
+  # ===========================================
+  - job_name: startup
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: startup
+          source: startup
+          __path__: ${PROJECT_DIR}/logs/startup.log
+
+# ===========================================
+# カスタムジョブを追加する場合のテンプレート
+# ===========================================
+#  - job_name: custom
+#    static_configs:
+#      - targets:
+#          - localhost
+#        labels:
+#          job: custom
+#          source: custom
+#          __path__: ${PROJECT_DIR}/logs/custom.log
