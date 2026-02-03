@@ -66,3 +66,47 @@ projects/<project>/         # 各プロジェクト
 - プロジェクト削除時にログ基盤が消失しない
 - ログ基盤のライフサイクルはプロジェクトより長い
 - 複数プロジェクトからの集約が容易
+
+### Claude Code Hooks 活用パターン
+
+Claude Code の Hooks 機能を使ってイベント駆動で外部システムと連携:
+
+```bash
+# Hook スクリプトの基本構造
+#!/bin/bash
+set -euo pipefail
+
+# JSON入力を読み取り
+input=$(cat)
+project_id="${CC_PROJECT_ID:-unknown}"
+
+# jq で安全に JSON 構築（インジェクション対策）
+payload=$(jq -n \
+  --arg project_id "$project_id" \
+  --argjson input "$input" \
+  '{project_id: $project_id, data: $input}')
+
+# API に送信
+curl -s -X POST "$CC_API_URL/hooks/event" \
+  -H "Content-Type: application/json" \
+  -d "$payload"
+```
+
+**Hook タイプ別の使い分け**:
+- `PermissionRequest`: 承認待機（exit 0=承認, exit 2=拒否）
+- `PostToolUse`: fire-and-forget 通知
+- `Notification (idle_prompt)`: ユーザー入力待ち検知
+- `Stop/SessionEnd`: セッション終了処理
+
+### Slack Interactive Components との連携
+
+FastAPI で Slack のボタンクリックを処理する際の注意点:
+
+```python
+# payload は form-urlencoded の "payload" フィールドに JSON が入っている
+form_data = await request.form()
+payload = json.loads(form_data.get("payload", "{}"))
+
+# 3秒以内に 200 を返さないとリトライされる
+# 重い処理はバックグラウンドタスクで
+```
