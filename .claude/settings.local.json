@@ -40,7 +40,14 @@
       "Bash(vercel --version:*)",
       "Bash(claude:*)",
       "Bash(./scripts/subagent-prompt-generator.sh:*)",
-      "Bash(./scripts/launch-agents.sh:*)"
+      "Bash(./scripts/launch-agents.sh:*)",
+      "Bash(tmux new-session -d -s web-command-center -n pm -c /home/serveruser/workspace/project-template-dev/projects/web-command-center \"claude --dangerously-skip-permissions ''あなたは Project-Manager です。docs/PRP.md を読み、プロジェクトを完遂してください。''; exec bash\")",
+      "Bash(tmux ls:*)",
+      "Bash(docker ps:*)",
+      "Bash(kill:*)",
+      "Bash(pkill:*)",
+      "Bash(./start.sh:*)",
+      "Bash(curl:*)"
     ]
   }
 }

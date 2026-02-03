@@ -1,0 +1,10 @@
+# Binaries
+victoria-logs/victoria-logs-prod
+victoria-logs/promtail-*
+
+# Data directories
+victoria-logs/vlogs-data/
+
+# Runtime files
+victoria-logs/vlogs.pid
+victoria-logs/vlogs.log

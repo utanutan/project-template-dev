@@ -24,7 +24,23 @@
 
 `projects/<project-name>/docs/PRP.md` に要件を記載する。
 
-### Step 3: PMエージェントをtmuxで起動
+### Step 3: Gitリポジトリ初期化
+
+`projects/` ディレクトリは親リポジトリの `.gitignore` で除外されているため、各プロジェクトは独立リポジトリとして管理する。
+**PMエージェント起動前に初期化しておくこと。**
+
+```bash
+cd projects/<project-name>
+git init
+git config user.name "carpediem"
+git config user.email "nakanisi.yuuta@gmail.com"
+echo "agent-pm.log" >> .gitignore
+git add -A
+git commit -m "chore: Initialize project structure"
+cd ../..
+```
+
+### Step 4: PMエージェントをtmuxで起動
 
 **重要**: `launch-agents.sh` はtmuxセッション外から実行するとnohupフォールバックになる。
 tmuxセッションを直接作成して起動すること。
@@ -40,7 +56,7 @@ tmux new-session -d -s <session-name> -n pm \
 tmux ls
 ```
 
-### Step 4: ユーザー確認の監視
+### Step 5: ユーザー確認の監視
 
 PMエージェント起動後、10秒間隔でtmux画面をキャプチャし、ユーザー確認要求を検知する。
 
@@ -59,25 +75,21 @@ done
 
 このコマンドはバックグラウンドで実行し、確認が検出されたらユーザーに報告する。
 
-### Step 5: 完了後のプッシュ
+### Step 6: 完了後のリモートプッシュ
 
-`projects/` ディレクトリは親リポジトリの `.gitignore` で除外されている。
-各プロジェクトは独立リポジトリとして管理する。
+プロジェクト完了後、成果物をコミットしてGitHubにプッシュする。
 
 ```bash
 cd projects/<project-name>
-git init
-git config user.name "carpediem"
-git config user.email "nakanisi.yuuta@gmail.com"
-echo "agent-pm.log" >> .gitignore
 git add -A
-git commit -m "feat: Initial implementation of <project-name>"
+git commit -m "feat: Complete implementation of <project-name>"
 gh repo create <project-name> --private --source=. --push
 ```
 
 ## 注意事項
 
 - 新規プロジェクト開始時は必ず `QUICKSTART.md` の手順に従う
+- **PMエージェント起動前に `git init` で個別リポジトリを初期化すること**
 - PMエージェントはtmuxセッション内で起動する（launch-agents.sh のnohupフォールバックを避ける）
 - ユーザー確認の監視はバックグラウンドで10秒間隔ポーリング
-- `projects/` 配下は親リポジトリから除外されるため、独立リポジトリとして `gh repo create` する
+- `projects/` 配下は親リポジトリから除外されるため、完了後に `gh repo create` でリモートにプッシュする

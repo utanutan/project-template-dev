@@ -1,0 +1,11 @@
+{
+  "name": "project-template-dev",
+  "type": "template",
+  "pm2_name": null,
+  "db_path": null,
+  "victoria_logs_query": null,
+  "status_file": null,
+  "created_at": "2025-01-01",
+  "tags": ["template", "infrastructure"],
+  "description": "Antigravity Life OS - プロジェクトテンプレートリポジトリ"
+}

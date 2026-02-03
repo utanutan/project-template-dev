@@ -314,9 +314,21 @@ tell application "Terminal"
     do script "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'"
 end tell
 EOF
-    elif command -v tmux &> /dev/null && [ -n "$TMUX" ]; then
-        # Linux with tmux: create new window
-        tmux new-window -n "${agent}" "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'; exec bash"
+    elif command -v tmux &> /dev/null; then
+        # Linux with tmux: always use tmux (create new session if not in tmux)
+        local session_name="${PROJECT_NAME}-agents"
+        if [ -n "$TMUX" ]; then
+            # Already in tmux: create new window
+            tmux new-window -n "${agent}" "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'; exec bash"
+        elif tmux has-session -t "${session_name}" 2>/dev/null; then
+            # Session exists: create new window in existing session
+            tmux new-window -t "${session_name}" -n "${agent}" "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'; exec bash"
+            echo -e "  ${BLUE}→ tmux window created in session: ${session_name} (attach with: tmux attach -t ${session_name})${NC}"
+        else
+            # Create new tmux session
+            tmux new-session -d -s "${session_name}" -n "${agent}" -c "${PROJECT_PATH}" "${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'; exec bash"
+            echo -e "  ${BLUE}→ tmux session created: ${session_name} (attach with: tmux attach -t ${session_name})${NC}"
+        fi
     elif command -v screen &> /dev/null; then
         # Linux with screen: create new window
         screen -dmS "agent-${agent}" bash -c "cd '${PROJECT_PATH}' && echo '=== ${title} ===' && ${claude_cmd} \"\$(cat '${prompt_file}')\" ; rm -f '${prompt_file}'"

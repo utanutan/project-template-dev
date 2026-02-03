@@ -223,6 +223,23 @@ if [ -n "$TEMPLATE_NAME" ]; then
     copy_template "$TEMPLATE_NAME" "$PROJECT_PATH"
 fi
 
+# Create .project-meta.json for dashboard integration
+cat > "${PROJECT_PATH}/.project-meta.json" << EOF
+{
+  "name": "${PROJECT_NAME}",
+  "type": "${PROJECT_TYPE}",
+  "pm2_name": "${PROJECT_NAME}",
+  "db_path": null,
+  "victoria_logs_query": "project:${PROJECT_NAME}",
+  "status_file": "spec/implementation_plan.md",
+  "created_at": "$(date +%Y-%m-%d)",
+  "tags": [],
+  "description": ""
+}
+EOF
+
+echo -e "${GREEN}✓${NC} Created .project-meta.json"
+
 # Create project README
 cat > "${PROJECT_PATH}/README.md" << EOF
 # ${PROJECT_NAME}
@@ -264,6 +281,19 @@ echo -e "${GREEN}✓${NC} Created README.md"
 [ ! "$(ls -A ${PROJECT_PATH}/spec 2>/dev/null)" ] && touch "${PROJECT_PATH}/spec/.gitkeep"
 [ ! "$(ls -A ${PROJECT_PATH}/tracks 2>/dev/null)" ] && touch "${PROJECT_PATH}/tracks/.gitkeep"
 
+# Initialize git repository
+echo ""
+echo -e "${BLUE}📦 Initializing Git repository...${NC}"
+cd "${PROJECT_PATH}"
+git init
+git config user.name "carpediem"
+git config user.email "nakanisi.yuuta@gmail.com"
+echo "agent-*.log" >> .gitignore
+git add -A
+git commit -m "chore: Initialize project structure"
+cd "${REPO_ROOT}"
+echo -e "${GREEN}✓${NC} Git repository initialized"
+
 echo ""
 echo -e "${GREEN}✅ Project initialized successfully!${NC}"
 echo ""
@@ -272,7 +302,7 @@ echo "  1. cd ${PROJECT_PATH}"
 echo "  2. Edit docs/PRP.md with your requirements"
 if [ -n "$TEMPLATE_NAME" ]; then
     echo -e "  3. Review TEMPLATE_README.md for template details"
-    echo "  4. Start development with Agent Guild"
+    echo "  4. Launch PM agent: ./scripts/launch-agents.sh ${PROJECT_NAME} --dangerously-skip-permissions"
 else
-    echo "  3. Start development with Agent Guild"
+    echo "  3. Launch PM agent: ./scripts/launch-agents.sh ${PROJECT_NAME} --dangerously-skip-permissions"
 fi
