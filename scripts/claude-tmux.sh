@@ -34,14 +34,25 @@ fi
 
 # セッション名を生成（現在のディレクトリ名ベース）
 DIR_NAME=$(basename "$(pwd)")
-SESSION_NAME="claude-${DIR_NAME}"
+BASE_SESSION_NAME="claude-${DIR_NAME}"
 
-# 既存のセッションがあるか確認
-if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
-    # 既存セッションに新しいウィンドウを作成してアタッチ
-    tmux new-window -t "$SESSION_NAME" -n "claude" "$CLAUDE_CMD $*; exec bash"
-    exec tmux attach -t "$SESSION_NAME"
-else
-    # 新しいセッションを作成してアタッチ
-    exec tmux new-session -s "$SESSION_NAME" -n "claude" "$CLAUDE_CMD $*; exec bash"
-fi
+# 一意のセッション名を生成する関数
+generate_unique_session_name() {
+    local base_name="$1"
+    local session_name="$base_name"
+    local counter=2
+
+    # 同名セッションが存在する場合は連番を付ける
+    while tmux has-session -t "$session_name" 2>/dev/null; do
+        session_name="${base_name}-${counter}"
+        counter=$((counter + 1))
+    done
+
+    echo "$session_name"
+}
+
+# 一意のセッション名を取得
+SESSION_NAME=$(generate_unique_session_name "$BASE_SESSION_NAME")
+
+# 新しいセッションを作成してアタッチ
+exec tmux new-session -s "$SESSION_NAME" -n "claude" "$CLAUDE_CMD $*; exec bash"
