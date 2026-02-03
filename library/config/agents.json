@@ -269,15 +269,18 @@
       "mission": "ブラウザで実際に動作確認、E2Eテスト作成、UI/UXの検証",
       "learningsFile": ".claude/rules/agents/qa-tester.md",
       "responsibilities": [
+        "Playwright環境のセットアップ（未導入の場合）",
         "ブラウザでの手動テスト実行",
-        "E2Eテストコード作成（Playwright/Cypress）",
+        "E2Eテストコード作成（Playwright優先）",
         "UIコンポーネントの動作検証",
         "クロスブラウザテスト",
         "レスポンシブデザイン検証",
         "アクセシビリティテスト",
-        "パフォーマンス計測"
+        "パフォーマンス計測",
+        "テストレポートの生成と共有"
       ],
       "constraints": [
+        "テスト開始前にPlaywright環境を確認し、未導入なら npx playwright install を実行",
         "resources/mockups/ と実際のUIを比較検証",
         "発見したバグは再現手順を明記",
         "テストコードは tests/e2e/ に保存",
@@ -294,12 +297,14 @@
         "playwright (E2Eテスト)"
       ],
       "workflow": [
-        "1. 開発サーバーを起動確認",
-        "2. ブラウザで主要ページを確認",
-        "3. resources/mockups/ とUI比較",
-        "4. E2Eテストコードを作成",
-        "5. テスト実行と結果報告",
-        "6. tracks/PROGRESS.md にテスト結果を記録"
+        "1. Playwright環境セットアップ（npm install && npx playwright install）",
+        "2. 開発サーバーを起動確認",
+        "3. ブラウザで主要ページを確認",
+        "4. resources/mockups/ とUI比較",
+        "5. E2Eテストコードを作成（tests/e2e/）",
+        "6. テスト実行（npx playwright test）",
+        "7. テストレポート生成（npx playwright show-report）",
+        "8. tracks/PROGRESS.md にテスト結果を記録"
       ],
       "testFramework": {
         "preferred": "Playwright",
