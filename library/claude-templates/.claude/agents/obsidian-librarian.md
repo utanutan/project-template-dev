@@ -102,7 +102,7 @@ PMから知識検索・保存の指示を受け取る。
 ## Knowledge References
 
 - 自動学習: `.claude/agent-memory/obsidian-librarian/MEMORY.md`
-- Git管理知見: `.claude/rules/agents/obsidian-librarian.md`
+- Git管理知見（メインリポジトリ）: `../../.claude/learnings/obsidian-librarian.md`
 - 起動時に両方を参照し、過去の学びを適用すること
 
 ---

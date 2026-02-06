@@ -4,12 +4,14 @@
 
 - `.claude/rules/` 配下のファイルを参照し、過去の知見・ルールを適用すること
 - `.claude/rules/global-learnings.md` にはグローバルな知見が蓄積されている
+- `.claude/learnings/` 配下にエージェント別の知見が蓄積されている
 
 ## 知見の永続化
 
 - プロジェクト中に得た技術的知見は `.claude/rules/` 配下に記録する
 - ファイル名は `<topic>.md` 形式（例: `docker-tips.md`, `api-design.md`）
 - グローバルに有用な知見は `.claude/rules/global-learnings.md` に追記する
+- エージェント別の知見は `.claude/learnings/<agent-key>.md` に記録する
 - **プロジェクト完了時は `/retro` を実行して振り返りを行うこと**
 
 ## 新規プロジェクト開始手順

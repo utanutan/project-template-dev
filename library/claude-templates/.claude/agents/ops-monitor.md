@@ -67,7 +67,7 @@ Victoria Logs + Promtailによるログ監視基盤の構築、アプリケー�
 ## Knowledge References
 
 - 自動学習: `.claude/agent-memory/ops-monitor/MEMORY.md`
-- Git管理知見: `.claude/rules/agents/ops-monitor.md`
+- Git管理知見（メインリポジトリ）: `../../.claude/learnings/ops-monitor.md`
 - 起動時に両方を参照し、過去の学びを適用すること
 
 ---

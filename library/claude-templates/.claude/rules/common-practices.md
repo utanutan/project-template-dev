@@ -6,7 +6,10 @@
 - エラーハンドリングは境界（ユーザー入力、外部API）で行う
 
 ## エージェント運用
-- サブエージェント起動時は必ず `subagent-prompt-generator.sh` を使用
+- エージェント起動時は `.claude/agents/<name>.md` のエージェント定義を参照する
+- 方式に応じた起動方法を使用する:
+  - **Agent Teams**: teammate として spawn（エージェント定義が自動適用）
+  - **Task Subagents**: `.claude/agents/<name>.md` を読んでプロンプトに含める
 - `tracks/PROGRESS.md` はタスク開始・完了時に必ず更新
 - PM は Coder に直接指示せず、必ず Architect 経由
 

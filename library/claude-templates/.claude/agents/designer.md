@@ -53,7 +53,7 @@ UIモックアップ、デザインシステム、ビジュアルアセットの
 ## Knowledge References
 
 - 自動学習: `.claude/agent-memory/designer/MEMORY.md`
-- Git管理知見: `.claude/rules/agents/designer.md`
+- Git管理知見（メインリポジトリ）: `../../.claude/learnings/designer.md`
 - 起動時に両方を参照し、過去の学びを適用すること
 
 ---

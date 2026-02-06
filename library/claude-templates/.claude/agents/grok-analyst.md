@@ -51,7 +51,7 @@ PMからトレンド分析・センチメント分析の指示を受け取る。
 ## Knowledge References
 
 - 自動学習: `.claude/agent-memory/grok-analyst/MEMORY.md`
-- Git管理知見: `.claude/rules/agents/grok-analyst.md`
+- Git管理知見（メインリポジトリ）: `../../.claude/learnings/grok-analyst.md`
 - 起動時に両方を参照し、過去の学びを適用すること
 
 ---

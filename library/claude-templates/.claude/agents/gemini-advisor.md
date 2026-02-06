@@ -81,7 +81,7 @@ PMからレビュー対象またはデザイン要件を受け取る。
 ## Knowledge References
 
 - 自動学習: `.claude/agent-memory/gemini-advisor/MEMORY.md`
-- Git管理知見: `.claude/rules/agents/gemini-advisor.md`
+- Git管理知見（メインリポジトリ）: `../../.claude/learnings/gemini-advisor.md`
 - 起動時に両方を参照し、過去の学びを適用すること
 
 ---

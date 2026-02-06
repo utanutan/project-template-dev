@@ -41,7 +41,7 @@ Webコンテンツ、ブログ記事、ランディングページの執筆。
 ## Knowledge References
 
 - 自動学習: `.claude/agent-memory/content-writer/MEMORY.md`
-- Git管理知見: `.claude/rules/agents/content-writer.md`
+- Git管理知見（メインリポジトリ）: `../../.claude/learnings/content-writer.md`
 - 起動時に両方を参照し、過去の学びを適用すること
 
 ---

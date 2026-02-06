@@ -65,7 +65,7 @@ memory: project
 ## Knowledge References
 
 - 自動学習: `.claude/agent-memory/qa-tester/MEMORY.md`
-- Git管理知見: `.claude/rules/agents/qa-tester.md`
+- Git管理知見（メインリポジトリ）: `../../.claude/learnings/qa-tester.md`
 - 起動時に両方を参照し、過去の学びを適用すること
 
 ---

@@ -4,58 +4,45 @@
 
 ---
 
-## Agent Teams によるオーケストレーション（重要）
+## オーケストレーション方式
 
-### Agent Teams（推奨）
+PMエージェント起動時に、以下の2方式からオーケストレーション方式を選択する。
 
-PMが **Agent Teams** 機能を使い、各teammateを独立したtmux paneとしてスポーンする:
+### 方式比較表
 
-```
-# 自然言語でteammateをspawn
-エージェントチームを作成してください:
-- requirements-analyst: docs/PRP.mdを分析し要件を明確化
-- researcher: 競合分析と技術調査
-- architect-plan: 技術設計とタスク分割
-```
+| | Mode A: Agent Teams (spawn) | Mode B: Task Subagents |
+|---|---|---|
+| 起動方法 | `claude --agent project-manager`（対話モード） | `claude --dangerously-skip-permissions` + PMプロンプト |
+| 実行形態 | TeamCreate → teammate spawn（各独立インスタンス） | Task tool (subagent_type) で子エージェント起動 |
+| 通信 | teammate間で直接メッセージ可能 | 親に結果を返すのみ（一方向） |
+| 可視性 | tmux paneで各teammate表示 | TUI内で不可視 |
+| タスク管理 | 共有タスクリスト（メイン）+ tracks/PROGRESS.md（補助） | tracks/PROGRESS.md（メイン） |
+| 監視 | paneクリックで直接操作可 | capture-pane不可 |
+| コスト | 高い（各teammateが独立インスタンス） | 低い（1セッション内で完結） |
+| 適用場面 | 大規模・長時間・複数人監視が必要な場合 | 小〜中規模・コスト重視・自動実行の場合 |
 
-- 各teammateが独立したClaude Codeインスタンスとして動作
-- teammate間で直接メッセージ可能
-- tmux paneで各teammateの状態を直接確認・操作
-- 共有タスクリストで進捗を自動管理
-- Shift+Tab でPMをdelegate mode（調整専任）に切り替え可能
+### Mode A: Agent Teams — 起動方法
 
-### 起動方法
-
-**対話モード（推奨）** — tmuxセッション内で対話的に操作:
 ```bash
 tmux new-session -s <session-name> -c <project-dir>
 # tmux内で実行:
-claude --agent project-manager --teammate-mode tmux
+claude --agent project-manager
 # TUI内でプロンプトを入力
 ```
 
-**自動モード（放置運用）** — `-p` + `--dangerously-skip-permissions` で自動実行:
-```bash
-claude --agent project-manager --teammate-mode tmux --dangerously-skip-permissions -p \
-  'docs/PRP.md を読み、プロジェクトを完遂してください。' 2>&1 | tee agent-pm.log
-```
-
-**注意**: `--teammate-mode tmux` は実験的フラグ（`--help` に表示されない、v2.1.34で動作確認済み）。
-`~/.claude/settings.json` に `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` の設定が必要。
-
-### プロンプト生成スクリプト（手動起動用・レガシー）
+### Mode B: Task Subagents — 起動方法
 
 ```bash
-# 特定エージェントのプロンプト表示
-./scripts/subagent-prompt-generator.sh architect-plan
-
-# エージェント一覧
-./scripts/subagent-prompt-generator.sh list
+tmux new-session -d -s <session-name> -n pm \
+  -c <project-dir> \
+  "claude --dangerously-skip-permissions 'あなたは Project-Manager です。docs/PRP.md を読み、プロジェクトを完遂してください。'; exec bash"
 ```
 
 ---
 
-## 指揮系統（Agent Teams）
+## 指揮系統
+
+### Mode A: Agent Teams
 
 ```
 PM (統括) ─── Agent Teams で各teammateをtmux paneとしてspawn
@@ -81,11 +68,21 @@ PM (統括) ─── Agent Teams で各teammateをtmux paneとしてspawn
    └→ obsidian-librarian (teammate)   → Vaultノート
 ```
 
-**Agent Teamsの特徴**:
-- 各teammateが独立したClaude Codeインスタンス
-- teammate間で直接メッセージが可能（PMを経由しなくてもよい）
-- PMはdelegate modeでオーケストレーションに専念可能
-- ファイル競合を避けるため、各teammateの出力先を明確に分離すること
+### Mode B: Task Subagents
+
+```
+PM (統括) ─── Task tool で各エージェントを起動
+   │
+   ├→ requirements-analyst (subagent) → docs/requirements.md
+   ├→ researcher (subagent)           → research/
+   ├→ architect-plan (subagent)       → spec/implementation_plan.md
+   │     └→ senior-coder (subagent)   → src/  ← Architect が起動可能
+   ├→ senior-coder (subagent)         → src/
+   ├→ review-guardian (subagent)      → review_report.md
+   ├→ qa-tester (subagent)            → tests/
+   ├→ cicd-deployer (subagent)        → docs/deployment.md
+   └→ ... (他のエージェントも同様)
+```
 
 ---
 
@@ -134,7 +131,7 @@ src/                        # ソースコード
 
 ## 進捗管理ルール
 
-### 進捗管理方式（Agent Teams）
+### Mode A: Agent Teams
 
 Agent Teamsの**共有タスクリスト**（Claude Code内蔵）をメインの進捗管理に使用する。
 `tracks/PROGRESS.md` は補助的な記録・レポート用として併用する。
@@ -144,11 +141,19 @@ Agent Teamsの**共有タスクリスト**（Claude Code内蔵）をメインの
 | **共有タスクリスト**（メイン） | リアルタイムのタスク管理・依存関係・ステータス追跡 |
 | **tracks/PROGRESS.md**（補助） | マイルストーン記録・ユーザーへの進捗レポート |
 
-### 進捗管理の責任分担
+### Mode B: Task Subagents
+
+`tracks/PROGRESS.md` をメインの進捗管理に使用する。
+
+| 管理方式 | 用途 |
+|---------|------|
+| **tracks/PROGRESS.md**（メイン） | タスク管理・ステータス追跡・進捗レポート |
+
+### 共通: 進捗管理の責任分担
 
 | エージェント | 責任 |
 |-------------|------|
-| **Project-Manager** | 共有タスクリストの管理・`tracks/PROGRESS.md` の更新 |
+| **Project-Manager** | 全体の進捗管理・`tracks/PROGRESS.md` の更新 |
 | **Senior-Coder** | 担当タスクのステータス更新 |
 | **Review-Guardian** | レビュー結果の反映 |
 | **QA-Tester** | テスト結果の反映 |
@@ -165,8 +170,8 @@ Agent Teamsの**共有タスクリスト**（Claude Code内蔵）をメインの
 
 ### 更新ルール
 
-1. **タスク開始時** - 共有タスクリストでステータスを「進行中」に変更
-2. **タスク完了時** - 共有タスクリストでステータスを「完了」に変更
+1. **タスク開始時** - ステータスを「進行中」に変更
+2. **タスク完了時** - ステータスを「完了」に変更
 3. **差し戻し/ブロック時** - ステータスを「差し戻し」または「ブロック」に変更
 4. **マイルストーン達成時** - `tracks/PROGRESS.md` にサマリーを記録
 
@@ -179,16 +184,16 @@ Agent Teamsの**共有タスクリスト**（Claude Code内蔵）をメインの
 | レイヤー | パス | 管理方法 |
 |---------|------|---------|
 | 自動学習（公式） | `.claude/agent-memory/<name>/MEMORY.md` | `memory: project` による自動管理 |
-| Git管理知見 | `.claude/rules/agents/<key>.md` | 手動管理の永続知見 |
+| Git管理知見（メインリポジトリ） | `../../.claude/learnings/<key>.md` | メインリポジトリで一元管理の永続知見 |
 
-### `.claude/rules/` の参照・更新
+### 知見の参照・更新
 
-- セッション開始時に `.claude/rules/` 配下のファイルを読み、過去の知見を適用する
-- プロジェクト中に得た技術的知見は `.claude/rules/` に記録する
+- セッション開始時に `../../.claude/learnings/` 配下の自分の知見ファイルを読み、過去の学びを適用する
+- プロジェクト中に得た技術的知見は `../../.claude/learnings/<key>.md` に記録する
+- 子プロジェクトは `projects/<name>/` に作成されるため、`../../` でメインリポジトリのルートに到達する
 
 ---
 
 ## References
 
 - [.claude/agents/](.claude/agents/) - 全エージェント定義（公式形式）
-- [subagent-prompt-generator.sh](scripts/subagent-prompt-generator.sh) - プロンプト生成（レガシー）

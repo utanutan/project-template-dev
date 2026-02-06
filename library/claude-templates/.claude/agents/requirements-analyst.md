@@ -44,7 +44,7 @@ PRPの曖昧な点を明確化し、ユーザーと対話して具体的な要�
 ## Knowledge References
 
 - 自動学習: `.claude/agent-memory/requirements-analyst/MEMORY.md`
-- Git管理知見: `.claude/rules/agents/requirements-analyst.md`
+- Git管理知見（メインリポジトリ）: `../../.claude/learnings/requirements-analyst.md`
 - 起動時に両方を参照し、過去の学びを適用すること
 
 ---

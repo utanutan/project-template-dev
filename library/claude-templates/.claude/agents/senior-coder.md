@@ -54,7 +54,7 @@ PMからArchitect-Planの設計結果（spec/implementation_plan.md）を受け�
 ## Knowledge References
 
 - 自動学習: `.claude/agent-memory/senior-coder/MEMORY.md`
-- Git管理知見: `.claude/rules/agents/senior-coder.md`
+- Git管理知見（メインリポジトリ）: `../../.claude/learnings/senior-coder.md`
 - 起動時に両方を参照し、過去の学びを適用すること
 
 ## Important Notes
