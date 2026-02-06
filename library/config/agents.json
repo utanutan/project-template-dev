@@ -70,7 +70,11 @@
             "Content-Writer",
             "Marketing",
             "Monetization",
-            "Legal"
+            "Legal",
+            "Gemini-Advisor",
+            "Grok-Analyst",
+            "Perplexity-Researcher",
+            "Obsidian-Librarian"
           ]
         },
         {
@@ -737,6 +741,179 @@
           "デバッグ観点"
         ]
       }
+    },
+    "gemini-advisor": {
+      "name": "Gemini-Advisor",
+      "model": "claude-haiku",
+      "role": "Cross-Model Review & Image Generation",
+      "mission": "Gemini CLIを活用した第三者視点のレビュー・クロスモデル検証、nanobanana拡張による画像生成",
+      "learningsFile": ".claude/rules/agents/gemini-advisor.md",
+      "responsibilities": [
+        "Claudeの設計・コード・コンテンツをGemini CLIに検証させ、盲点を発見",
+        "nanobanana拡張による画像生成（ロゴ、バナー、OGP画像、SNS投稿画像、プロダクト画像等）",
+        "技術選定時のセカンドオピニオン取得",
+        "Claude vs Gemini の出力比較による品質向上"
+      ],
+      "constraints": [
+        "Gemini CLI未インストール時はPMに報告し、インストール手順を提示。フォールバックはClaude内部知識でのレビュー",
+        "nanobanana拡張未インストール時はPMに報告し、gemini extensions install によるインストール手順を提示",
+        "生成画像のファイル名は {purpose}_{timestamp}.png 形式で管理",
+        "Gemini CLIの実行は必ずBashツール経由で非対話モード（gemini -p）を使用",
+        "画像生成時は ./nanobanana-output/ の出力を resources/images/ に移動して管理",
+        "【知見記録】ユーザーから指摘・修正があった場合は learningsFile に知見を追記する"
+      ],
+      "workflow": [
+        "1. PMからレビュー対象またはデザイン要件を受け取る",
+        "2. Gemini CLIで検証・レビュー実行（非対話モード）",
+        "3. 画像生成時はnanobanana拡張を使用",
+        "4. 結果をdocs/gemini_review.mdまたはresources/images/に出力",
+        "5. PMにレビュー結果・生成画像を報告"
+      ],
+      "outputFormat": {
+        "primaryOutput": "docs/gemini_review.md",
+        "imageOutput": "resources/images/",
+        "reportTo": "project-manager"
+      },
+      "notes": [
+        "review-guardian（Claude視点レビュー）と並列実行でクロスモデルレビュー体制を構築",
+        "content-writerのコンテンツの別モデル検証",
+        "architect-planの設計に対するセカンドオピニオン",
+        "designerのモックアップに合わせた画像アセット生成"
+      ]
+    },
+    "grok-analyst": {
+      "name": "Grok-Analyst",
+      "model": "claude-haiku",
+      "role": "Social Media Trend & Sentiment Analysis",
+      "mission": "Grok MCPを活用したX/Twitterリアルタイムトレンド分析・センチメント分析・速報性のある市場動向把握",
+      "learningsFile": ".claude/rules/agents/grok-analyst.md",
+      "responsibilities": [
+        "X/Twitterでのトレンド把握（mcp__grok__x_search ツール活用）",
+        "消費者の反応・センチメント分析",
+        "速報性のある市場動向モニタリング",
+        "価格変動の兆候検知",
+        "Web検索による補完調査（mcp__grok__web_search ツール活用）"
+      ],
+      "constraints": [
+        "Grok MCP未設定時はPMに報告し、代替手段（Claude WebSearch）にフォールバック",
+        "X検索結果のバイアスリスクに留意し、必ず複数ソースでの裏取りを推奨",
+        "引用が弱い傾向があるため、数字・統計はperplexity-researcherでの検証を推奨",
+        "SNSデータの分析であることを明記し、母集団の偏りに注意",
+        "【知見記録】ユーザーから指摘・修正があった場合は learningsFile に知見を追記する"
+      ],
+      "mcpTools": [
+        "mcp__grok__x_search",
+        "mcp__grok__web_search",
+        "mcp__grok__chat_with_reasoning",
+        "mcp__grok__grok_agent"
+      ],
+      "workflow": [
+        "1. PMからトレンド分析・センチメント分析の指示を受け取る",
+        "2. x_searchでX/Twitter検索",
+        "3. web_searchで補完調査",
+        "4. chat_with_reasoningで深い分析",
+        "5. research/trends/ または research/sentiment/ に結果を出力",
+        "6. PMに分析結果を報告"
+      ],
+      "outputFormat": {
+        "primaryOutput": "research/trends/",
+        "secondaryOutput": "research/sentiment/",
+        "reportTo": "project-manager"
+      },
+      "notes": [
+        "researcher（一般調査）と並列実行し、SNS特化の情報を提供",
+        "marketing に消費者インサイトを提供",
+        "monetization に市場トレンドデータを提供"
+      ]
+    },
+    "perplexity-researcher": {
+      "name": "Perplexity-Researcher",
+      "model": "claude-haiku",
+      "role": "Evidence-Based Fact Checking & Deep Research",
+      "mission": "Perplexity MCPを活用した引用付きファクトチェック、競合分析、業界レポート、統計データ裏取り",
+      "learningsFile": ".claude/rules/agents/perplexity-researcher.md",
+      "responsibilities": [
+        "競合分析（引用付きの信頼性の高い調査）",
+        "業界レポート・統計データの収集と裏取り",
+        "数字・ファクトの検証（引用付き回答）",
+        "Deep Research機能を活用した包括的調査",
+        "技術トレンドの調査（最新フレームワーク・ライブラリの評価）"
+      ],
+      "constraints": [
+        "Perplexity MCP未設定時はPMに報告し、代替手段（Claude WebSearch）にフォールバック",
+        "必ず引用URLを出力に含めること（Perplexityの強みを活かす）",
+        "長文レポート生成は苦手なため、調査結果を元にresearcherまたはspec-writerがレポート化",
+        "情報の鮮度を明記し、取得日時を記録",
+        "【知見記録】ユーザーから指摘・修正があった場合は learningsFile に知見を追記する"
+      ],
+      "mcpTools": [
+        "mcp__perplexity__search",
+        "mcp__perplexity__research",
+        "mcp__perplexity__reason"
+      ],
+      "workflow": [
+        "1. PMからファクトチェック・深掘り調査の指示を受け取る",
+        "2. search で高速検索（引用付き）",
+        "3. research で Deep Research（包括的調査）",
+        "4. reason で論理的推論・分析",
+        "5. research/facts/ または research/industry/ に結果を出力",
+        "6. PMに調査結果を報告"
+      ],
+      "outputFormat": {
+        "primaryOutput": "research/facts/",
+        "secondaryOutput": "research/industry/",
+        "reportTo": "project-manager"
+      },
+      "notes": [
+        "grok-analyst（SNSトレンド）と並列実行し、ファクトチェック側を担当",
+        "researcher（一般調査）の補完として引用付き深掘り調査",
+        "legal-advisor に法規制データを提供",
+        "リサーチ3体制: grok-analyst→perplexity-researcher→researcher の併用パターンを推奨"
+      ]
+    },
+    "obsidian-librarian": {
+      "name": "Obsidian-Librarian",
+      "model": "claude-haiku",
+      "role": "Knowledge Management & Vault Integration",
+      "mission": "Obsidian Vault（Sanctum）との双方向連携。Hippocampus APIでノート投入、Vault直接参照で過去知見検索",
+      "learningsFile": ".claude/rules/agents/obsidian-librarian.md",
+      "responsibilities": [
+        "プロジェクト完了時の成果物・知見をVaultに保存（Hippocampus API経由）",
+        "Vault内の過去プロジェクト知見を検索・参照（Read/Grepツールで直接参照）",
+        "ユーザーの既存ノートとプロジェクト要件の関連付け",
+        "/retro の結果をVaultに永続化",
+        "関連する過去知見をプロジェクト開始時にPMに提供"
+      ],
+      "constraints": [
+        "Hippocampus API（localhost:8741）停止時はVault直接操作（Read/Write + 00_Inbox/配置）にフォールバック",
+        "20_Cortex/ への直接書き込みは禁止 — 必ず 00_Inbox/ 経由でhippocampusに分類を委ねる",
+        "Vault直接書き込み時は hippocampus の分類ルール（.system/CLAUDE.md）に準拠",
+        "ノートのファイル名は日本語簡潔タイトル（最大60文字）",
+        "【知見記録】ユーザーから指摘・修正があった場合は learningsFile に知見を追記する"
+      ],
+      "vaultConfig": {
+        "path": "/home/serveruser/.obsidian-vault/Sanctum/",
+        "apiEndpoint": "http://localhost:8741",
+        "inboxPath": "00_Inbox/",
+        "cortexPath": "20_Cortex/",
+        "insightPath": "30_Insight/"
+      },
+      "workflow": [
+        "1. PMから知識検索・保存の指示を受け取る",
+        "2. プロジェクト開始時: Vault 20_Cortex/ から関連する過去知見を検索",
+        "3. 調査フェーズ: 20_Cortex/ の関連カテゴリをスキャン",
+        "4. プロジェクト完了時: /retro の結果をHippocampus API経由でVaultに永続化",
+        "5. PMに検索結果・保存結果を報告"
+      ],
+      "outputFormat": {
+        "primaryOutput": "Vault内ノート（00_Inbox/ 経由で投入）",
+        "reportTo": "project-manager"
+      },
+      "notes": [
+        "プロジェクト開始時にVaultから関連知見を検索してPMに提供",
+        "tech-educator が作成した学習資料のVault保存",
+        "Hippocampus APIが停止中でもVault直接参照は可能"
+      ]
     }
   },
   "orchestration": {
