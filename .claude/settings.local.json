@@ -48,7 +48,10 @@
       "Bash(pkill:*)",
       "Bash(./start.sh:*)",
       "Bash(curl:*)",
-      "Bash(tmux new-session -d -s slack-integration -n pm -c /home/serveruser/workspace/project-template-dev/projects/slack-integration \"claude --dangerously-skip-permissions ''あなたは Project-Manager です。docs/PRP.md を読み、プロジェクトを完遂してください。''; exec bash\")"
+      "Bash(tmux new-session -d -s slack-integration -n pm -c /home/serveruser/workspace/project-template-dev/projects/slack-integration \"claude --dangerously-skip-permissions ''あなたは Project-Manager です。docs/PRP.md を読み、プロジェクトを完遂してください。''; exec bash\")",
+      "Bash(sudo usermod:*)",
+      "Bash(sudo systemctl reload:*)",
+      "Bash(sudo nginx:*)"
     ]
   }
 }
