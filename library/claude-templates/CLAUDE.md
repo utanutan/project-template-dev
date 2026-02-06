@@ -1,6 +1,6 @@
 # Antigravity Life OS - Claude Code Configuration
 
-このプロジェクトはマルチエージェント・オーケストレーション（20エージェント構成）を採用。
+このプロジェクトはマルチエージェント・オーケストレーション（19エージェント構成）を採用。
 
 ---
 
@@ -62,7 +62,6 @@ PM (統括) ─── Agent Teams で各teammateをtmux paneとしてspawn
    ├→ legal-advisor (teammate)        → docs/legal_compliance.md
    ├→ spec-writer (teammate)          → docs/
    ├→ tech-educator (teammate)        → docs/tutorials/
-   ├→ gemini-advisor (teammate)       → docs/gemini_review.md, resources/images/
    ├→ grok-analyst (teammate)         → research/trends/, research/sentiment/
    ├→ perplexity-researcher (teammate)→ research/facts/, research/industry/
    └→ obsidian-librarian (teammate)   → Vaultノート
@@ -106,7 +105,6 @@ PM (統括) ─── Task tool で各エージェントを起動
 | **CICD-Deployer** | CI/CD | `cicd-deployer` |
 | **Ops-Monitor** | 監視 | `ops-monitor` |
 | **Tech-Educator** | 教育 | `tech-educator` |
-| **Gemini-Advisor** | クロスモデルレビュー・画像生成 | `gemini-advisor` |
 | **Grok-Analyst** | X/Twitterトレンド・センチメント分析 | `grok-analyst` |
 | **Perplexity-Researcher** | 引用付きファクトチェック・業界調査 | `perplexity-researcher` |
 | **Obsidian-Librarian** | Vault知識管理・過去知見連携 | `obsidian-librarian` |

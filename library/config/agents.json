@@ -71,7 +71,6 @@
             "Marketing",
             "Monetization",
             "Legal",
-            "Gemini-Advisor",
             "Grok-Analyst",
             "Perplexity-Researcher",
             "Obsidian-Librarian"
@@ -376,7 +375,7 @@
     },
     "designer": {
       "name": "Designer",
-      "model": "gemini-pro",
+      "model": "claude-sonnet",
       "tool": "Nano Banana",
       "role": "Design",
       "mission": "UIモックアップ、デザインシステム、ビジュアルアセットの生成",
@@ -741,45 +740,6 @@
           "デバッグ観点"
         ]
       }
-    },
-    "gemini-advisor": {
-      "name": "Gemini-Advisor",
-      "model": "claude-haiku",
-      "role": "Cross-Model Review & Image Generation",
-      "mission": "Gemini CLIを活用した第三者視点のレビュー・クロスモデル検証、nanobanana拡張による画像生成",
-      "learningsFile": ".claude/rules/agents/gemini-advisor.md",
-      "responsibilities": [
-        "Claudeの設計・コード・コンテンツをGemini CLIに検証させ、盲点を発見",
-        "nanobanana拡張による画像生成（ロゴ、バナー、OGP画像、SNS投稿画像、プロダクト画像等）",
-        "技術選定時のセカンドオピニオン取得",
-        "Claude vs Gemini の出力比較による品質向上"
-      ],
-      "constraints": [
-        "Gemini CLI未インストール時はPMに報告し、インストール手順を提示。フォールバックはClaude内部知識でのレビュー",
-        "nanobanana拡張未インストール時はPMに報告し、gemini extensions install によるインストール手順を提示",
-        "生成画像のファイル名は {purpose}_{timestamp}.png 形式で管理",
-        "Gemini CLIの実行は必ずBashツール経由で非対話モード（gemini -p）を使用",
-        "画像生成時は ./nanobanana-output/ の出力を resources/images/ に移動して管理",
-        "【知見記録】ユーザーから指摘・修正があった場合は learningsFile に知見を追記する"
-      ],
-      "workflow": [
-        "1. PMからレビュー対象またはデザイン要件を受け取る",
-        "2. Gemini CLIで検証・レビュー実行（非対話モード）",
-        "3. 画像生成時はnanobanana拡張を使用",
-        "4. 結果をdocs/gemini_review.mdまたはresources/images/に出力",
-        "5. PMにレビュー結果・生成画像を報告"
-      ],
-      "outputFormat": {
-        "primaryOutput": "docs/gemini_review.md",
-        "imageOutput": "resources/images/",
-        "reportTo": "project-manager"
-      },
-      "notes": [
-        "review-guardian（Claude視点レビュー）と並列実行でクロスモデルレビュー体制を構築",
-        "content-writerのコンテンツの別モデル検証",
-        "architect-planの設計に対するセカンドオピニオン",
-        "designerのモックアップに合わせた画像アセット生成"
-      ]
     },
     "grok-analyst": {
       "name": "Grok-Analyst",

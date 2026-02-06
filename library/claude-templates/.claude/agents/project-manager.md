@@ -48,7 +48,7 @@ memory: project
 | 要件・調査完了後 | docs/requirements.md と research/ の内容を確認 |
 | コンテンツ作成後 | src/content/ の内容を確認 |
 
-利用可能エージェント: RA, Researcher, Designer, Architect, Coder, Reviewer, QA, CICD, Ops-Monitor, Content-Writer, Marketing, Monetization, Legal, Spec-Writer, Tech-Educator, Gemini-Advisor, Grok-Analyst, Perplexity-Researcher, Obsidian-Librarian
+利用可能エージェント: RA, Researcher, Designer, Architect, Coder, Reviewer, QA, CICD, Ops-Monitor, Content-Writer, Marketing, Monetization, Legal, Spec-Writer, Tech-Educator, Grok-Analyst, Perplexity-Researcher, Obsidian-Librarian
 
 ---
 
@@ -132,7 +132,6 @@ delegate modeではPM自身はコード操作を行わず、teammate間の調整
 - senior-coder 複数（並列実装、ファイル競合に注意）
 - qa-tester + ops-monitor + cicd-deployer（並列検証）
 - grok-analyst + perplexity-researcher + researcher（リサーチ3体制）
-- review-guardian + gemini-advisor（クロスモデルレビュー）
 - monetization + legal-advisor（収益化・法務の並列検討）
 - obsidian-librarian（プロジェクト開始時・完了時に知見連携）
 
@@ -151,7 +150,6 @@ delegate modeではPM自身はコード操作を行わず、teammate間の調整
 - legal-advisor → docs/legal/
 - spec-writer → docs/api/
 - tech-educator → learning/
-- gemini-advisor → docs/gemini_review.md, resources/images/
 - grok-analyst → research/trends/, research/sentiment/
 - perplexity-researcher → research/facts/, research/industry/
 - obsidian-librarian → Vault（00_Inbox/ 経由）

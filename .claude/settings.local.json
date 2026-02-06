@@ -52,7 +52,11 @@
       "Bash(sudo usermod:*)",
       "Bash(sudo systemctl reload:*)",
       "Bash(sudo nginx:*)",
-      "Bash(test:*)"
+      "Bash(test:*)",
+      "Bash(uv:*)",
+      "WebFetch(domain:docs.perplexity.ai)",
+      "WebFetch(domain:deepakness.com)",
+      "mcp__grok__chat"
     ]
   }
 }

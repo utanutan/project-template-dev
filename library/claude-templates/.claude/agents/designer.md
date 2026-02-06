@@ -32,13 +32,12 @@ UIモックアップ、デザインシステム、ビジュアルアセットの
 
 ## Recommended External Tools
 
-- gemini-pro（画像生成に最適、Claude Code公式未対応のため外部ツールとして使用）
 - Nano Banana（UIモックアップ生成）
 
 ## Workflow
 
 1. PRPのデザイン要件を分析
-2. モックアップ生成（推奨: Nano Banana / gemini-pro）
+2. モックアップ生成（推奨: Nano Banana）
 3. resources/mockups/に画像保存
 4. design_system.mdを作成
 5. resources/image_assets.mdに使用画像一覧を作成（URL/パス、用途、サイズを明記）
