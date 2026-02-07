@@ -56,7 +56,11 @@
       "Bash(uv:*)",
       "WebFetch(domain:docs.perplexity.ai)",
       "WebFetch(domain:deepakness.com)",
-      "mcp__grok__chat"
+      "mcp__grok__chat",
+      "Bash(chmod:*)",
+      "Bash(jq:*)",
+      "Bash(/home/serveruser/workspace/project-template-dev/scripts/export-session-log.sh:*)",
+      "Bash(/home/serveruser/workspace/project-template-dev/scripts/new-session-note.sh:*)"
     ]
   }
 }

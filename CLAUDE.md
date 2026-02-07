@@ -14,6 +14,42 @@
 - エージェント別の知見は `.claude/learnings/<agent-key>.md` に記録する
 - **プロジェクト完了時は `/retro` を実行して振り返りを行うこと**
 
+## セッションノート（振り返り記録）
+
+作業セッションごとに、判断の理由・所感・気づきを記録する。
+Claude Codeの自動ログ（`~/.claude/projects/` 配下のJSONL）は事実の記録にすぎず、
+**「なぜその判断をしたか」「どう感じたか」は人間が意識的に言語化しないと残らない。**
+
+### 作成方法
+
+```bash
+./scripts/new-session-note.sh <project-name>
+```
+
+### 保存先
+
+| 優先度 | 保存先 | 条件 |
+|---|---|---|
+| 1 | `~/.obsidian-vault/Sanctum/30_Insight/` | vault書き込み可の場合（`~/logs/notes/` にもバックアップ） |
+| 2 | `~/logs/notes/` | フォールバック |
+
+### テンプレート構成 (`templates/session-note.md`)
+
+- **Why** — なぜやったか
+- **What I Did** — やったこと
+- **Key Decisions** — 判断ポイント1行メモ
+- **Artifacts Created** — 作ったもの
+- **Insights** — 得た知見
+- **Screenshots** — 動いた/壊れた/見た目変わった
+- **Blockers / Surprises** — 詰まり・想定外
+- **Next** — 次にやること
+
+### 運用ポイント
+
+- Aqua Voice（音声入力）で振り返りを吐き出すと、書くより内省が出やすい
+- セッション完了時に記録する習慣をつける
+- ブログ等のアウトプットの主素材はこのセッションノート
+
 ## 新規プロジェクト開始手順
 
 ### Step 1: プロジェクト作成
