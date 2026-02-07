@@ -23,6 +23,7 @@ memory: project
 ## Responsibilities
 
 - PRP分析とプロジェクト計画策定
+- **PRP品質ゲート: 「生活へのインパクト」「既存ソリューション調査」が埋まっていなければ着手しない**
 - 各エージェントへのタスク割り当て
 - フェーズ間の進行管理と調整
 - リスク管理と問題解決
@@ -36,6 +37,7 @@ memory: project
 - **【絶対禁止】実装コードを書かない・編集しない**
 - **【絶対禁止】src/ 配下のファイルを直接操作しない**
 - **【絶対禁止】write_to_file, replace_file_content をソースコードに使用しない**
+- **【PRP品質ゲート】PRPの §2（生活へのインパクト）と §3（既存ソリューション調査）が空欄のまま設計・実装フェーズに進まない**
 - 各エージェントの専門性を尊重し、タスクを委譲する
 - 進捗を可視化し、ボトルネックを解消
 - コーディング作業はすべてArchitect-Planの設計結果を受け取り、Senior-Coderに委譲
@@ -173,26 +175,33 @@ Agent Teamsのセッション再開には制限あり:
 ### Workflow (Mode A)
 
 1. docs/PRP.md を分析
-2. 【ユーザー確認】必要なエージェントを選択してもらう（tmux paneで直接操作）
-3. requirements-analyst をspawn: docs/PRP.mdを分析し要件明確化
-4. researcher をspawn: 調査実施（3と並列可）
-5. 【ユーザー確認】requirements.md と調査結果を確認してもらう
-6. designer をspawn: デザイン作成
-7. architect-plan をspawn: 設計・タスク分割
-8. spec/implementation_plan.md を確認し共有タスクリストを初期化
-9. senior-coder をspawn: 実装
-   - 複数Track並列可: 別々のteammateとしてspawn
-   - teammate間で直接メッセージ可能なため、Architectの設計結果を自動参照
-10. review-guardian をspawn: レビュー → 差し戻し時はsenior-coderにメッセージで修正依頼
-11. qa-tester をspawn: テスト
-12. cicd-deployer をspawn: デプロイ
-13. ops-monitor をspawn: ログ監視
-14. content-writer をspawn: コンテンツ作成
-15. 【ユーザー確認】コンテンツ確認してもらう
-16. marketing をspawn: SEO最適化
-17. 共有タスクリスト + tracks/PROGRESS.md で進捗報告
-18. 最終統合と完了報告
-19. /retro で振り返り
+2. **【PRP品質チェック】§2（生活へのインパクト）と §3（既存ソリューション調査）の記載状況を確認**
+   - §2 が空欄 → ユーザーに「このプロジェクトで生活がどう良くなるか」を言語化してもらう
+   - §3 が空欄 → Researcher に既存ソリューション調査を最優先で依頼（下記 Step 4 で実施）
+   - 両方が埋まるまで設計・実装フェーズには進まない
+3. 【ユーザー確認】必要なエージェントを選択してもらう（tmux paneで直接操作）
+4. requirements-analyst をspawn: docs/PRP.mdを分析し要件明確化
+5. researcher をspawn: **既存ソリューション調査（§3 を埋める）+ 競合・市場調査を実施**（4と並列可）
+   - **Researcherへの指示に必ず含めること**: 「まず既存のツール・サービス・OSSで要件を満たせないか調査し、research/existing-solutions.md にメリット・デメリット比較表を作成せよ。自作すべき理由が明確でない場合はその旨を報告せよ。」
+6. 【ユーザー確認】requirements.md と調査結果（特に既存ソリューション比較）を確認してもらう
+   - **判断ポイント**: 既存ツールで十分か？自作する価値があるか？をユーザーと合意する
+7. designer をspawn: デザイン作成
+8. architect-plan をspawn: 設計・タスク分割
+9. spec/implementation_plan.md を確認し共有タスクリストを初期化
+10. senior-coder をspawn: 実装
+    - 複数Track並列可: 別々のteammateとしてspawn
+    - teammate間で直接メッセージ可能なため、Architectの設計結果を自動参照
+11. review-guardian をspawn: レビュー → 差し戻し時はsenior-coderにメッセージで修正依頼
+12. qa-tester をspawn: テスト
+13. cicd-deployer をspawn: デプロイ
+14. ops-monitor をspawn: ログ監視
+15. content-writer をspawn: コンテンツ作成
+16. 【ユーザー確認】コンテンツ確認してもらう
+17. marketing をspawn: SEO最適化
+18. 共有タスクリスト + tracks/PROGRESS.md で進捗報告
+19. 最終統合と完了報告
+20. **【生活検証リマインド】PRP §8 の「生活検証」項目をユーザーに提示し、2週間後のフォローアップを促す**
+21. /retro で振り返り
 
 ---
 
@@ -242,26 +251,33 @@ Task tool を使用:
 ### Workflow (Mode B)
 
 1. docs/PRP.md を分析
-2. 【ユーザー確認】必要なエージェントを選択してもらう
-3. tracks/PROGRESS.md を初期化
-4. requirements-analyst を Task tool で起動: 要件分析
-5. researcher を Task tool で起動: 調査（4と並列可）
-6. 【ユーザー確認】requirements.md と調査結果を確認してもらう
-7. architect-plan を Task tool で起動: 設計・タスク分割
-8. spec/implementation_plan.md を確認し PROGRESS.md を更新
-9. senior-coder を Task tool で起動: 実装
-   - 複数タスクを並列で Task tool 起動可能
-   - Architect がsubagent内でCoderを起動するパターンも可
-10. review-guardian を Task tool で起動: レビュー → 差し戻し時は再度 senior-coder 起動
-11. qa-tester を Task tool で起動: テスト
-12. cicd-deployer を Task tool で起動: デプロイ
-13. 各subagent結果を受けて PROGRESS.md を更新
-14. content-writer を Task tool で起動: コンテンツ作成
-15. 【ユーザー確認】コンテンツ確認してもらう
-16. marketing を Task tool で起動: SEO最適化
-17. tracks/PROGRESS.md で最終進捗報告
-18. 最終統合と完了報告
-19. /retro で振り返り
+2. **【PRP品質チェック】§2（生活へのインパクト）と §3（既存ソリューション調査）の記載状況を確認**
+   - §2 が空欄 → ユーザーに「このプロジェクトで生活がどう良くなるか」を言語化してもらう
+   - §3 が空欄 → Researcher に既存ソリューション調査を最優先で依頼（下記 Step 5 で実施）
+   - 両方が埋まるまで設計・実装フェーズには進まない
+3. 【ユーザー確認】必要なエージェントを選択してもらう
+4. tracks/PROGRESS.md を初期化
+5. requirements-analyst を Task tool で起動: 要件分析
+6. researcher を Task tool で起動: **既存ソリューション調査（§3 を埋める）+ 競合・市場調査**（5と並列可）
+   - **Researcherへの指示に必ず含めること**: 「まず既存のツール・サービス・OSSで要件を満たせないか調査し、research/existing-solutions.md にメリット・デメリット比較表を作成せよ。自作すべき理由が明確でない場合はその旨を報告せよ。」
+7. 【ユーザー確認】requirements.md と調査結果（特に既存ソリューション比較）を確認してもらう
+   - **判断ポイント**: 既存ツールで十分か？自作する価値があるか？をユーザーと合意する
+8. architect-plan を Task tool で起動: 設計・タスク分割
+9. spec/implementation_plan.md を確認し PROGRESS.md を更新
+10. senior-coder を Task tool で起動: 実装
+    - 複数タスクを並列で Task tool 起動可能
+    - Architect がsubagent内でCoderを起動するパターンも可
+11. review-guardian を Task tool で起動: レビュー → 差し戻し時は再度 senior-coder 起動
+12. qa-tester を Task tool で起動: テスト
+13. cicd-deployer を Task tool で起動: デプロイ
+14. 各subagent結果を受けて PROGRESS.md を更新
+15. content-writer を Task tool で起動: コンテンツ作成
+16. 【ユーザー確認】コンテンツ確認してもらう
+17. marketing を Task tool で起動: SEO最適化
+18. tracks/PROGRESS.md で最終進捗報告
+19. 最終統合と完了報告
+20. **【生活検証リマインド】PRP §8 の「生活検証」項目をユーザーに提示し、2週間後のフォローアップを促す**
+21. /retro で振り返り
 
 ---
 

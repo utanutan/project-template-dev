@@ -60,7 +60,11 @@
       "Bash(chmod:*)",
       "Bash(jq:*)",
       "Bash(/home/serveruser/workspace/project-template-dev/scripts/export-session-log.sh:*)",
-      "Bash(/home/serveruser/workspace/project-template-dev/scripts/new-session-note.sh:*)"
+      "Bash(/home/serveruser/workspace/project-template-dev/scripts/new-session-note.sh:*)",
+      "Bash(ss:*)",
+      "Bash(netstat:*)",
+      "Bash(sudo mkdir:*)",
+      "Bash(sudo openssl req:*)"
     ]
   }
 }
