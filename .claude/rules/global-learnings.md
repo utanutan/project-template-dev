@@ -258,3 +258,69 @@ uv run uvicorn main:app --host 0.0.0.0 --port 8741 &
 - Gateway + 開発ツール（claude-code, gh, git 等）はオールインワン1コンテナ構成
 - CLI 用の別サービス分離は過剰。Gateway コンテナ内でツール実行するため純粋な役割分離は不可能
 - CLI 対話は `docker exec -it <container> bash` で十分
+
+### MoneyForward ME 手入力口座のスクレイピング (2026-02-08)
+
+**ページ構造:**
+- `/accounts/show_manual` は一覧ページではなく、個別口座のベースパス（`/accounts/show_manual/{hash_id}`）
+- 口座URLは `/accounts` ページのリンクから取得する必要がある
+
+**資産エントリの操作:**
+- 初回登録: `#modal_asset_new` モーダルを `$().modal("show")` で開いてフォーム送信
+- 更新: `a.btn-asset-action:not([data-method="delete"])` で変更モーダルを開いて金額更新
+- 残高修正(rollover): エントリ0件時はエラーになるため、変更モーダル経由が確実
+
+**Bootstrapモーダル操作:**
+- MoneyForward MEはBootstrap 2-3系。jQuery `$().modal("show")` でモーダルを直接開ける
+- 開いた状態のモーダルには `.modal.in` クラスが付く（Bootstrap 4+の `.modal.show` とは異なる）
+
+**外貨建て口座のMCPツール化:**
+- `open.er-api.com` で無料為替レート取得 → JPY換算 → MF更新のパイプラインが有効
+- `accounts.yaml` で口座設定を外部化し、gitignoreで機密管理
+
+### crontab 上書き事故の防止 (2026-02-08)
+
+`crontab <file>` や `echo ... | crontab -` は既存エントリを**全置換**する。複数プロジェクトのcronを管理する場合:
+
+- 新規追加時は必ず `crontab -l` で既存エントリを確認してから統合
+- 統合crontabファイルを `/tmp/combined-cron.txt` 等で管理し、全エントリをまとめて登録
+- 個別プロジェクトごとに `crontab` を叩くと他プロジェクトのジョブが消える
+
+### Slack 通知の Webhook → Bot Token 移行 (2026-02-08)
+
+Incoming Webhook は設定が簡単だが、URL管理が煩雑。複数プロジェクトで共通の通知先を使う場合は Bot Token + `chat.postMessage` API に統一すると管理が容易:
+
+```bash
+# Webhook 方式（プロジェクトごとにURL管理が必要）
+curl -s -X POST "$SLACK_WEBHOOK_URL" -H 'Content-Type: application/json' -d "$payload"
+
+# Bot Token 方式（token + channel_id を共有）
+curl -s -X POST "https://slack.com/api/chat.postMessage" \
+    -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
+    -H 'Content-Type: application/json' \
+    -d "$payload"
+```
+
+**利点**: Bot Token は1つで全チャンネルに投稿可能。Webhook は URL ごとにチャンネル固定。
+
+### kaigai-bbs.com スクレイピング構造 (2026-02-08)
+
+マレーシア掲示板の投稿リストの HTML セレクタ:
+
+- タイトル: `a.thread-title` (href = `/mys/thread/sell/view/{ID}/`)
+- 日付: `span.thread-date`
+- 価格: `span.price`
+- 都市: `span.cities`
+- カテゴリ: `span.categories`
+- 要約: `div.thread-summary`
+- 受付終了: `img.close` の有無
+- 広告: `li.ads-thread` → スキップ対象
+- ページネーション: `/mys/thread/sell/{page_num}`
+
+### GitHub プライベートリポジトリの検索 (2026-02-08)
+
+GitHub MCP ツールで自分のプライベートリポジトリを検索する場合:
+
+- `user:@me` を使うと認証済みユーザーのリポジトリを検索できる
+- 例: `mcp__github__search_repositories(query="user:@me mac")`
+- ユーザー名が分からなくてもOK

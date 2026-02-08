@@ -12,7 +12,15 @@
       "Bash(git commit:*)",
       "Bash(git reset:*)",
       "WebFetch(domain:api.slack.com)",
-      "WebFetch(domain:docs.slack.dev)"
+      "WebFetch(domain:docs.slack.dev)",
+      "WebFetch(domain:kaigai-bbs.com)",
+      "mcp__grok__live_search",
+      "Bash(PYTHONPATH=src uv run python:*)",
+      "Bash(printf:*)",
+      "Bash(crontab:*)",
+      "Bash(PROJ_DIR=\"/home/serveruser/workspace/project-template-dev/projects/kaigai-bbs-monitor\" echo:*)",
+      "Bash(.venv/bin/pip install:*)",
+      "Bash(python3:*)"
     ]
   }
 }

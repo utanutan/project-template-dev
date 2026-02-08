@@ -9,7 +9,7 @@
 #   echo '{"notification_type":"idle_prompt","message":"test","cwd":"/home/user/project"}' | bash scripts/claude-notify.sh
 #
 # 設定:
-#   library/config/notification.env に SLACK_WEBHOOK_URL を設定すること
+#   library/config/notification.env に SLACK_BOT_TOKEN, SLACK_CHANNEL_ID を設定すること
 # =============================================================================
 
 set -euo pipefail
@@ -28,10 +28,11 @@ else
     exit 0
 fi
 
-# SLACK_WEBHOOK_URL が未設定なら何もしない
-SLACK_WEBHOOK_URL="${SLACK_WEBHOOK_URL:-}"
-if [[ -z "$SLACK_WEBHOOK_URL" || "$SLACK_WEBHOOK_URL" == "your-slack-webhook-url-here" ]]; then
-    echo "Warning: SLACK_WEBHOOK_URL is not configured" >&2
+# SLACK_BOT_TOKEN / SLACK_CHANNEL_ID が未設定なら何もしない
+SLACK_BOT_TOKEN="${SLACK_BOT_TOKEN:-}"
+SLACK_CHANNEL_ID="${SLACK_CHANNEL_ID:-}"
+if [[ -z "$SLACK_BOT_TOKEN" || -z "$SLACK_CHANNEL_ID" ]]; then
+    echo "Warning: SLACK_BOT_TOKEN or SLACK_CHANNEL_ID is not configured" >&2
     exit 0
 fi
 
@@ -131,10 +132,12 @@ else
         "$emoji" "$label" "$project_dir" "$session_label" "$detail")
 fi
 
-payload=$(jq -n --arg text "$text" '{text: $text}')
+payload=$(jq -n --arg channel "$SLACK_CHANNEL_ID" --arg text "$text" \
+    '{channel: $channel, text: $text}')
 
-# Slack に送信
-curl -s -X POST "$SLACK_WEBHOOK_URL" \
+# Slack chat.postMessage API で送信
+curl -s -X POST "https://slack.com/api/chat.postMessage" \
+    -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
     -H 'Content-Type: application/json' \
     -d "$payload" \
     > /dev/null 2>&1 || {
