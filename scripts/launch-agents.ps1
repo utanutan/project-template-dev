@@ -47,6 +47,24 @@ if (-not (Test-Path $ProjectPath)) {
 Write-Color "🚀 Launching agents for project: $ProjectName" "Cyan"
 Write-Host ""
 
+# Permission Mode Selection (interactive if -DangerouslySkipPermissions not explicitly passed)
+if (-not $DangerouslySkipPermissions) {
+    $title = "Permission Mode"
+    $message = "エージェントの権限モードを選択してください"
+    $choices = @(
+        (New-Object System.Management.Automation.Host.ChoiceDescription "&Normal", "権限チェックあり（監視可能な場合に推奨）"),
+        (New-Object System.Management.Automation.Host.ChoiceDescription "&Skip Permissions", "確認なし自動実行（隔離環境向け）")
+    )
+    $result = $host.UI.PromptForChoice($title, $message, $choices, 0)
+    if ($result -eq 1) {
+        $DangerouslySkipPermissions = [switch]::new($true)
+        Write-Color "⚠ Skip Permissions モードが選択されました" "Yellow"
+    } else {
+        Write-Color "✓ 通常モード（権限チェックあり）で起動します" "Green"
+    }
+    Write-Host ""
+}
+
 # Load Agents Config
 if (-not (Test-Path $AgentsJsonPath)) {
     Write-Color "Error: agents.json not found at $AgentsJsonPath" "Red"

@@ -15,7 +15,7 @@ PROJECT_NAME="${1:-general}"
 DATE=$(date +%Y-%m-%d)
 TEMPLATE_DIR="$(cd "$(dirname "$0")/../templates" && pwd)"
 FALLBACK_DIR="$HOME/logs/notes"
-OBSIDIAN_DIR="$HOME/.obsidian-vault/Sanctum/30_Insight"
+OBSIDIAN_DIR="$HOME/.obsidian-vault/Sanctum/40_SessionNote"
 
 # Obsidian vault が使えるか判定（存在 + 書き込み権限）
 if [ -d "$OBSIDIAN_DIR" ] && [ -w "$OBSIDIAN_DIR" ]; then
@@ -29,7 +29,7 @@ else
   fi
 fi
 
-NOTE_FILE="$NOTE_DIR/${DATE}_${PROJECT_NAME}_session.md"
+NOTE_FILE="$NOTE_DIR/Session Note - ${DATE}-${PROJECT_NAME}.md"
 
 mkdir -p "$NOTE_DIR"
 mkdir -p "$FALLBACK_DIR"

@@ -84,6 +84,23 @@ fi
 echo -e "${BLUE}🚀 Launching agents for project: ${PROJECT_NAME}${NC}"
 echo ""
 
+# Permission Mode Selection (interactive if --dangerously-skip-permissions not explicitly passed)
+if [ -z "$SKIP_PERMISSIONS" ]; then
+    echo "Permission Mode を選択してください:"
+    echo "  [1] 通常モード — 権限チェックあり（監視可能な場合に推奨）"
+    echo "  [2] Skip Permissions — 確認なし自動実行（隔離環境向け）"
+    echo ""
+    read -p "選択 (default: 2): " perm_choice
+    perm_choice="${perm_choice:-2}"
+    if [ "$perm_choice" = "2" ]; then
+        SKIP_PERMISSIONS="--dangerously-skip-permissions"
+        echo -e "${YELLOW}⚠ Skip Permissions モードが選択されました${NC}"
+    else
+        echo -e "${GREEN}✓ 通常モード（権限チェックあり）で起動します${NC}"
+    fi
+    echo ""
+fi
+
 # Path to agents.json
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 AGENTS_JSON="${REPO_ROOT}/library/config/agents.json"

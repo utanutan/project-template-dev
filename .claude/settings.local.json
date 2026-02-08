@@ -1,5 +1,16 @@
 {
   "permissions": {
-    "allow": []
+    "allow": [
+      "Bash(\"C:\\\\Program Files\\\\Git\\\\usr\\\\bin\\\\bash.exe\" --version)",
+      "Bash(bash:*)",
+      "Bash(cmd /c scripts/claude-notify.cmd:*)",
+      "Bash(git --exec-path)",
+      "Bash(cmd.exe //c \"echo {\"\"notification_type\"\":\"\"idle_prompt\"\",\"\"message\"\":\"\"test\"\"} | D:\\\\docker-data\\\\ubuntu-container\\\\home\\\\serveruser\\\\workspace\\\\project-template-dev\\\\scripts\\\\claude-notify.cmd\")",
+      "Bash(cmd.exe //c \"type D:\\\\docker-data\\\\ubuntu-container\\\\home\\\\serveruser\\\\workspace\\\\project-template-dev\\\\test-notify.json | D:\\\\docker-data\\\\ubuntu-container\\\\home\\\\serveruser\\\\workspace\\\\project-template-dev\\\\scripts\\\\claude-notify.cmd\")",
+      "Bash(echo:*)",
+      "Bash(TMUX=\"/tmp/tmux-1000/default,12345,0\" tmux_session=\"my-project\" bash -c '\nexport TMUX\necho \"\"{\\\\\"\"notification_type\\\\\"\":\\\\\"\"permission_prompt\\\\\"\",\\\\\"\"message\\\\\"\":\\\\\"\"Claude Code needs your attention\\\\\"\",\\\\\"\"session_id\\\\\"\":\\\\\"\"abcd1234\\\\\"\",\\\\\"\"cwd\\\\\"\":\\\\\"\"/home/serveruser/workspace/projects/my-app\\\\\"\",\\\\\"\"transcript_path\\\\\"\":\\\\\"\"\\\\\"\"}\"\" | bash scripts/claude-notify.sh 2>&1\necho \"\"EXIT: $?\"\"\n')",
+      "Bash(git commit:*)",
+      "Bash(git reset:*)"
+    ]
   }
 }

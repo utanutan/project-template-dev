@@ -30,8 +30,14 @@ Claude Codeの自動ログ（`~/.claude/projects/` 配下のJSONL）は事実の
 
 | 優先度 | 保存先 | 条件 |
 |---|---|---|
-| 1 | `~/.obsidian-vault/Sanctum/30_Insight/` | vault書き込み可の場合（`~/logs/notes/` にもバックアップ） |
+| 1 | `~/.obsidian-vault/Sanctum/40_SessionNote/` | vault書き込み可の場合（`~/logs/notes/` にもバックアップ） |
 | 2 | `~/logs/notes/` | フォールバック |
+
+### 命名規則
+
+`Session Note - YYYY-MM-DD-タイトル.md`
+
+例: `Session Note - 2026-02-08-OpenClaw実機評価と方針転換.md`
 
 ### テンプレート構成 (`templates/session-note.md`)
 
