@@ -123,6 +123,44 @@ curl -s -X POST "$CC_API_URL/hooks/event" \
 - 改行は `printf` で実際の改行文字を生成してから jq に渡すこと
 - Incoming Webhook は Block Kit (`blocks`) 非対応の場合がある。`text` フィールドで mrkdwn を使うのが確実
 
+### Slack Socket Mode + リアクション応答パターン (2026-02-08)
+
+Slack Bot Token + Socket Mode で双方向通知を実現するパターン:
+
+```python
+from slack_bolt import App
+from slack_bolt.adapter.socket_mode import SocketModeHandler
+
+app = App(token=bot_token)
+
+# スレッド返信で応答
+@app.event({"type": "message"})
+def handle_message(event, say):
+    thread_ts = event.get("thread_ts")  # 親メッセージのts
+    text = event.get("text")
+    # thread_ts → tmuxセッション検索 → send-keys
+
+# リアクションで応答（✅=yes, ❌=no）
+@app.event("reaction_added")
+def handle_reaction(event, say):
+    message_ts = event["item"]["ts"]  # リアクション対象メッセージのts
+    reaction = event["reaction"]       # "white_check_mark", "x" 等
+    # message_ts → tmuxセッション検索 → send-keys
+
+handler = SocketModeHandler(app, app_token)
+handler.start()
+```
+
+**必要なSlack App設定:**
+- Bot Token Scopes: `chat:write`, `reactions:write`
+- Event Subscriptions: `message.channels`, `reaction_added`
+- App-Level Token: `connections:write`（Socket Mode用）
+- `channels:history` スコープだけでは Event が届かない。Event Subscriptions に明示追加が必要
+
+**Bot自身のリアクション除外:**
+- `message` イベント: `event.get("bot_id")` で判定
+- `reaction_added` イベント: `app.client.auth_test()["user_id"]` と `event["user"]` を比較
+
 ### Slack Interactive Components との連携
 
 FastAPI で Slack のボタンクリックを処理する際の注意点:

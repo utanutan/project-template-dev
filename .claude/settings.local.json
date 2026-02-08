@@ -10,7 +10,9 @@
       "Bash(echo:*)",
       "Bash(TMUX=\"/tmp/tmux-1000/default,12345,0\" tmux_session=\"my-project\" bash -c '\nexport TMUX\necho \"\"{\\\\\"\"notification_type\\\\\"\":\\\\\"\"permission_prompt\\\\\"\",\\\\\"\"message\\\\\"\":\\\\\"\"Claude Code needs your attention\\\\\"\",\\\\\"\"session_id\\\\\"\":\\\\\"\"abcd1234\\\\\"\",\\\\\"\"cwd\\\\\"\":\\\\\"\"/home/serveruser/workspace/projects/my-app\\\\\"\",\\\\\"\"transcript_path\\\\\"\":\\\\\"\"\\\\\"\"}\"\" | bash scripts/claude-notify.sh 2>&1\necho \"\"EXIT: $?\"\"\n')",
       "Bash(git commit:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "WebFetch(domain:api.slack.com)",
+      "WebFetch(domain:docs.slack.dev)"
     ]
   }
 }
