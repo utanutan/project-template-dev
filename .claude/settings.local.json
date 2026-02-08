@@ -20,7 +20,9 @@
       "Bash(crontab:*)",
       "Bash(PROJ_DIR=\"/home/serveruser/workspace/project-template-dev/projects/kaigai-bbs-monitor\" echo:*)",
       "Bash(.venv/bin/pip install:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(git config:*)",
+      "Bash(ssh:*)"
     ]
   }
 }

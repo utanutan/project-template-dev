@@ -136,12 +136,10 @@ payload=$(jq -n --arg channel "$SLACK_CHANNEL_ID" --arg text "$text" \
     '{channel: $channel, text: $text}')
 
 # Slack chat.postMessage API で送信
-curl -s -X POST "https://slack.com/api/chat.postMessage" \
+response=$(curl -s -X POST "https://slack.com/api/chat.postMessage" \
     -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
     -H 'Content-Type: application/json' \
-    -d "$payload" \
-    > /dev/null 2>&1 || {
-    echo "Warning: Failed to send Slack notification" >&2
-}
+    -d "$payload" 2>&1)
+echo "[claude-notify] $(date '+%Y-%m-%d %H:%M:%S') response: $response" >> /tmp/claude-notify-debug.log
 
 exit 0
