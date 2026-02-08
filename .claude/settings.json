@@ -152,5 +152,36 @@
             "Bash(iptables -F*)",
             "Bash(sudo iptables -F*)"
         ]
+    },
+    "hooks": {
+        "Notification": [
+            {
+                "matcher": "permission_prompt",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash scripts/claude-notify.sh || scripts/claude-notify.cmd"
+                    }
+                ]
+            },
+            {
+                "matcher": "idle_prompt",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash scripts/claude-notify.sh || scripts/claude-notify.cmd"
+                    }
+                ]
+            },
+            {
+                "matcher": "elicitation_dialog",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "bash scripts/claude-notify.sh || scripts/claude-notify.cmd"
+                    }
+                ]
+            }
+        ]
     }
 }

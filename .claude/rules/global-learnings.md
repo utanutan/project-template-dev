@@ -98,6 +98,31 @@ curl -s -X POST "$CC_API_URL/hooks/event" \
 - `Notification (idle_prompt)`: ユーザー入力待ち検知
 - `Stop/SessionEnd`: セッション終了処理
 
+### Claude Code Notification Hook の実装知見 (2026-02-08)
+
+**Notification Hook に渡される JSON 構造:**
+
+```json
+{
+  "session_id": "uuid",
+  "transcript_path": "/path/to/.jsonl",
+  "cwd": "/project/dir",
+  "hook_event_name": "Notification",
+  "message": "Claude Code needs your attention",
+  "notification_type": "permission_prompt"
+}
+```
+
+**重要な注意点:**
+- `message` フィールドは汎用メッセージ（`"Claude Code needs your attention"`）のみで、実際の確認内容は含まれない
+- 実際の確認内容を取得するには `transcript_path` のJSONLから最新の assistant メッセージの `tool_use` を抽出する必要がある
+- `CC_PROJECT_ID` 等の環境変数は設定されない。`CLAUDE_PROJECT_DIR` のみ利用可能
+
+**Slack Incoming Webhook の制約:**
+- bash 変数の `\n` は2文字のリテラル。jq `--arg` で渡すと `\\n` にエスケープされ、Slackで改行されない
+- 改行は `printf` で実際の改行文字を生成してから jq に渡すこと
+- Incoming Webhook は Block Kit (`blocks`) 非対応の場合がある。`text` フィールドで mrkdwn を使うのが確実
+
 ### Slack Interactive Components との連携
 
 FastAPI で Slack のボタンクリックを処理する際の注意点:
@@ -171,3 +196,27 @@ uv run uvicorn main:app --host 0.0.0.0 --port 8741 &
 ```
 
 開発中は `--reload` オプションを検討（ただしproductionでは非推奨）
+
+### OpenClaw Docker デプロイ知見 (2026-02-08)
+
+**イメージ選定:**
+- `openclaw/openclaw` は Docker Hub に存在しない。`alpine/openclaw:latest` を使用
+- Debian bookworm ベース。`xfonts-cyrillic` 等 Ubuntu 固有パッケージは利用不可
+
+**Gateway 設定:**
+- `--bind` の有効値: `loopback`, `lan`, `tailnet`, `auto`, `custom` （`all` は無効）
+- Docker 内で外部公開するには `--bind lan` を command で指定
+- Gateway Token の環境変数名は `OPENCLAW_GATEWAY_TOKEN`
+
+**ボリューム:**
+- named volume は root 所有になるため、bind mount (`./data:/home/node/.openclaw`) を推奨
+- config.json は bind mount のサブパスとして `:ro` マウント可能
+
+**SSH 追加パターン:**
+- entrypoint.sh で root → sshd 起動 → `su node` で降格 → gateway 起動
+- authorized_keys のパーミッション修正は `|| true` でエラー無視（ro マウント対応）
+
+**コンテナ構成:**
+- Gateway + 開発ツール（claude-code, gh, git 等）はオールインワン1コンテナ構成
+- CLI 用の別サービス分離は過剰。Gateway コンテナ内でツール実行するため純粋な役割分離は不可能
+- CLI 対話は `docker exec -it <container> bash` で十分
